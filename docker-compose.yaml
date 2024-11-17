@@ -1,0 +1,77 @@
+services:
+  vite:
+    container_name: vite
+    build: front
+    ports:
+      - 5173:5173
+    develop:
+      watch:
+        - action: sync
+          path: front
+          target: /usr/src/app
+    networks:
+      - transcendence
+  
+  django:
+    container_name: django
+    build: back
+    ports:
+      - 8000:8000
+    develop:
+      watch:
+        - action: sync
+          path: back
+          target: /usr/src/app
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - static-data:/vol/static
+      - media-data:/vol/media
+    networks:
+      - transcendence
+  
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    networks:
+      - transcendence
+    restart: on-failure
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - transcendence
+  
+  nginx:
+    container_name: nginx
+    volumes:
+      - static-data:/vol/static
+      - media-data:/vol/media
+    build: ./nginx
+    ports:
+      - 443:443
+    depends_on:
+      - vite
+    networks:
+      - transcendence
+
+volumes:
+  static-data:
+  media-data:
+  postgres-data:
+
+networks:
+  transcendence:
+    driver: bridge

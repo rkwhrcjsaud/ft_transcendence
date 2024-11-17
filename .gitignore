@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LOverrides
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Node.js
+node_modules/
+
+# Frontend
+dist/
+build/
+
+# env
+.env
+
+# backend
+__pycache__/
+*.pyc
+
+# package or venv
+*.egg-info/
+*.egg
+env/
+venv/
+pip-log.txt
+
+# Migration
+*/migrations/*.py
+*/migrations/*.pyc
+*/migrations/__pycache__/

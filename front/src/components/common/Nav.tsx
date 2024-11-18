@@ -11,9 +11,9 @@ export default function Nav() {
         >
             <Row>
                 <Col xs='auto'>
-                    <NavLink to="/home" className={style}>
-                        <i className="bi bi-house-door fs-1 px-3"></i>
-                        <span>Home</span>
+                    <NavLink to="/profile" className={style}>
+                        <i className="bi bi-person fs-1 px-3"></i>
+                        <span>Profile</span>
                     </NavLink>
                     <NavLink to="/cpugame" className={style}>
                         <i className="bi bi-joystick fs-1 px-3"></i>

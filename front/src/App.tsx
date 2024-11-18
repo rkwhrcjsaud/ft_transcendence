@@ -13,6 +13,9 @@ import { AuthLayout } from "./components/layout/AuthLayout";
 import LocalGamePage from "./pages/LocalGame/LocalGame";
 import LocalGameLoader from "./pages/LocalGame/LocalGameLoader";
 
+import ProfilePage from "./pages/Profile/ProfilePage";
+import ProfileLoader from "./pages/Profile/ProfileLoader";
+
 import ErrorPage from "./pages/ErrorPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -24,6 +27,7 @@ export const router = createBrowserRouter(
         <Route path="/" element={<SideBar />} errorElement={<ErrorPage/>}>
           <Route index element={<Index />} />
           <Route path="multygame" element={<LocalGamePage />} loader={LocalGameLoader}/>
+          <Route path="profile" element={<ProfilePage />} loader={ProfileLoader}/>
         </Route>
       </Route>
 

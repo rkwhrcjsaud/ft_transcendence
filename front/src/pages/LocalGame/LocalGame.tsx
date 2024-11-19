@@ -44,7 +44,7 @@ export default function LocalGame() {
     useEffect(() => {
         const username = user.username || "guest"; // 사용자의 이름을 지정
         console.log("username: ", username);
-        const newWs = new WebSocket(`ws://localhost:8000/ws/localgame/${username}/`);
+        const newWs = new WebSocket(`wss://localhost:443/ws/localgame/${username}/`);
 
         // ws 실패 시 콘솔에 에러 메시지 출력
         newWs.onerror = (error) => {

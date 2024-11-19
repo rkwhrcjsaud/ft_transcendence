@@ -66,11 +66,43 @@ services:
       - vite
     networks:
       - transcendence
+  
+  vault:
+    container_name: vault
+    build: ./back/vault
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_ADDR: http://127.0.0.1:8200
+    ports:
+      - "8200:8200"   # Vault 서버의 포트 노출
+    volumes:
+      - vault-data:/vault/
+    networks:
+      - transcendence
+
+    # mariadb:
+    #   container_name: mariadb
+    #   build: back/mariadb/
+    #   expose:
+    #     - "3306:3306"
+    #   env_file: .env
+    #   volumes:
+    #     - mariadb_vlm:/var/lib/mysql/
+    #   networks:
+    #     - transcendence
 
 volumes:
   static-data:
   media-data:
   postgres-data:
+  vault-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ~/Desktop/ft_ts/fork/back/volumes/vault # 로컬에서 기록 저장
+
 
 networks:
   transcendence:

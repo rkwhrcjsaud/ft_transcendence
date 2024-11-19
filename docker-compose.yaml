@@ -76,8 +76,6 @@ services:
       VAULT_ADDR: http://127.0.0.1:8200
     ports:
       - "8200:8200"
-    volumes:
-      - vault-data:/vault
     networks:
       - transcendence
 
@@ -85,13 +83,6 @@ volumes:
   static-data:
   media-data:
   postgres-data:
-  vault-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: volumes/vault
-
 
 networks:
   transcendence:

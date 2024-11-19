@@ -69,15 +69,15 @@ services:
   
   vault:
     container_name: vault
-    build: ./back/vault
+    build: ./vault
     cap_add:
       - IPC_LOCK
     environment:
       VAULT_ADDR: http://127.0.0.1:8200
     ports:
-      - "8200:8200"   # Vault 서버의 포트 노출
+      - "8200:8200"
     volumes:
-      - vault-data:/vault/
+      - vault-data:/vault
     networks:
       - transcendence
 
@@ -90,7 +90,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: back/volumes/vault # 로컬에서 기록 저장
+      device: volumes/vault
 
 
 networks:

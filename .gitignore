@@ -36,3 +36,11 @@ pip-log.txt
 */migrations/*.py
 */migrations/*.pyc
 */migrations/__pycache__/
+
+# vault
+unseal_key.txt
+root_token.txt
+init-output.txt
+initialized
+volumes/vault/file/
+volumes/vault/logs/

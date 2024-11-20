@@ -16,6 +16,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
     profile_image = models.ImageField(upload_to='profile_images/', default='default.png')
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='custom_user_set',
+        blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='custom_user_set',
+        blank=True
+    )
 
     # 인증에 사용될 필드를 이메일로 설정
     USERNAME_FIELD = 'email'

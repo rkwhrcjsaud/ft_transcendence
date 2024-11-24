@@ -4,22 +4,31 @@ import { Link, useNavigate } from 'react-router-dom';
 import InputFields from '../../components/common/InputFields.tsx';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import FormTemplate from '../../components/layout/AuthFormLayout.tsx';
-// import axios from 'axios';
+import axios from 'axios';
+import { useAuth } from '../../hooks/useAuth.tsx';
+
+interface Auser {
+  id: number;
+  username: string;
+  full_name: string;
+  email: string;
+}
 
 interface UserProps {
-  username: string;
+  email: string;
   password: string;
   showPassword: boolean;
 }
 
 const LoginPage = () => {
+  const Auth = useAuth();
   const [formData, setFormData] = useState<UserProps>({
-    username: '',
+    email: '',
     password: '',
     showPassword: false,
   });
   const navigate = useNavigate();
-  const { username, password } = formData;
+  const { email, password } = formData;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({...formData, [e.target.name]: e.target.value});
@@ -27,16 +36,26 @@ const LoginPage = () => {
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    navigate('/');
-    // try {
-    //   const response = axios.post('api주소', {
-    //     username: username,
-    //     password: password
-    //   });
-    //   console.log('Login Success:', response);
-    // } catch (error) {
-    //   console.error('Login Failed:', error);
-    // }
+    try {
+      const response = await axios.post("https://localhost:443/api/accounts/login/", formData,{
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 200) {
+        const auser: Auser = {
+          id: response.data.id,
+          username: response.data.username,
+          full_name: response.data.full_name,
+          email: response.data.email,
+        };
+        if (await Auth?.login(auser, response.data.access_token, response.data.refresh_token))
+          navigate('/');
+        console.log('Login Success:', response);
+      }
+    } catch (error) {
+      console.error('Login Failed:', error);
+    }
   };
 
   return (
@@ -45,9 +64,9 @@ const LoginPage = () => {
       <Form onSubmit={submitHandler}>
         <h3 className="text-center text-muted mb-2 mb-0">Sign In</h3>
         <InputFields
-            placeholder="Username"
-            name="username"
-            value={username}
+            placeholder="Email"
+            name="email"
+            value={email}
             changeHandler={handleChange} />
         <InputFields
             placeholder="Password"

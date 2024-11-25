@@ -20,6 +20,8 @@ import ErrorPage from "./pages/ErrorPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
+import { SocialLoginLoader } from "./loaders/SocialLoginLoader";
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthProvider />} loader={AuthProviderLoader} errorElement={<ErrorPage/>}>
@@ -34,6 +36,7 @@ export const router = createBrowserRouter(
       {/* public routes */}
       <Route path="/login" element={<LoginPage></LoginPage>}/>
       <Route path="/register" element={<RegisterPage />}/>
+      <Route path="/42" loader={SocialLoginLoader} />
     </Route>
   )
 );

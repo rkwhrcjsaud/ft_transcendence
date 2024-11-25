@@ -103,7 +103,6 @@ class LoginSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
 
         user = authenticate(request, email=email, password=password)
-        print('user1 : ', user)
         if not user:
             raise AuthenticationFailed('Invalid credential')
         if user.auth_provider != 'email':
@@ -114,9 +113,7 @@ class LoginSerializer(serializers.ModelSerializer):
         user.is_online = True
         user.save()
 
-        print('user2 : ', user)
         user_tokens = user.tokens()
-        print('user_tokens : ', user_tokens)
 
         return {
             'id': user.id,

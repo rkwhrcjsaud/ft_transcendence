@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import *
+from .views import Oauth42RegisterView
 
 urlpatterns = [
-    path('42/', Oauth42RegisterView.as_view()),
+    path('', Oauth42RegisterView.as_view(), name='oauth42_register'),
 
 ]

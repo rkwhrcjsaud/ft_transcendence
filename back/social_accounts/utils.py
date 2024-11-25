@@ -6,7 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import authenticate
 from accounts.models import User, UserStats
 
-def RegisterSocialAccount(email, username, nickname, firstname, lastname, img_URL):
+def RegisterSocialAccount(email, username, nickname, firstName, lastName, img_URL):
     user = User.objects.filter(email=email)
     if user.exists():
         register_userd=authenticate(email=email, password=settings.SOCIAL_AUTH_PASSWORD)

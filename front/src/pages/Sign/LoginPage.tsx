@@ -6,6 +6,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import FormTemplate from '../../components/layout/AuthFormLayout.tsx';
 import axios from 'axios';
 import { useAuth } from '../../hooks/useAuth.tsx';
+import SocialLoginButton from '../../components/common/SocialLoginButton.tsx';
 
 interface Auser {
   id: number;
@@ -79,6 +80,7 @@ const LoginPage = () => {
             </Button>
         </InputFields>
         <Button color="primary" block>Sign In</Button>
+        <SocialLoginButton redirectUrl={`${import.meta.env.VITE_42_API_URL}`} icon='' message='Sign in with ' />
         <Col>
           <Row>
             <Link to="/register">

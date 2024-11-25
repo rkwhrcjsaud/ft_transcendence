@@ -1,0 +1,2 @@
+tail -f /var/log/nginx/modsec_audit.log
+실시간 로그 확인

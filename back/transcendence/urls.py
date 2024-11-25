@@ -17,7 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from social_accounts.views import Oauth42RegisterView
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),

@@ -18,7 +18,7 @@ export async function SocialLoginLoader(props: LoaderProps) {
     
     if (code) {
         try {
-            const response = await axios.post('https://localhost:443/api/accounts/42/', { code: code }); 
+            const response = await axios.post('https://localhost:443/api/social_accounts/', { code: code });
             if (response.status === 200) {
                 const user: Auser = {
                     id: response.data.id,

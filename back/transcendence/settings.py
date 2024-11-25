@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'localgame',
     'accounts',
+    'social_accounts',
 ]
 ASGI_APPLICATION = 'transcendence.asgi.application'
 
@@ -187,3 +188,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# social accounts settings
+
+SOCIAL_AUTH_PASSWORD = 'social_auth_password'
+CLIENT_ID_42 = 'u-s4t2ud-96437c35cb0bba2daf708c6fbb4809dad2e5eb2141405032acbfb2d4d70628a5'
+CLIENT_SECRET_42 = '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'
+DOMAIN = 'localhost'

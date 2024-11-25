@@ -1,4 +1,4 @@
-import axios, { AixosError, AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { redirect } from 'react-router-dom';
 
 interface Auser {

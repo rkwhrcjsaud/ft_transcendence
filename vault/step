@@ -1,0 +1,10 @@
+1. vault 컨테이너에서 로그인
+vault login <root-key> /vault/file/root_token
+
+2. 보안을 위한 kv엔진 생성
+vault secrets enable -path=ts kv
+
+3. 환경변수 파일을 파싱하여 환경변수 이름과 값으로 데이터를 저장
+3-1. 저장된 값 형식이 문자열(")콜론을 포함하고 있다면 제거해서 문자열 자체만 저장
+vault kv put ts/env envname=envname_val envvalue=envvalue
+

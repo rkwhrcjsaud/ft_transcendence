@@ -193,6 +193,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # social accounts settings
 
 SOCIAL_AUTH_PASSWORD = 'social_auth_password'
-CLIENT_ID_42 = 'u-s4t2ud-96437c35cb0bba2daf708c6fbb4809dad2e5eb2141405032acbfb2d4d70628a5'
-CLIENT_SECRET_42 = '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'
+CLIENT_ID_42 = 'u-s4t2ud-e3d3b1d27051c80f8dff74e972c4008a67f3d2b24359eb41b4b59f90e699e32d'
+CLIENT_SECRET_42 = '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'
 DOMAIN = 'localhost'

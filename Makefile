@@ -16,7 +16,7 @@ reup: down
 
 # 파일 변경 감지 후 업데이트
 watch:
-	@docker compose watch
+	@docker-compose up --watch
 
 # 컨테이너 정지 및 도커 리소스 삭제
 clean: down

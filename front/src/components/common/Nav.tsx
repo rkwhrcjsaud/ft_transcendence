@@ -1,9 +1,11 @@
 import { Container, Row, Col } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Nav() {
     const style="py-3 text-decoration-none d-flex justify-content-between align-items-center";
+    const Auth = useAuth();
 
     return (
         <Container
@@ -35,7 +37,7 @@ export default function Nav() {
             </Row>
             <Row className="d-flex justify-content-between">
                 <Col xs='auto'>
-                    <NavLink to="/login" className={style}>
+                    <NavLink to="/login" onClick={() => Auth?.logout()} className={style}>
                         <i className="bi bi-box-arrow-right fs-1 px-3"></i>
                         <span>Logout</span>
                     </NavLink>

@@ -1,7 +1,7 @@
 import { Container, Row, Col } from 'reactstrap';
 import { Outlet } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import Nav from '../common/Nav.tsx';
+import Nav from './Nav.tsx';
 
 export default function SideBar() {
     return (

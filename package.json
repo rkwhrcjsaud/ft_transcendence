@@ -10,8 +10,15 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "rest-framework": "^0.2.6",
+    "@types/reactstrap": "^8.7.2",
+    "react-router-dom": "^7.0.1",
+    "reactstrap": "^9.2.3",
+    "rest-framework": "^0.1.0",
     "socket-client": "^1.0.0",
     "websocket": "^1.0.35"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
   }
 }

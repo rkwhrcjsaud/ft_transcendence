@@ -1,7 +1,8 @@
 import LoginPage from "./pages/Sign/LoginPage";
 import Index from "./pages/Index";
 import { RegisterPage } from "./pages/Sign/RegisterPage";
-import SideBar from "./components/layout/sidebar";
+import Nav from "./components/layout/Nav";
+// import SideBar from "./components/layout/sidebar";
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 
 import AuthProvider from "./providers/AuthProvider";
@@ -29,7 +30,8 @@ export const router = createBrowserRouter(
     <Route element={<LangProvider />}>
     <Route element={<AuthProvider />} loader={AuthProviderLoader} errorElement={<ErrorPage/>}>
       <Route element={<ProtectedRoute><AuthLayout /></ProtectedRoute>} errorElement={<ErrorPage/>}>
-        <Route path="/" element={<SideBar />} errorElement={<ErrorPage/>}>
+      
+        <Route path="/" element={<Nav />} errorElement={<ErrorPage/>}>
           <Route index element={<Index />} />
           <Route path="multygame" element={<LocalGamePage />} loader={LocalGameLoader}/>
           <Route path="profile" element={<ProfilePage />} loader={ProfileLoader}/>

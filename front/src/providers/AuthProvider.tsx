@@ -23,26 +23,28 @@ function AuthValue(isJWTAuth: boolean): AuthReturnType {
   const [isAuth, setIsAuth] = useState<boolean>(isJWTAuth);
   
   const login = async (user: Auser, access_token: string, refresh_token: string): Promise<boolean> => {
-      try {
-          localStorage.setItem('access_Token', access_token);
-          localStorage.setItem('refresh_Token', refresh_token);
-          localStorage.setItem('user', JSON.stringify(user));
-          setIsAuth(true);
-          return true;
-      } catch {
-          return false;
-      }
+    console.log("login");
+    try {
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+        localStorage.setItem('user', JSON.stringify(user));
+        setIsAuth(true);
+        return true;
+    } catch {
+        return false;
+    }
   }
 
   const logout = () => {
-      localStorage.removeItem('access_Token');
-      localStorage.removeItem('refresh_Token');
+      console.log("logout");
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
       localStorage.removeItem('user');
       setIsAuth(false);
   }
 
   useLayoutEffect(() => {
-    const token = localStorage.getItem('access_Token');
+    const token = localStorage.getItem('access_token');
     setIsAuth(!!token && isJWTAuth);
   }, [isJWTAuth]);
 

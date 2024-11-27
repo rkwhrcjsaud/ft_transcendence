@@ -1,54 +1,39 @@
-import { Container, Row, Col } from "reactstrap";
-import { NavLink } from "react-router-dom";
+import { Navbar, NavbarBrand, Nav, NavItem, NavLink} from "reactstrap";
+import CustomDropdown from '../common/CustomDropdown';
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { useAuth } from "../../hooks/useAuth";
+import "../../styles/FixedNavBar.scss";
 
-// 다국어 지원 import
-import { useLang } from "../../context/LangContext";
-import { language } from "../../utils/language";
-//
-
-export default function Nav() {
-    const style="py-3 text-decoration-none d-flex justify-content-between align-items-center";
-    const Auth = useAuth();
-    const { lang } = useLang(); // 다국어 지원
-
-    return (
-        <Container
-            className="h-100 d-flex justify-content-between flex-column"
-        >
-            <Row>
-                <Col xs='auto'>
-                    <NavLink to="/profile" className={style}>
-                        <i className="bi bi-person fs-1 px-3"></i>
-                        <span>{language[lang].Profile}</span>
-                    </NavLink>
-                    <NavLink to="/cpugame" className={style}>
-                        <i className="bi bi-joystick fs-1 px-3"></i>
-                        <span>{language[lang].SinglePlay}</span>
-                    </NavLink>
-                    <NavLink to="/multygame" className={style}>
-                        <i className="bi bi-keyboard fs-1 px-3"></i>
-                        <span>{language[lang].MultyPlay}</span>
-                    </NavLink>
-                    <NavLink to="/olinematch" className={style}>
-                        <i className="bi bi-wifi fs-1 px-3"></i>
-                        <span>{language[lang].OnlinePlay}</span>
-                    </NavLink>
-                    <NavLink to="/tournament" className={style}>
-                        <i className="bi bi-flag fs-1 px-3"></i>
-                        <span>{language[lang].Tournament}</span>
-                    </NavLink>
-                </Col>
-            </Row>
-            <Row className="d-flex justify-content-between">
-                <Col xs='auto'>
-                    <NavLink to="/login" onClick={() => Auth?.logout()} className={style}>
-                        <i className="bi bi-box-arrow-right fs-1 px-3"></i>
-                        <span>{language[lang].Logout}</span>
-                    </NavLink>
-                </Col>
-            </Row>
-        </Container>
-    )
+export default function NavBar() {
+  return (
+    <Navbar dark expand="md" fixed="top" id="FixedNavBar" className="px-4 d-flex justify-content-center">
+      <NavbarBrand href="/">ft_transcendence</NavbarBrand>
+      <Nav className="d-flex justify-content-center align-items-center" navbar>
+        <NavItem>
+          <NavLink to="/profile" className="px-3 py-2 d-flex align-items-center">
+            Profile
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink to="/cpugame" className="px-3 py-2 d-flex align-items-center">
+            Single Play
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink to="/multygame" className="px-3 py-2 d-flex align-items-center">
+            Multiplay
+          </NavLink>
+        </NavItem>
+      </Nav>
+      <Nav navbar>
+        <NavItem className="NavLang">
+            <CustomDropdown className="px-3"/>
+        </NavItem>
+        <NavItem className="NavbarLogin">
+          <NavLink to="/login" className="px-3 py-2 d-flex align-items-center NavLogin">
+            Login
+          </NavLink>
+        </NavItem>
+      </Nav>
+    </Navbar>
+  );
 }

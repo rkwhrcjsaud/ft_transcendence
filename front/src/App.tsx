@@ -22,8 +22,11 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import { SocialLoginLoader } from "./loaders/SocialLoginLoader";
 
+import { LangProvider } from "./context/LangContext";
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
+    <Route element={<LangProvider />}>
     <Route element={<AuthProvider />} loader={AuthProviderLoader} errorElement={<ErrorPage/>}>
       <Route element={<ProtectedRoute><AuthLayout /></ProtectedRoute>} errorElement={<ErrorPage/>}>
         <Route path="/" element={<SideBar />} errorElement={<ErrorPage/>}>
@@ -32,6 +35,7 @@ export const router = createBrowserRouter(
           <Route path="profile" element={<ProfilePage />} loader={ProfileLoader}/>
         </Route>
       </Route>
+    </Route>
 
       {/* public routes */}
       <Route path="/login" element={<LoginPage></LoginPage>}/>

@@ -37,3 +37,6 @@ pip-log.txt
 */migrations/*.pyc
 */migrations/__pycache__/
 
+# Vault
+./vault/step
+volumes/vault-data

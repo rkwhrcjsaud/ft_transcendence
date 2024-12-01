@@ -124,7 +124,7 @@ export default function LocalGame() {
                         <CardBody className="text-light">
                             <CardTitle>Pong Rules:</CardTitle>
                             <CardText>
-                                <span>The first player to 10 points, or with the most points when the time runs out wins!</span>
+                                <span>The first player to 11 points, or with the most points when the time runs out wins!</span>
                             </CardText>
                             <CardText>
                                 <b className="text-primary">Left</b> player controls: W (up), S (down).
@@ -145,9 +145,8 @@ export default function LocalGame() {
                   {message}
                 </div>
                 <div className="middleLine"></div>
-                <div className="centerCircle"></div>
-                <LocalGamePaddle key="1" color="red" left="1.25" top={localPaddleTop.left.top} />
-                <LocalGamePaddle key="2" color="blue" left="94.75" top={localPaddleTop.right.top} />
+                <LocalGamePaddle key="1" color="red" left="5" top={localPaddleTop.left.top} />
+                <LocalGamePaddle key="2" color="blue" left="93.5" top={localPaddleTop.right.top} />
                 <Ball left={ballPosition.x} top={ballPosition.y} />
                 <ScoreBoard leftScore={leftScore} rightScore={rightScore} />
                 <Timer minutes={minutes} seconds={seconds} />

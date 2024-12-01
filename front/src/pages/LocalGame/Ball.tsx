@@ -8,8 +8,8 @@ interface BallProps {
       <div
         style={{
           position: "absolute",
-          width: "20px",
-          height: "20px",
+          width: "1.5%",
+          height: "2%",
           transform: "translate(-50%, -50%)",
           backgroundColor: "black",
           borderRadius: "50%",

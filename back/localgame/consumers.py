@@ -162,23 +162,23 @@ class PongConsumer(AsyncWebsocketConsumer):
     
     async def handle_keydown(self, key):
         if key == 'w':
-            self.paddles['left']['keyup'] = True
-        elif key == 's':
             self.paddles['left']['keydown'] = True
+        elif key == 's':
+            self.paddles['left']['keyup'] = True
         elif key == 'ArrowUp':
-            self.paddles['right']['keyup'] = True
-        elif key == 'ArrowDown':
             self.paddles['right']['keydown'] = True
+        elif key == 'ArrowDown':
+            self.paddles['right']['keyup'] = True
     
     async def handle_keyup(self, key):
         if key == 'w':
-            self.paddles['left']['keyup'] = False
-        elif key == 's':
             self.paddles['left']['keydown'] = False
+        elif key == 's':
+            self.paddles['left']['keyup'] = False
         elif key == 'ArrowUp':
-            self.paddles['right']['keyup'] = False
-        elif key == 'ArrowDown':
             self.paddles['right']['keydown'] = False
+        elif key == 'ArrowDown':
+            self.paddles['right']['keyup'] = False
     
     async def move_ball(self):
         if self.game_state != GameState.PLAYING:

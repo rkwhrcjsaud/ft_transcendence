@@ -124,3 +124,6 @@ class LoginSerializer(serializers.ModelSerializer):
             'access_token': str(user_tokens['access']),
             'refresh_token': str(user_tokens['refresh'])
         }
+
+class VerifyEmailSerializer(serializers.ModelSerializer):
+    pass

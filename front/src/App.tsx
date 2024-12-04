@@ -2,6 +2,7 @@ import LoginPage from "./pages/Sign/LoginPage";
 import LandingPage from "./pages/Landing/LandingPage"; // 랜딩 페이지 컴포넌트 추가
 import Dashboard from "./pages/Profile/Dashboard";
 import { RegisterPage } from "./pages/Sign/RegisterPage";
+import { VerifyEmailPage } from "./pages/Sign/VerifyEmailPage";
 import Nav from "./components/layout/Nav";
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 
@@ -49,6 +50,7 @@ export const router = createBrowserRouter(
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/42" loader={SocialLoginLoader} />
+      <Route path="/verify" element={<VerifyEmailPage />} />
     </Route>
   )
 );

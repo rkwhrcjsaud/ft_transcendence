@@ -52,7 +52,7 @@ export const RegisterPage = () => {
             });
             if (response.status == 201) {
                 console.log('Register Success:', response);
-                navigate('/login');
+                navigate('/verify');
             }
         } catch (error) {
             if (error instanceof AxiosError) {

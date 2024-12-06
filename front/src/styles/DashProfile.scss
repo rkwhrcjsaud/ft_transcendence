@@ -1,0 +1,104 @@
+@import "./Global.scss";
+
+#dashProfile {
+  --bs-accordion-bg: #eee;
+
+  .accordion {
+    --bs-border-radius: 1.8rem;
+  }
+
+  .accordion-button {
+    color: #EE532C;
+    --bs-accordion-active-bg: #F2F2F2;
+    background-color: #eee;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &::after {
+      display: none; /* 기본 화살표 제거 */
+    }
+  }
+
+  .accordion-icon {
+    font-size: 1.2rem;
+    color: #EE532C; /* 아이콘 색상 */
+    transition: transform 0.3s ease; /* 회전 애니메이션 */
+  }
+
+  /* 열림 상태에서 아이콘 회전 */
+  .accordion-icon.rotated {
+    transform: rotate(-180deg);
+  }
+
+  /* 열린 상태의 보더 */
+  .accordion-item {
+    border: 1px solid #EE532C;
+  }
+  
+  /* 닫힌 상태의 보더 */
+  .accordion-item:last-of-type > .accordion-header {
+    .accordion-button.collapsed {
+      outline: 1px solid #eee;
+    }
+  }
+
+  .accordion-body {
+    padding-bottom: 3.5rem;
+  }
+
+  .profile-container {
+    text-align: center;
+  }
+
+  .profile-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #ccc;
+    display: block;
+    margin: 0 auto 20px;
+    border: 1px solid #EE532C;
+  }
+
+  .profile-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+
+  .profile-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .profile-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: transparent;
+    border: 1px solid #EE532C;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: #EE532C;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .profile-button:hover {
+    background-color: #EE532C;
+    color: #fff;
+  }
+
+  .profile-button i {
+    font-size: 1.2rem;
+  }
+
+  .profile-setting-btn {
+    padding: 10px 28px;
+  }
+}

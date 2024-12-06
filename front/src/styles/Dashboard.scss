@@ -1,0 +1,53 @@
+@import "./Global.scss";
+
+
+.dashboard-container {
+    margin-top: 6rem;
+    max-width: 70% !important; //맥데스크탑 화면 확인 필요
+    
+    .accordion-header {
+      font-weight: bold;
+      color: #EE532C;
+    }
+}
+
+.dashAccordion {
+  margin-bottom: 30px;
+}
+
+.accordion {
+  --bs-border-radius: 1.8rem;
+  --bs-accordion-active-bg: #F2F2F2;
+  --bs-accordion-bg: #000;
+}
+
+.accordion-button {
+  --bs-accordion-btn-padding-x: 2.2rem;
+  --bs-accordion-btn-padding-y: 1.8rem;
+  --bs-accordion-border-color: #eee;
+  font-weight: 600;
+  font-size: 2rem;
+
+  &::after { /* 아코디언 토글 화살표 안보이게 처리 */
+    display: none;
+  }
+}
+
+.accordion-body {
+  --bs-accordion-btn-padding-x: 2.2rem;
+  --bs-accordion-btn-padding-y: 2.2rem;
+}
+
+
+
+
+
+#dashFriendList {
+
+  .accordion-button {
+    color: #fff;
+    --bs-accordion-active-bg: #f2f2f2;
+    color: #fff;
+    background-color: #777;
+  }
+}

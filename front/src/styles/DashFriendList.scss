@@ -1,0 +1,233 @@
+#dashFriendList {
+  @import "./Global.scss";
+
+  .accordion {
+    --bs-border-radius: 1.8rem;
+  }
+
+  .accordion-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.2rem;
+
+    &::after {
+      display: none; /* 기본 화살표 제거 */
+    }
+  }
+
+  .custom-accordion-header {
+    display: flex;
+    align-items: center;
+  
+    .friend-count {
+      margin-left: 10px;
+      font-size: 1rem;
+      color: #fff;
+    }
+  
+    .accordion-icon {
+      margin-left: auto; /* 아이콘을 헤더의 오른쪽 끝으로 배치 */
+      font-size: 1.2rem;
+      color: #fff;
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-icon.rotated {
+      transform: rotate(-180deg);
+    }
+  }
+
+  /* 아코디언 바디의 패딩값 변수 재조정 */
+  --bs-accordion-body-padding-x: 3rem;
+  --bs-accordion-body-padding-y: 3.5rem;
+
+  .friend-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  
+    .friend-item {
+      display: flex;
+      align-items: center;
+      padding: 20px 50px;
+      margin-bottom: 20px;
+      background-color: #eee;
+      border-radius: 1.5rem;
+      transition: box-shadow 0.3s ease-out, color 0.3s ease;
+
+      &:hover {
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      }
+  
+      .friend-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+  
+      .friend-info {
+        display: flex;
+        align-items: center;
+        margin-left: 50px;
+  
+        .friend-name-container {
+          width: 120px; /* 닉네임의 고정 너비 */
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+  
+        .friend-status-container {
+          margin-left: 10px;
+        }
+  
+        .friend-name {
+          font-size: 1rem;
+          font-weight: bold;
+        }
+  
+        .friend-status {
+          font-size: 0.9rem;
+          display: inline-flex;
+          align-items: baseline; /* 상태 동그라미와 텍스트 수평 맞추기 */
+          gap: 6px;
+  
+          .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            line-height: 10rem;
+            vertical-align: middle;
+          }
+  
+          &.online .status-indicator {
+            background-color: rgb(20, 195, 20);
+          }
+  
+          &.offline .status-indicator {
+            background-color: rgb(159, 159, 159);
+          }
+
+          span {
+            line-height: 1;
+          }
+        }
+      }
+  
+      .friend-remove-btn {
+        margin-left: auto; /* 삭제 버튼을 오른쪽 끝으로 이동 */
+        background-color: transparent;
+        border: none;
+        color: #ee532c;
+        font-size: 1.125rem;
+        cursor: pointer;
+
+        svg {
+          transition: filler 0.3s ease-out, color 0.3s ease;
+        }
+
+        &:hover {
+          color: #ee532c;
+          svg {
+            filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));
+          }
+        }
+      }
+    }
+  }
+  
+  /* 친구 검색 창 */
+  .search-container {
+    display: flex;
+    align-items: center;
+    margin-top: 50px;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    padding: 5px 15px;
+    background-color: #fff;
+
+    .search-icon {
+      font-size: 1.2rem;
+      color: #888;
+    }
+
+    .search-input {
+      border: none;
+      outline: none;
+      flex: 1;
+      padding: 5px;
+      margin-left: 10px;
+      font-size: .9rem;
+
+      &::placeholder {
+        color: #ccc;
+      }
+    }
+
+  }
+
+  .search-results {
+    display: flex;
+    flex-wrap: wrap; /* 여러 줄에 걸쳐 검색 결과를 나열하는 설정 */
+    gap: 20px; /* 카드 사이 간격 */
+    margin-top: 30px;
+  
+    .search-result {
+      flex: 1 1 calc(25% - 20px); /* 4열 배치 (부모의 1/4 너비 차지), 3열도 봐보기 */
+      max-width: calc(25% - 20px); /* 최대 너비 제한 */
+      background-color: #eee;
+      border-radius: 1.5rem;
+      padding: 40px 20px 30px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: box-shadow 0.3s ease-out, color 0.3s ease;
+
+      &:hover {
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      }
+  
+      .result-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px; /* 이미지와 이름 간격 */
+      }
+  
+      .result-info {
+        .result-name {
+          font-size: 1rem;
+          font-weight: 600;
+          margin-bottom: 15px; /* 이름과 버튼 간격 */
+          color: #4b4b4b;
+        }
+      }
+  
+      .friend-add-btn {
+        background-color: #555;
+        border: none;
+        color: #fff;
+        margin-top: 15px;
+        padding: 10px 16px;
+        border-radius: 1rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease;
+  
+        &:hover {
+          background-color: #ee532c;
+          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+      }
+
+      .svg-inline--fa {
+        margin-right: 5px;
+        vertical-align: -0.11em;
+      }
+    }
+  }  
+}

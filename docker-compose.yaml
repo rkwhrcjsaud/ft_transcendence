@@ -77,8 +77,10 @@ services:
     build: ./vault
     cap_add:
       - IPC_LOCK
-    environment:
-      VAULT_ADDR: http://127.0.0.1:8200
+    env_file:
+      - vault/.env
+    volumes:
+      - ./volumes/vault-data/init-data:/vault-data
     ports:
       - "8200:8200"
     networks:

@@ -16,25 +16,25 @@ class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.paddles = {
-            'left': {'left': 10, 'top': 300, 'keydown': False, 'keyup': False},
-            'right': {'left': 768, 'top': 300, 'keydown': False, 'keyup': False}
+            'left': {'left': 40, 'top': 300, 'keydown': False, 'keyup': False},
+            'right': {'left': 748, 'top': 300, 'keydown': False, 'keyup': False}
         }
-        self.paddle_speed = 20
+        self.paddle_speed = 10
         self.paddle_height = 120
-        self.paddle_width = 32
+        self.paddle_width = 12
 
         self.height = 600
         self.width = 800
         self.last_update = time.time()
         
-        self.leftPaddle_x = 10
-        self.rightPaddle_x = 768
+        self.leftPaddle_x = 40
+        self.rightPaddle_x = 748
 
-        self.ball_x = 50
-        self.ball_y = 50
-        self.ball_speed_x = 20
-        self.ball_speed_y = 20
-        self.ball_radius = 10
+        self.ball_x = self.width / 2
+        self.ball_y = self.height / 2
+        self.ball_speed_x = 10
+        self.ball_speed_y = 10
+        self.ball_radius = 6
 
         self.leftScore = 0
         self.rightScore = 0
@@ -46,11 +46,11 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.leftScore = 0
         self.rightScore = 0
         self.minutes = 1
-        self.seconds = 0
+        self.seconds = 40
         self.ball_x = self.width / 2
         self.ball_y = self.height / 2
-        self.ball_speed_x = random.randint(5, 10) * random.choice([1, -1])
-        self.ball_speed_y = random.randint(5, 10) * random.choice([1, -1])
+        self.ball_speed_x = random.randint(3, 5) * random.choice([1, -1])
+        self.ball_speed_y = random.randint(3, 5) * random.choice([1, -1])
         self.paddles['left']['top'] = self.height / 2 - self.paddle_height / 2
         self.paddles['right']['top'] = self.height / 2 - self.paddle_height / 2
         await self.send_update()
@@ -125,13 +125,13 @@ class PongConsumer(AsyncWebsocketConsumer):
                 continue
 
     async def goal_reset(self):
-        if self.leftScore >= 10 or self.rightScore >= 10:
+        if self.leftScore >= 11 or self.rightScore >= 11:
             await self.set_game_state(GameState.GAME_OVER)
         else:
             self.ball_x = self.width / 2
             self.ball_y = self.height / 2
-            self.ball_speed_x = random.randint(5, 10) * random.choice([1, -1])
-            self.ball_speed_y = random.randint(5, 10) * random.choice([1, -1])
+            self.ball_speed_x = random.randint(3, 5) * random.choice([1, -1])
+            self.ball_speed_y = random.randint(3, 5) * random.choice([1, -1])
             self.paddles['left']['top'] = self.height / 2 - self.paddle_height / 2
             self.paddles['right']['top'] = self.height / 2 - self.paddle_height / 2
             self.game_state = GameState.GOAL
@@ -162,23 +162,23 @@ class PongConsumer(AsyncWebsocketConsumer):
     
     async def handle_keydown(self, key):
         if key == 'w':
-            self.paddles['left']['keyup'] = True
-        elif key == 's':
             self.paddles['left']['keydown'] = True
+        elif key == 's':
+            self.paddles['left']['keyup'] = True
         elif key == 'ArrowUp':
-            self.paddles['right']['keyup'] = True
-        elif key == 'ArrowDown':
             self.paddles['right']['keydown'] = True
+        elif key == 'ArrowDown':
+            self.paddles['right']['keyup'] = True
     
     async def handle_keyup(self, key):
         if key == 'w':
-            self.paddles['left']['keyup'] = False
-        elif key == 's':
             self.paddles['left']['keydown'] = False
+        elif key == 's':
+            self.paddles['left']['keyup'] = False
         elif key == 'ArrowUp':
-            self.paddles['right']['keyup'] = False
-        elif key == 'ArrowDown':
             self.paddles['right']['keydown'] = False
+        elif key == 'ArrowDown':
+            self.paddles['right']['keyup'] = False
     
     async def move_ball(self):
         if self.game_state != GameState.PLAYING:
@@ -196,34 +196,38 @@ class PongConsumer(AsyncWebsocketConsumer):
         if self.ball_speed_x < 0 \
             and self.ball_x - self.ball_radius \
             <= self.paddles['left']['left'] + self.paddle_width \
+            and self.paddles['left']['left']\
+            >= self.ball_x - self.ball_radius\
             and self.paddles['left']['top']\
             <= self.ball_y + self.ball_radius\
             <= self.paddles['left']['top'] + self.paddle_height:
-            self.ball_speed_x = abs(self.ball_speed_x)
+            self.ball_speed_x = abs(self.ball_speed_x) + 1
 
             # 패들의 방향에 따라 공에게 추가 속도를 줌
             if self.paddles['left']['keydown']:
-                self.ball_speed_y += 5
+                self.ball_speed_y += 4
             elif self.paddles['left']['keyup']:
-                self.ball_speed_y -= 5
+                self.ball_speed_y -= 4
         
         # 오른쪽 패들과 부딪히면 방향을 바꿈
         if self.ball_speed_x > 0 \
             and self.ball_x + self.ball_radius \
             >= self.paddles['right']['left']\
+            and self.ball_x + self.ball_radius\
+            <= self.paddles['right']['left'] + self.paddle_width\
             and self.paddles['right']['top']\
             <= self.ball_y + self.ball_radius\
             <= self.paddles['right']['top'] + self.paddle_height:
-            self.ball_speed_x = -abs(self.ball_speed_x)
+            self.ball_speed_x = -abs(self.ball_speed_x) - 1
 
             # 패들의 방향에 따라 공에게 추가 속도를 줌
             if self.paddles['right']['keydown']:
-                self.ball_speed_y += 5
+                self.ball_speed_y += 4
             elif self.paddles['right']['keyup']:
-                self.ball_speed_y -= 5
+                self.ball_speed_y -= 4
         
         # 공의 최고 속도를 제한
-        self.ball_speed_x = max(-10, min(10, self.ball_speed_x))
+        self.ball_speed_x = max(-12, min(12, self.ball_speed_x))
         self.ball_speed_y = max(-10, min(10, self.ball_speed_y))
 
         # 왼쪽 벽에 부딪히면 오른쪽이 골

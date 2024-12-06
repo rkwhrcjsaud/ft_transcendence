@@ -4,6 +4,7 @@ from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
 from rest_framework_simplejwt.tokens import RefreshToken
+import random
 
 AUTH_PROVIDER = { 'email': 'email' }
 
@@ -13,12 +14,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     email = models.EmailField(max_length=255, unique=True, verbose_name=_('email address'))
     username = models.CharField(max_length=40, unique=True)
-    nickname = models.CharField(max_length=40, unique=True, null=True, blank=True, default="")
+    nickname = models.CharField(max_length=40, null=True, blank=True, default="")
     first_name = models.CharField(max_length=40, verbose_name=_('first name'))
     last_name = models.CharField(max_length=40, verbose_name=_('last name'))
     is_active = models.BooleanField(default=True)
     is_online = models.BooleanField(default=False)
-    is_verified = models.BooleanField(default=True) # 임시로 True로 설정
+    is_verified = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -68,11 +69,9 @@ class OTP(models.Model):
     """
     사용자 인증을 위한 One-Time Password 모델.
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    code = models.CharField(max_length=6, unique=True)
-
-    def __str__(self):
-        return f"{self.user.username}-passcode"
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="verification_code")
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class UserProfile(models.Model):
     """

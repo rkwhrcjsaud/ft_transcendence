@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'localgame',
     'accounts',
     'social_accounts',
+    'friends',
 ]
 ASGI_APPLICATION = 'transcendence.asgi.application'
 

@@ -12,8 +12,8 @@ $en-font: 'Roboto Mono', monospace;
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-color: #333;  // 기본 텍스트 색상 변경
-  --bs-body-bg: #f8f9fa;  // 기본 배경 색상 변경
+  --bs-body-color: #4b4b4b;  // 기본 텍스트 색상 변경
+  --bs-body-bg: #fff;  // 기본 배경 색상 변경
 }
 
 // 글로벌 폰트 설정
@@ -25,3 +25,7 @@ $en-font: 'Roboto Mono', monospace;
 //   color: var(--bs-body-color);
 //   background-color: var(--bs-body-bg);
 // }
+
+html {
+  scrollbar-gutter: stable;
+}

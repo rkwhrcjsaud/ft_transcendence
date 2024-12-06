@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Row, Col } from 'reactstrap';
+import { Form, Button, Row, Col, Alert } from 'reactstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import InputFields from '../../components/common/InputFields.tsx';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -30,7 +30,7 @@ const LoginPage = () => {
   });
   const navigate = useNavigate();
   const { email, password } = formData;
-  const [alertmessage, setAlertMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({...formData, [e.target.name]: e.target.value});
@@ -61,19 +61,19 @@ const LoginPage = () => {
         } else if (error.response?.data?.error) {
           setAlertMessage(error.response.data.error);
         } else {
-          setAlertMessage('An error occurred while signing in');
+          setAlertMessage('An error occurred. Please try again');
         }
       } else if (error instanceof Error && error.message) {
         setAlertMessage("Credentials are incorrect");
       } else {
-        setAlertMessage('An error occurred while signing in');
+        setAlertMessage('Unknown error occurred. Please try again');
       }
     }
   };
 
   return (
     <FormTemplate>
-      {
+      {alertMessage && <Alert color="danger">{alertMessage}</Alert>}
       <Form onSubmit={submitHandler}>
         <h3 className="text-center text-muted mb-2 mb-0">Sign In</h3>
         <InputFields
@@ -101,7 +101,6 @@ const LoginPage = () => {
           </Row>
         </Col>
       </Form>
-    }
     </FormTemplate>
   );
 };

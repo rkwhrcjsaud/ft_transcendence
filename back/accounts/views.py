@@ -93,7 +93,7 @@ class LoginView(generics.GenericAPIView):
             serializer.is_valid(raise_exception=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Invalid credentials, please try again'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class VerifyEmailView(generics.GenericAPIView):

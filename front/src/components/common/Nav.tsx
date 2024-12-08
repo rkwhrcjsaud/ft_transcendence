@@ -1,5 +1,5 @@
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink} from "reactstrap";
-import CustomDropdown from '../common/CustomDropdown';
+import CustomDropdown from './CustomDropdown';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../styles/FixedNavBar.scss";
 

@@ -1,0 +1,130 @@
+.edit-profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 60px;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+    .edit-profile-title {
+      font-size: 1.6rem;
+      color: #ee532c;
+      margin-bottom: 40px;
+    }
+  
+    .edit-profile-content {
+      display: flex;
+      gap: 100px; /* 프로필 사진과 입력 폼 사이 간격 */
+      align-items: center;
+  
+      .profile-section {
+        text-align: center;
+        margin-bottom: 14%;
+  
+        .profile-image-wrapper {
+          position: relative;
+          margin-bottom: 20px;
+
+    
+          .profile-image {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            object-fit: cover;
+          }
+    
+          .delete-image-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 20px;
+            background-color: #ccc;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:hover {
+              background-color: #ee532c;
+            }
+          }
+        }
+    
+        .upload-btn {
+          background-color: #ee532c;
+          color: #fff;
+          padding: 10px 40px;
+          border-radius: 15px;
+          cursor: pointer;
+          font-size: .8rem;
+          text-align: center;
+        }
+      }
+  
+      .edit-profile-form {
+        flex: 1;
+  
+        .form-group {
+          margin-bottom: 15px;
+  
+          .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: .8rem;
+            font-weight: 500;
+            color: #888;
+          }
+  
+          .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #ccc;
+            transition: all 0.3s ease;
+            
+            &:focus {
+              outline: none;
+              border-color: #ee532c;
+              color: #333;
+            }
+          }
+        }
+      }
+    }
+  
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+  
+      .cancel-btn,
+      .save-btn {
+        background-color: #ee532c;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+  
+      .cancel-btn {
+        background-color: #ee532c;
+      }
+  
+      .save-btn {
+        background-color: #333;
+      }
+    }
+  }
+  

@@ -1,6 +1,7 @@
 import LoginPage from "./pages/Sign/LoginPage";
 import LandingPage from "./pages/Landing/LandingPage"; // 랜딩 페이지 컴포넌트 추가
 import Dashboard from "./pages/Profile/Dashboard";
+import EditProfilePage from "./pages/Profile/DashProfile/EditProfile";
 import { RegisterPage } from "./pages/Sign/RegisterPage";
 import { VerifyEmailPage } from "./pages/Sign/VerifyEmailPage";
 import Nav from "./components/layout/Nav";
@@ -42,6 +43,8 @@ export const router = createBrowserRouter(
             <Route path="/multygame" element={<LocalGamePage />} loader={LocalGameLoader} />
             {/* 프로필 페이지 (예시로 남겨둠) */}
             <Route path="/profile" element={<ProfilePage />} loader={ProfileLoader} />
+            {/* 프로필 수정 페이지 */}
+            <Route path="/dashboard/edit_profile" element={<EditProfilePage />} />
           </Route>
         </Route>
       </Route>

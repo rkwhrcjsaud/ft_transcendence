@@ -5,36 +5,92 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include custom CSS -->
+    <link rel="stylesheet" href="./styles/FixedNavBar.css">
+    <link rel="stylesheet" href="./styles/Global.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <title>Vite App</title>
   </head>
   <body>
 
     <!-- NavBar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/" data-router-link>ft_transcendence</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="/" data-router-link>Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/dashboard" data-router-link>Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/profile" data-router-link>Profile</a>
-            </li>
-          </ul>
+    <nav class="navbar">
+      <div class="navbar-container">
+        <!-- Left: Logo -->
+        <a href="/" class="navbar-brand">ft_transcendence</a>
+        
+        <!-- Center: Navigation Links -->
+        <div class="navbar-center">
+          <a href="/dashboard" class="nav-link">dashboard</a>
+          <a href="/play" class="nav-link">play</a>
+        </div>
+        
+        <!-- Right: Language Dropdown & Auth Button -->
+        <div class="d-flex align-items-center">
+          <div class="dropdown">
+            <button class="btn btn-outline-danger dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              한국어
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+              <li class="dropdown-item active">
+                <img src="path-to-korea-flag.png" alt="Korean Flag" /> 한국어
+                <i class="check-icon fas fa-check"></i>
+              </li>
+              <li class="dropdown-item">
+                <img src="path-to-us-flag.png" alt="US Flag" /> English
+              </li>
+              <li class="dropdown-item">
+                <img src="path-to-spain-flag.png" alt="Spain Flag" /> Español
+              </li>
+            </ul>
+          </div>
+          <button id="auth-button" class="btn btn-outline-danger">로그인</button>
         </div>
       </div>
     </nav>
-
+    
+  
+  
 
     <div id="app"></div>
     <script type="module" src="/src/app.js"></script>
   </body>
 </html>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const authButton = document.getElementById('auth-button');
+      const langDropdown = document.getElementById('languageDropdown');
+      const langItems = document.querySelectorAll('.dropdown-item');
+
+      // Language selection logic
+      langItems.forEach(item => {
+          item.addEventListener('click', (e) => {
+              e.preventDefault();
+              langDropdown.textContent = item.textContent;
+              langItems.forEach(lang => lang.classList.remove('active'));
+              item.classList.add('active');
+          });
+      });
+
+      // Authentication button logic
+      authButton.addEventListener('click', () => {
+          if (authButton.textContent === 'Login') {
+              window.location.href = '/login';
+          } else {
+              // Implement logout logic
+              alert('Logged out!');
+              authButton.textContent = 'Login';
+          }
+      });
+
+      // Highlight active link
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+          link.addEventListener('click', (e) => {
+              navLinks.forEach(nav => nav.classList.remove('active'));
+              link.classList.add('active');
+          });
+      });
+  });
+</script>

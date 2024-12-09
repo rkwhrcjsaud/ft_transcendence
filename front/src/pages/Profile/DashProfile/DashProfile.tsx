@@ -2,14 +2,20 @@ import React, { useState } from "react";
 import { AccordionItem, AccordionHeader, AccordionBody, UncontrolledAccordion } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faCog, faLock } from "@fortawesome/free-solid-svg-icons";
-import defaultProfilePic from "../../assets/default_profile.jpeg";
-import "../../styles/DashProfile.scss";
+import { useNavigate } from "react-router-dom"; // useNavigate 추가
+import defaultProfilePic from "../../../assets/default_profile.jpeg";
+import "../../../styles/DashProfile.scss";
 
 const ProfileAccordion = () => {
   const [isOpen, setIsOpen] = useState<string | null>("1"); // 아코디언 상태 관리
+  const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate
 
   const handleToggle = (id: string) => {
     setIsOpen(isOpen === id ? null : id); // 클릭 시 열림/닫힘 상태 변경
+  };
+
+  const handleEditProfile = () => {
+    navigate("/dashboard/edit_profile"); // 프로필 수정 페이지로 이동
   };
 
   return (
@@ -34,9 +40,11 @@ const ProfileAccordion = () => {
             </div>
             <h2 className="profile-name">ranchoi</h2>
             <div className="profile-buttons">
-              <button className="profile-button profile-setting-btn">
+              {/* 프로필 수정 버튼 */}
+              <button className="profile-button profile-setting-btn" onClick={handleEditProfile}>
                 <FontAwesomeIcon icon={faCog} /> 프로필 수정
               </button>
+              {/* 비밀번호 변경 버튼 */}
               <button className="profile-button">
                 <FontAwesomeIcon icon={faLock} /> 비밀번호 변경
               </button>

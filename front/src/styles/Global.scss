@@ -16,6 +16,9 @@ $en-font: 'Roboto Mono', monospace;
   --bs-body-bg: #fff;  // 기본 배경 색상 변경
 }
 
+body {
+  margin-top: 56px;
+}
 // 글로벌 폰트 설정
 // body {
 //   font-family: var(--bs-body-font-family);

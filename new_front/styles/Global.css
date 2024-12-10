@@ -1,29 +1,23 @@
-/* 글로벌 스타일 설정 */
-
-/* 한글, 영문 폰트 설정 */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
-/* Global Font Settings */
+/* 글로벌 기본 폰트 설정 */
 html {
-    font-family: "Noto Sans KR", "Roboto Mono", monospace;
-}
-
-/* Specific Language Settings */
-html:lang(ko) {
     font-family: "Noto Sans KR", sans-serif;
+    scrollbar-gutter: stable;
 }
-
-html:lang(en) {
-    font-family: "Roboto Mono", monospace;
-    letter-spacing: -0.05rem;
-}
-
+  
 body {
-    font-family: "Noto Sans KR", "Roboto Mono", monospace;
     font-size: 1rem;
     padding-top: 60px;
+    font-family: "Noto Sans KR", sans-serif;
+}
+  
+.font-roboto {
+    font-family: "Roboto Mono", monospace !important;
 }
 
-html {
-  scrollbar-gutter: stable;
+#app {
+    max-width: 1200px; /* 최대 너비 제한 */
+    margin: 0 auto; /* 가운데 정렬 */
+    padding: 1.5rem 1rem;
 }

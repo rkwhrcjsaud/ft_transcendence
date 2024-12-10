@@ -2,51 +2,47 @@
 .navbar {
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     width: 100%;
-    height: 60px;
-    background-color: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    background-color: rgba(255, 255, 255, .5);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
 
 .navbar-container {
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 0 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .navbar-brand {
-    font-family: Roboto Mono;
     font-size: 1.25rem;
-    font-weight: 600;
-    letter-spacing: -10%;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
     color: #ee532c;
     text-decoration: none;
 }
 
 .navbar-brand:hover {
-    color: #ff7043;
+    color: #ee532c;
 }
 
 /* Center Navigation Links */
 .navbar-center {
     display: flex;
-    gap: 20px;
+    gap: 30px;
     justify-content: center;
     flex-grow: 1;
-    letter-spacing: 0rem;
-    font-family: 'Roboto Mono', monospace;
-    font-weight: 400;
 }
 
 .nav-link {
+    font-family: 'Roboto Mono', monospace;
     font-size: 1rem;
     color: #666;
     text-decoration: none;
-    padding: .5rem .8rem;
+    padding: 0.5rem 1rem;
     position: relative;
     transition: color 0.3s ease;
 }
@@ -75,10 +71,11 @@
     width: 80%;
 }
 
-/* Dropdown Styles */
+/* language selection btn, auth btn styles */
 .btn-outline-danger {
     border-color: #ee532c;
     color: #ee532c;
+    font-size: .9rem;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -89,12 +86,12 @@
 
 .dropdown-menu {
     border: 1px solid #ee532c;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-item {
-    color: #333;
+    color: #555;
     padding: 0.5rem 1rem;
     display: flex;
     align-items: center;
@@ -108,13 +105,12 @@
     border-radius: 50%;
 }
 
-.dropdown-item:hover {
-    background-color: #ee532c;
-    color: #fff;
+.dropdown-item:hover,
+.dropdown-item:hover.active {
+    background-color: #e7e7e7;
 }
 
 .dropdown-item.active {
-    background-color: #ff7043;
     color: #fff;
     display: flex;
     align-items: center;
@@ -127,15 +123,85 @@
 }
 
 /* Language Dropdown */
+/* 아이콘 기본 상태 */
+#languageDropdown i.fa-angle-down {
+    color: #ee532c; /* 기본 색상 */
+    transform: translateY(0) rotate(0deg); /* 위치 및 회전 초기화 */
+    transition: color 0.3s ease, transform 0.3s ease; /* 부드러운 애니메이션 */
+}
+
+/* hover 상태 */
+#languageDropdown {
+    display: flex; /* 버튼을 Flexbox 컨테이너로 설정 */
+    align-items: center; /* 세로 정렬 */
+    justify-content: space-between; /* 텍스트와 아이콘 간격 조정 */
+    width: 110px;
+    border-radius: 1.2rem;
+    --bs-btn-padding-x: 1.2rem;
+}
+
+#languageDropdown::after {
+    display: none; /* Bootstrap 기본 화살표 숨기기 */
+}
+
+#languageDropdown i.fa-angle-down {
+    margin-left: auto; /* 아이콘을 오른쪽 끝으로 이동 */
+    font-size: 1rem; /* 아이콘 크기 */
+    color: #ee532c; /* 아이콘 색상 */
+}
+
+#languageDropdown:hover i.fa-angle-down {
+    color: #fff; /* 아이콘 색상 */
+}
+
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+    /* 드롭다운 메뉴가 펼쳐져있을때의 버튼 설정 */
+    background-color: #ee532c;
+    border-color: #ee532c;
+}
+
+/* 드롭다운이 펼쳐졌을 때 */
+.dropdown-menu[data-bs-popper] {
+    left: unset;
+    right: 0;
+}
+#languageDropdown.show i.fa-angle-down {
+    transform: translateY(1px) rotate(-180deg); /* 위치 보정 및 회전 */
+    color: #ffffff; /* 흰색으로 변경 */
+}
+
 .language-dropdown {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.dropdown-menu[data-bs-popper] {
-    left: auto;
-    right: 0;
+.dropdown-item {
+    display: flex;
+    align-items: center; /* 세로 정렬 */
+    justify-content: space-between; /* 아이템 간 간격 자동 조정 */
+    font-size: .85rem;
+}
+
+.active_lang {
+    margin-left: auto; /* 왼쪽 여백으로 오른쪽으로 밀어냄 */
+}
+
+.dropdown-item.active {
+    color: #555;
+    background-color: unset;
+}
+
+/* 기본적으로 아이콘 숨김 */
+.dropdown-item .active_lang {
+    color: rgb(23, 187, 23);
+    font-size: .9rem;
+    visibility: hidden; /* 아이콘 숨기기 */
+}
+
+/* 활성화된 경우 아이콘 표시 */
+.dropdown-item.active .active_lang {
+    visibility: visible;
 }
 
 .language-dropdown img {
@@ -154,7 +220,6 @@
 #auth-button {
     border-color: #ee532c;
     color: #ee532c;
-    padding: 0.5rem 1rem;
     border-radius: 20px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }

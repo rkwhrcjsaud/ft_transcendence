@@ -3,10 +3,11 @@ import { loadRegister } from './page/register';
 import { loadVerifyEmail } from './auth/verifyEmail';
 import { loadMultyGame } from './page/multyGame';
 import { socialLogin } from './auth/socialLogin';
+import { loadDashboard } from './page/dashboard_related/dashboard';
 
 const routes = {
   // '/': () => loadLanding(),
-  // '/dashboard': () => loadDashboard(),
+  '/dashboard': () => loadDashboard(),
   '/multygame': () => loadMultyGame(),
   // '/profile': () => loadProfile(),
 

@@ -5,6 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Awesome Icon Link -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Include custom CSS -->
     <link rel="stylesheet" href="./styles/FixedNavBar.css">
     <link rel="stylesheet" href="./styles/Global.css">
@@ -21,7 +23,7 @@
         
         <!-- Center: Navigation Links -->
         <div class="navbar-center">
-          <a href="/dashboard" class="nav-link">dashboard</a>
+          <a href="/dashboard" class="nav-link" id="dashboard-link" data-router-link>dashboard</a>
           <a href="/play" class="nav-link">play</a>
         </div>
         
@@ -29,18 +31,21 @@
         <div class="d-flex align-items-center">
           <div class="dropdown">
             <button class="btn btn-outline-danger dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              한국어
+              <span class="dropdown-text">한국어</span>
+              <i class="fa-solid fa-angle-down"></i>
             </button>
             <ul class="dropdown-menu" aria-labelledby="languageDropdown">
               <li class="dropdown-item active">
-                <img src="path-to-korea-flag.png" alt="Korean Flag" /> 한국어
-                <i class="check-icon fas fa-check"></i>
+                <img src="./public/korean.png" alt="Korean" /> 한국어
+                <i class="active_lang fa-solid fa-check"></i>
               </li>
               <li class="dropdown-item">
-                <img src="path-to-us-flag.png" alt="US Flag" /> English
+                <img src="./public/english.png" alt="English" /> English
+                <i class="active_lang fa-solid fa-check"></i>
               </li>
               <li class="dropdown-item">
-                <img src="path-to-spain-flag.png" alt="Spain Flag" /> Español
+                <img src="./public/french.png" alt="French" /> French
+                <i class="active_lang fa-solid fa-check"></i>
               </li>
             </ul>
           </div>
@@ -53,6 +58,7 @@
   
 
     <div id="app"></div>
+    <script src="./src/utils/applyfont.js"></script>
     <script type="module" src="/src/app.js"></script>
   </body>
 </html>
@@ -67,11 +73,17 @@
       langItems.forEach(item => {
           item.addEventListener('click', (e) => {
               e.preventDefault();
-              langDropdown.textContent = item.textContent;
+          
+              // 드롭다운 버튼에서 텍스트만 변경 (아이콘 제외)
+              const selectedText = item.textContent.trim(); // 선택된 언어의 텍스트
+              langDropdown.querySelector('.dropdown-text').textContent = selectedText;
+          
+              // 활성화 상태 업데이트
               langItems.forEach(lang => lang.classList.remove('active'));
               item.classList.add('active');
           });
       });
+      
 
       // Authentication button logic
       authButton.addEventListener('click', () => {

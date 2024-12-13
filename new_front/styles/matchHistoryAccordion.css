@@ -1,130 +1,144 @@
 /* 매치 히스토리 아코디언 */
 #matchHistoryAccordion {
-    background-color: #f9f9f9; /* 아코디언 배경 */
-    border-color: #ee532c; /* 경계선 색상 */
-  }
+    background-color: #f9f9f9;
+    border-color: #ee532c;
+}
   
-  #matchHistoryAccordion .accordion-button {
-    background-color: #f9f9f9; /* 배경색 */
-    color: #ee532c; /* 텍스트 색상 */
+#matchHistoryAccordion .accordion-button {
+    color: #fff;
+    background-color: #ee532c;
     font-size: 1.2rem;
-    font-weight: bold;
-    padding: 1rem;
+    font-weight: 600;
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
+    --bs-accordion-btn-padding-x: 2.7rem;
+    --bs-accordion-btn-padding-y: 2rem;
+}
   
-  #matchHistoryAccordion .accordion-button::after {
-    display: none; /* 기본 화살표 제거 */
-  }
+#matchHistoryAccordion .accordion-button::after {
+    display: none; /* 부트스트랩 기본 화살표 아이콘 제거 */
+}
   
-  #matchHistoryAccordion .accordion-button i {
-    font-size: 1rem;
+#matchHistoryAccordion .accordion-button i {
+    font-size: 1.2rem;
     transition: transform 0.3s ease; /* 회전 애니메이션 */
-  }
+}
   
-  #matchHistoryAccordion .accordion-button.collapsed i {
-    transform: rotate(180deg); /* 닫혔을 때 아이콘 회전 */
-  }
+#matchHistoryAccordion .accordion-button.collapsed i {
+    transform: rotate(-180deg); /* 닫혔을 때 아이콘 회전 */
+}
   
-  #matchHistoryAccordion .accordion-body {
-    padding: 2rem 1.5rem;
-    background-color: #ffffff; /* 화이트 배경 */
-    border-radius: 0.5rem;
-  }
+#matchHistoryAccordion .accordion-body {
+    padding: 3rem 4rem;
+    background-color: #fff;
+    border-radius: 1.8rem;
+}
   
 /* match-stats 스타일 */
 .match-stats {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-bottom: 2rem;
     gap: 1rem; /* 카드 간의 간격 */
-  }
+}
   
-  .match-stats .card {
-    position: relative; /* 겹치기 위한 상대 위치 설정 */
-    text-align: center;
-    width: 20%; /* 고정 너비 */
-    border: none; /* 기본 테두리 제거 */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-    border-radius: 1rem; /* 모서리 둥글게 */
-    background-color: #f2f2f2; /* 카드 배경색 */
-  }
-  
-  .match-stats .card .card-body {
-    padding: 2rem 1rem;
+.match-stats .card {
     position: relative;
-  }
+    text-align: center;
+    width: 23%;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 1.3rem;
+    background-color: #f2f2f2;
+}
   
-  .match-stats .card .stat-label {
+.match-stats .card .card-body {
+    padding: 1.6rem 1rem 3.5rem 1rem;
+    position: relative;
+}
+  
+.match-stats .card .stat-label {
     position: absolute;
-    bottom: -10px; /* stat-value의 밑면에 겹치도록 조정 */
+    bottom: 0px; /* stat-value의 밑면에 겹치도록 조정 */
     left: 50%; /* 가운데 정렬 */
+    width: 100%;
     transform: translateX(-50%); /* 가운데 정렬 */
-    background-color: #fff; /* 배경 흰색 */
-    color: #555; /* 텍스트 색상 */
+    background-color: #fff;
+    color: #ee532c;
     font-size: 0.9rem;
-    font-weight: bold;
-    padding: 0.2rem 0.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+    font-weight: 500;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0 0 1.3rem 1.3rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1;
-  }
+}
   
-  .match-stats .card .stat-value {
+.match-stats .card .stat-value {
     font-size: 2rem;
     font-weight: bold;
-    color: #ee532c; /* 강조 색상 */
-  }
+    color: #ee532c;
+}
   
-  
-  
-  /* 매치 리스트 스타일 */
-  .match-list {
+/* 매치 리스트 스타일 */
+.match-list {
     margin-top: 2rem;
-  }
+}
   
-  .match-list .match-item {
+.match-list .match-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.5rem;
+    padding: 1.5rem 3rem;
     border: 1px solid #eee;
-    border-radius: 1rem;
+    border-radius: 1.3rem;
     margin-bottom: 1rem;
     background-color: #fff;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  }
+}
   
-  .match-list .match-item .profile-img {
-    width: 50px;
-    height: 50px;
+.match-list .match-item .profile-img {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #ee532c; /* 이미지 테두리 */
-  }
+    border: 1px solid #ee532c;
+}
   
-  .match-list .match-item .match-info {
+.match-list .match-item .match-info {
     text-align: center;
     flex-grow: 1;
-  }
+    display: flex;
+    justify-content: space-between;
+    margin: 0 2rem;
+}
   
-  .match-list .match-item .match-info .date-badge {
+.match-list .match-item .match-info .matchlist-user {
+    line-height: 88.79px;
+    font-weight: 500;
+}
+
+.match-list .match-item .match-info .match-score {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* padding: 6px 0; */
+}
+.match-list .match-item .match-info .date-badge {
     display: inline-block;
     background-color: #ee532c;
     color: #ffffff;
     font-size: 0.8rem;
-    padding: 0.3rem 0.8rem;
-    border-radius: 1rem;
-    margin-bottom: 0.5rem;
-  }
+    padding: 0.5rem 1.5rem;
+    border-radius: 1.3rem;
+}
   
-  .match-list .match-item .match-info .score {
+.match-list .match-item .match-info .score {
     display: block;
-    font-size: 1.5rem;
+    background-color: #666;
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 1.3rem;
     font-weight: bold;
-    color: #333; /* 점수 색상 */
-    margin: 0.5rem 0;
-  }
-  
+    color: #fff;
+}

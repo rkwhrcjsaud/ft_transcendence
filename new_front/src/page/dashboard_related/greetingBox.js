@@ -17,7 +17,7 @@ export function GreetingBox() {
   
     // 시간대에 따라 `prefix` 메시지를 반환하는 함수
     const getGreetingMessage = () => {
-      const postfix = " 🏓 핑퐁🏓  한 판 어떠세요?";
+      const postfix = "🏓 핑퐁🏓  한 판 어떠세요?";
       const currentHour = new Date().getHours();
   
       if (currentHour >= 6 && currentHour < 11) {

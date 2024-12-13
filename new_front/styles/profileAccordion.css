@@ -1,60 +1,56 @@
 .accordion {
     --bs-border-radius: 1.8rem;
-}
-
-#dashProfile {
+  }
+  
+  #profileAccordion {
     margin-bottom: 30px;
-}
-
-#dashProfile .accordion-button {
+  }
+  
+  #profileAccordion .accordion-button {
     color: #ee532c;
     background-color: #f7f7f7;
     font-size: 1.2rem;
     font-weight: 600;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    border: none;
     --bs-accordion-btn-padding-x: 2.7rem;
     --bs-accordion-btn-padding-y: 2rem;
+  }
+  
+#profileAccordion .accordion-button::after {
+    display: none; /* 기본 화살표 제거 */
 }
-
-#dashProfile .accordion-button .accordion-icon {
-  font-size: 1.2rem;
-  color: #ee532c;
-  transition: transform 0.3s ease; /* 회전 애니메이션 */
-}
-
-#dashProfile .accordion-button .accordion-icon.rotated {
-  transform: rotate(-180deg); /* 회전 상태 */
+  
+#profileAccordion .accordion-button i {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease; /* 회전 애니메이션 */
 }
 
 .accordion-button:not(.collapsed) {
     box-shadow: unset;
 }
-  
-#dashProfile .accordion-button::after {
-  display: none; /* Bootstrap 기본 화살표 제거 */
+
+#profileAccordion .accordion-button.collapsed i {
+    transform: rotate(-180deg); /* 닫혔을 때 아이콘 회전 */
 }
   
-#dashProfile .accordion-button.collapsed::after {
-    transform: rotate(-180deg);
-}
-  
-#dashProfile .accordion-item {
+.accordion-item {
     border: 1px solid #ee532c;
 }
   
-#dashProfile .accordion-body {
+  .accordion-body {
     padding-bottom: 4rem;
     background-color: #f7f7f7;
-    border-radius: 0 0 1.8rem 1.8rem ;
-}
+    border-radius: 0 0 1.8rem 1.8rem;
+  }
   
-.profile-container {
+  .profile-container {
     text-align: center;
-}
+  }
   
-.profile-image img {
+  .profile-image img {
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -62,22 +58,22 @@
     display: block;
     margin: 0 auto 20px;
     border: 1px solid #ee532c;
-}
+  }
   
-.profile-name {
+  .profile-name {
     font-size: 1.5rem;
     font-weight: bold;
     color: #555;
     margin-bottom: 40px;
-}
+  }
   
-.profile-buttons {
+  .profile-buttons {
     display: flex;
     justify-content: center;
     gap: 30px;
-}
+  }
   
-.profile-button {
+  .profile-button {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -90,17 +86,10 @@
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-}
+  }
   
-.profile-button:hover {
+  .profile-button:hover {
     background-color: #ee532c;
     color: #fff;
-}
+  }
   
-.profile-setting-btn {
-    padding: 10px 28px;
-}
-
-.profile-btn-icon {
-  padding-top: 1.6px;
-}

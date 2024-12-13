@@ -7,7 +7,6 @@ export function loadDashboard() {
     const app = document.getElementById('app');
     app.innerHTML = ''; // 기존 콘텐츠 초기화
 
-    // GreetingBox 호출
     GreetingBox();
     ProfileAccordion();
     MatchHistoryAccordion();

@@ -1,16 +1,16 @@
-import axios from 'axios';
-import jwtDecode from 'jwt-decode';
-import dayjs from 'dayjs';
+import axios from "axios";
+import jwtDecode from "jwt-decode";
+import dayjs from "dayjs";
 
 const baseUrl = "https://localhost:443/api";
 
-const getAccessToken = () => localStorage.getItem('access_token');
-const getRefreshToken = () => localStorage.getItem('refresh_token');
-const setAccessToken = (token) => localStorage.setItem('access_token', token);
+const getAccessToken = () => localStorage.getItem("access_token");
+const getRefreshToken = () => localStorage.getItem("refresh_token");
+const setAccessToken = (token) => localStorage.setItem("access_token", token);
 const removeTokens = () => {
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
-  localStorage.removeItem('user');
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("user");
 };
 
 const isTokenExpired = (token) => {
@@ -19,7 +19,7 @@ const isTokenExpired = (token) => {
     const exp = decodedToken.exp;
     return dayjs.unix(exp).isBefore(dayjs());
   } catch (error) {
-    console.error('Error decoding token:', error);
+    console.error("Error decoding token:", error);
     return false;
   }
 };
@@ -28,14 +28,16 @@ const handleLogout = async () => {
   try {
     const refresh_token = getRefreshToken();
     if (refresh_token) {
-      const res = await axios.post(`${baseUrl}/v1/auth/logout/`, { refresh: refresh_token });
+      const res = await axios.post(`${baseUrl}/v1/auth/logout/`, {
+        refresh: refresh_token,
+      });
       if (res.status === 200) {
         removeTokens();
-        axios.defaults.headers['Authorization'] = '';
+        axios.defaults.headers["Authorization"] = "";
       }
     }
   } catch (error) {
-    console.error('Error during logout:', error);
+    console.error("Error during logout:", error);
   }
 };
 
@@ -44,18 +46,20 @@ const axiosRequestInterceptor = async (config) => {
   const refresh_token = getRefreshToken();
 
   if (access_token && !isTokenExpired(access_token)) {
-    config.headers['Authorization'] = `Bearer ${access_token}`;
+    config.headers["Authorization"] = `Bearer ${access_token}`;
     return config;
   }
 
   if (refresh_token) {
     try {
-      const response = await axios.post(`${baseUrl}/v1/auth/token/refresh/`, { refresh: refresh_token });
+      const response = await axios.post(`${baseUrl}/v1/auth/token/refresh/`, {
+        refresh: refresh_token,
+      });
       if (response.status === 200) {
         access_token = response.data.access;
         if (access_token) {
           setAccessToken(access_token);
-          config.headers['Authorization'] = `Bearer ${access_token}`;
+          config.headers["Authorization"] = `Bearer ${access_token}`;
         } else {
           await handleLogout();
         }
@@ -76,9 +80,9 @@ const axiosRequestInterceptor = async (config) => {
 const axiosInstance = axios.create({
   baseURL: baseUrl,
   headers: {
-    'Content-Type': 'application/json',
-    'Authorization': getAccessToken() ? `Bearer ${getAccessToken()}` : ''
-  }
+    "Content-Type": "application/json",
+    Authorization: getAccessToken() ? `Bearer ${getAccessToken()}` : "",
+  },
 });
 
 // Add request interceptor

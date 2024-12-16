@@ -1,14 +1,15 @@
 import { loadCSS } from "../../utils/loadcss";
 
 export function MatchHistoryAccordion() {
-  loadCSS('../../styles/matchHistoryAccordion.css');
+  loadCSS("../../styles/matchHistoryAccordion.css");
+
   // 목데이터: 매치 통계
   const stats = {
-        total: 7,
-        wins: 4,
-        losses: 2,
-        draws: 1,
-    };
+    total: 7,
+    wins: 4,
+    losses: 2,
+    draws: 1,
+  };
 
   // 목데이터: 매치 히스토리
   const matchData = [
@@ -40,8 +41,8 @@ export function MatchHistoryAccordion() {
 
   // 최신 10경기만 가져오기
   const latest10Matches = matchData
-  .sort((a, b) => new Date(b.date) - new Date(a.date)) // 최신 날짜순 정렬
-  .slice(0, 10); // 최신 10경기만 자르기!!
+    .sort((a, b) => new Date(b.date) - new Date(a.date)) // 최신 날짜순 정렬
+    .slice(0, 10); // 최신 10경기만 자르기!!
 
   // 매치 리스트 HTML 생성
   const matchListHTML = latest10Matches
@@ -128,5 +129,5 @@ export function MatchHistoryAccordion() {
     </div>
   `;
 
-  document.getElementById('app').innerHTML += html;
+  document.getElementById("app").innerHTML += html;
 }

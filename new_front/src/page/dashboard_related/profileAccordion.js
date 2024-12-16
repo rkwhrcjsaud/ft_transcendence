@@ -1,8 +1,7 @@
 import { loadCSS } from "../../utils/loadcss";
-import { AccordionIconRotation } from "../../utils/accordionIconHandler";
 
 export function ProfileAccordion() {
-  loadCSS('../../styles/profileAccordion.css');
+  loadCSS("../../styles/profileAccordion.css");
 
   const html = `
     <div class="accordion" id="profileAccordion">
@@ -47,7 +46,5 @@ export function ProfileAccordion() {
     </div>
   `;
 
-  document.getElementById('app').innerHTML += html;
-
-  AccordionIconRotation('profileContent', '[data-bs-target="#profileContent"]');
+  document.getElementById("app").innerHTML += html;
 }

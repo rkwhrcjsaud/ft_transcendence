@@ -1,23 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 
 /* 글로벌 기본 폰트 설정 */
 html {
-    font-family: "Noto Sans KR", sans-serif;
-    scrollbar-gutter: stable;
+  font-family: "Noto Sans KR", sans-serif;
 }
-  
+
 body {
-    font-size: 1rem;
-    padding-top: 60px;
-    font-family: "Noto Sans KR", sans-serif;
+  font-size: 1rem;
+  padding-top: 60px;
+  font-family: "Noto Sans KR", sans-serif;
 }
-  
+
 .font-roboto {
-    font-family: "Roboto Mono", monospace !important;
+  font-family: "Roboto Mono", monospace !important;
 }
 
 #app {
-    max-width: 1200px; /* 최대 너비 제한 */
-    margin: 0 auto; /* 가운데 정렬 */
-    padding: 1.5rem 1rem;
+  max-width: 1200px; /* 최대 너비 제한 */
+  margin: 0 auto; /* 가운데 정렬 */
+  padding: 2rem 1rem;
+}
+
+.modal-header {
+  border-bottom: unset;
+  --bs-modal-header-padding: 1.6rem;
+}
+
+.modal-title {
+  font-size: 1rem;
+  color: #444;
+}
+
+.modal {
+  --bs-modal-footer-border-width: unset;
+  --bs-modal-border-width: unset;
+  --bs-border-radius-lg: 1rem;
+  --bs-modal-padding: 1rem 1.6rem;
+}
+
+.modal-body {
+  color: #555;
+}
+
+.modal-footer {
+  padding: 0.8rem 1.6rem 1.2rem;
+  /* padding: calc(1.6rem - var(--bs-modal-footer-gap)* .5); */
+}
+
+.modal-footer .btn {
+  font-size: 0.8rem;
+  --bs-btn-padding-x: 1.7rem;
+  --bs-btn-padding-y: 0.6rem;
+  --bs-btn-border-radius: 1rem;
+}
+
+.btn-secondary {
+  --bs-btn-color: #444;
+  --bs-btn-bg: #fff;
+  --bs-btn-border-color: #b4b4b4;
+  --bs-btn-hover-color: #444;
+  --bs-btn-hover-bg: #fff;
+  --bs-btn-hover-border-color: #b4b4b4;
+}
+
+.btn-primary {
+  --bs-btn-bg: #555;
+  --bs-btn-border-color: #898989;
+  --bs-btn-hover-bg: #444;
+}
+
+.btn-primary:hover {
+  --bs-btn-bg: #444;
 }

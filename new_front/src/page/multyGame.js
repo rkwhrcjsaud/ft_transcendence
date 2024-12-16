@@ -41,16 +41,16 @@ function loadMultyGame(username = "guest") {
   </html>
   `;
 
-  const startButton = document.getElementById('start-button');
-  const canvas = document.getElementById('game-canvas');
-  const ctx = canvas.getContext('2d');
-  const leftScoreElement = document.getElementById('left-score');
-  const rightScoreElement = document.getElementById('right-score');
-  const timerElement = document.getElementById('timer');
-  const gameInfoElement = document.getElementById('game-info');
+  const startButton = document.getElementById("start-button");
+  const canvas = document.getElementById("game-canvas");
+  const ctx = canvas.getContext("2d");
+  const leftScoreElement = document.getElementById("left-score");
+  const rightScoreElement = document.getElementById("right-score");
+  const timerElement = document.getElementById("timer");
+  const gameInfoElement = document.getElementById("game-info");
 
   ws = new WebSocket(`wss://localhost:443/ws/localgame/${username}/`);
-  
+
   ws.onerror = (error) => {
     console.error(error);
   };
@@ -85,7 +85,7 @@ function loadMultyGame(username = "guest") {
     ws = null;
   };
 
-  startButton.addEventListener('click', () => {
+  startButton.addEventListener("click", () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "start_game" }));
       roomState = "2";
@@ -96,14 +96,20 @@ function loadMultyGame(username = "guest") {
 
   function handleKeyDown(event) {
     const key = event.key;
-    if (["w", "s", "ArrowUp", "ArrowDown"].includes(key) && ws.readyState === WebSocket.OPEN) {
+    if (
+      ["w", "s", "ArrowUp", "ArrowDown"].includes(key) &&
+      ws.readyState === WebSocket.OPEN
+    ) {
       ws.send(JSON.stringify({ type: "keydown", key }));
     }
   }
 
   function handleKeyUp(event) {
     const key = event.key;
-    if (["w", "s", "ArrowUp", "ArrowDown"].includes(key) && ws.readyState === WebSocket.OPEN) {
+    if (
+      ["w", "s", "ArrowUp", "ArrowDown"].includes(key) &&
+      ws.readyState === WebSocket.OPEN
+    ) {
       ws.send(JSON.stringify({ type: "keyup", key }));
     }
   }
@@ -115,7 +121,9 @@ function loadMultyGame(username = "guest") {
   function updateGameState() {
     leftScoreElement.textContent = `Left: ${leftScore}`;
     rightScoreElement.textContent = `Right: ${rightScore}`;
-    timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    timerElement.textContent = `${String(minutes).padStart(2, "0")}:${String(
+      seconds
+    ).padStart(2, "0")}`;
   }
 
   // 게임 렌더링
@@ -133,7 +141,13 @@ function loadMultyGame(username = "guest") {
     // 공
     ctx.fillStyle = "#FFFFFF";
     ctx.beginPath();
-    ctx.arc(parseInt(ballPosition.x), parseInt(ballPosition.y), 10, 0, Math.PI * 2);
+    ctx.arc(
+      parseInt(ballPosition.x),
+      parseInt(ballPosition.y),
+      10,
+      0,
+      Math.PI * 2
+    );
     ctx.fill();
   }
 

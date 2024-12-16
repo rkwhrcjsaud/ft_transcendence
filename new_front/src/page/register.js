@@ -1,9 +1,9 @@
-import axios from 'axios';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import axios from "axios";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function loadRegister() {
-    const content = document.getElementById('app');
-    content.innerHTML = `
+  const content = document.getElementById("app");
+  content.innerHTML = `
         <div class="container mt-5">
         <h3 class="text-center text-muted mb-4">Create an Account</h3>
         <div id="alert-container"></div>
@@ -43,68 +43,74 @@ function loadRegister() {
         </div>
     `;
 
-    const registerForm = document.getElementById('register-form');
-    const emailInput = document.getElementById('email');
-    const usernameInput = document.getElementById('username');
-    const firstNameInput = document.getElementById('first_name');
-    const lastNameInput = document.getElementById('last_name');
-    const passwordInput = document.getElementById('password');
-    const password2Input = document.getElementById('password2');
-    const alertContainer = document.getElementById('alert-container');
-    const togglePasswordBtn = document.getElementById('toggle-password');
-    const passwordIcon = document.getElementById('password-icon');
+  const registerForm = document.getElementById("register-form");
+  const emailInput = document.getElementById("email");
+  const usernameInput = document.getElementById("username");
+  const firstNameInput = document.getElementById("first_name");
+  const lastNameInput = document.getElementById("last_name");
+  const passwordInput = document.getElementById("password");
+  const password2Input = document.getElementById("password2");
+  const alertContainer = document.getElementById("alert-container");
+  const togglePasswordBtn = document.getElementById("toggle-password");
+  const passwordIcon = document.getElementById("password-icon");
 
-    let showPassword = false;
+  let showPassword = false;
 
-    togglePasswordBtn.addEventListener('click', () => {
-        showPassword = !showPassword;
-        passwordInput.type = showPassword ? 'text' : 'password';
-        passwordIcon.className = showPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
-    });
+  togglePasswordBtn.addEventListener("click", () => {
+    showPassword = !showPassword;
+    passwordInput.type = showPassword ? "text" : "password";
+    passwordIcon.className = showPassword ? "bi bi-eye-slash" : "bi bi-eye";
+  });
 
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        const email = emailInput.value;
-        const username = usernameInput.value;
-        const first_name = firstNameInput.value;
-        const last_name = lastNameInput.value;
-        const password = passwordInput.value;
-        const password2 = password2Input.value;
+    const email = emailInput.value;
+    const username = usernameInput.value;
+    const first_name = firstNameInput.value;
+    const last_name = lastNameInput.value;
+    const password = passwordInput.value;
+    const password2 = password2Input.value;
 
-        if (password !== password2) {
-            showAlert('Passwords do not match');
-            return;
-        }
-
-        try {
-            const response = await axios.post('https://localhost:443/api/accounts/register/',{
-                email, 
-                username, 
-                first_name, 
-                last_name, 
-                password
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.status === 201) {
-                window.location.href = '/verify';
-            }
-        } catch (error) {
-            if (error.response) {
-                showAlert(error.response.data.error || 'An error occurred. Please try again');
-            } else {
-                showAlert('An unknown error occurred');
-            }
-        }
-    });
-
-    function showAlert(message) {
-        alertContainer.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+    if (password !== password2) {
+      showAlert("Passwords do not match");
+      return;
     }
+
+    try {
+      const response = await axios.post(
+        "https://localhost:443/api/accounts/register/",
+        {
+          email,
+          username,
+          first_name,
+          last_name,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        window.location.href = "/verify";
+      }
+    } catch (error) {
+      if (error.response) {
+        showAlert(
+          error.response.data.error || "An error occurred. Please try again"
+        );
+      } else {
+        showAlert("An unknown error occurred");
+      }
+    }
+  });
+
+  function showAlert(message) {
+    alertContainer.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+  }
 }
 
 export { loadRegister };

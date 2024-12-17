@@ -1,10 +1,11 @@
 #!/bin/sh
 
 # 데이터베이스 대기
-
 while ! nc -z postgres 5432; do
   sleep 0.1
 done
+
+sleep 6
 
 export DJANGO_SETTINGS_MODULE=transcendence.settings
 

@@ -17,10 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+import sys
+import os
+from ..vault import *
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from manage import getSecretValue
 
 urlpatterns = [
-    path('api/admin/', admin.site.urls),
-    path('api/accounts/', include('accounts.urls')),
-    path('api/social_accounts/', include('social_accounts.urls')),
-    path('api/friends/', include('friends.urls')),
+    path(getSecretValue('back/BACK_API_USER'), admin.site.urls),
+    path(getSecretValue('back/BACK_API_ACCOUNT'), include('accounts.urls')),
+    path(getSecretValue('back/BACK_API_SOCIAL_ACCOUNTS'), include('social_accounts.urls')),
+    path(getSecretValue('back/BACK_API_FRIENDS'), include('friends.urls')),
 ]

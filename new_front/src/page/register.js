@@ -1,5 +1,6 @@
 import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { getSecretValue } from "../vault";
 
 function loadRegister() {
   const content = document.getElementById("app");
@@ -79,7 +80,7 @@ function loadRegister() {
 
     try {
       const response = await axios.post(
-        "https://localhost:443/api/accounts/register/",
+        await getSecretValue('front/FRONT_API_ACCOUNTS_REGISTER'),
         {
           email,
           username,

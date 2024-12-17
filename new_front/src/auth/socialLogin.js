@@ -6,7 +6,7 @@ export async function socialLogin() {
     
     if (code) {
         try {
-            const response = await axios.post('https://localhost:443/api/social_accounts/', { code: code });
+            const response = await axios.post(await getSecretValue('front/FRONT_API_SOCIAL_ACCOUNTS'), { code: code });
             if (response.status === 200) {
                 const user = {
                     id: response.data.id,

@@ -9,6 +9,12 @@ services:
         - action: sync
           path: front
           target: /usr/src/app
+    environment:
+      VAULT_ADDR: http://vault:8200
+      ROLE_ID_FILE: /usr/src/app/approle/role-id.json
+      SECRET_ID_FILE: /usr/src/app/approle/secret-id.json
+    volumes:
+      - ./volumes/vault-data/approle/front:/usr/src/app/approle
     networks:
       - transcendence
   
@@ -25,9 +31,15 @@ services:
     depends_on:
       - postgres
       - redis
+      - vault
+    environment:
+      VAULT_ADDR: http://vault:8200
+      ROLE_ID_FILE: /usr/src/app/approle/role-id.json
+      SECRET_ID_FILE: /usr/src/app/approle/secret-id.json
     volumes:
       - static-data:/vol/static
       - media-data:/vol/media
+      - ./volumes/vault-data/approle/back:/usr/src/app/approle
     networks:
       - transcendence
   
@@ -80,7 +92,7 @@ services:
     env_file:
       - vault/.env
     volumes:
-      - ./volumes/vault-data/init-data:/vault-data
+      - ./volumes/vault-data/:/vault-data
     ports:
       - "8200:8200"
     networks:

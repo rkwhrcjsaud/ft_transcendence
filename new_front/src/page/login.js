@@ -1,5 +1,6 @@
 import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { getSecretValue } from "../vault";
 
 function loadLogin() {
   const content = document.getElementById("app");
@@ -54,7 +55,7 @@ function loadLogin() {
 
     try {
       const response = await axios.post(
-        "https://localhost:443/api/accounts/login/",
+        await getSecretValue('front/FRONT_API_ACCOUNTS_LOGIN'),
         { email, password },
         {
           headers: {
@@ -87,7 +88,7 @@ function loadLogin() {
 
   socialLoginBtn.addEventListener("click", async () => {
     const authUrl =
-      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-96437c35cb0bba2daf708c6fbb4809dad2e5eb2141405032acbfb2d4d70628a5&redirect_uri=https%3A%2F%2Flocalhost%2F42&response_type=code";
+      await getSecretValue('front/FRONT_API_AUTHURL')
     window.location.href = authUrl;
   });
 

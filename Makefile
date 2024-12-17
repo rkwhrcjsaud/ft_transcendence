@@ -25,5 +25,6 @@ clean: down
 # 컨테이너 정지 및 도커 리소스와 볼륨 삭제
 fclean: down
 	@docker system prune -f -a --volumes
+	@find volumes/vault-data -type f -exec rm -f {} +
 
 .PHONY: all detach down reup watch clean fclean

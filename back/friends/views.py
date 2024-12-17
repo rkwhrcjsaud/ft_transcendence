@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Friend
 from django.contrib.auth.models import User
-from 
 
 class AddFriend(APIView):
     premission_classes = [IsAuthenticated]

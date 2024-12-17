@@ -46,7 +46,7 @@ def delete_all_secrets(engine_path):
         print(f"오류 발생: {e}")
         exit(1)
 
-# 모든 환경변수를 저장
+# (1)모든 환경변수를 저장
 def save_ts_env_variables(base_engine_path):
     vault_env_variables = {key: value for key, value in os.environ.items() if key.startswith("VAULT_")}
     back_env_variables = {key: value for key, value in os.environ.items() if key.startswith("BACK_")}
@@ -68,7 +68,7 @@ def save_ts_env_variables(base_engine_path):
                 print(f"비밀 '{key}' 저장 중 오류 발생: {e}")
                 exit(1)
 
-    # 각각의 환경변수를 다른 경로로 저장
+    # (2)각각의 환경변수를 다른 경로로 저장
     save_env_to_vault(vault_env_variables, "vault")
     save_env_to_vault(back_env_variables, "back")
     save_env_to_vault(front_env_variables, "front")

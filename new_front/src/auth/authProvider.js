@@ -1,3 +1,4 @@
+import { getSecretValue } from "../vault";
 
 
 
@@ -6,7 +7,7 @@ let user = null;
 
 async function checkAuth() {
     try {
-        const res = await axios.get('https://localhost:443/api/accounts/auth/');
+        const res = await axios.get(await getSecretValue('front/FRONT_API_ACCOUNTS_AUTH'));
         if (res.status === 200) {
             isAuth = true;
             user = JSON.parse(localStorage.getItem('user'));

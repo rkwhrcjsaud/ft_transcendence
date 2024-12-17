@@ -1,8 +1,9 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import dayjs from "dayjs";
+import { getSecretValue } from "../vault";
 
-const baseUrl = "https://localhost:443/api";
+const baseUrl = await getSecretValue("front/FORNT_API_BASEURL");
 
 const getAccessToken = () => localStorage.getItem("access_token");
 const getRefreshToken = () => localStorage.getItem("refresh_token");

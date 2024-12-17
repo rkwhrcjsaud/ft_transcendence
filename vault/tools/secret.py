@@ -40,17 +40,16 @@ def delete_all_secrets(engine_path):
                     path=secret,
                     mount_point=engine_path
                 )
-        print(f"'{engine_path}' 경로의 모든 비밀이 삭제되었습니다.")
     except hvac.exceptions.InvalidPath:
         print(f"'{engine_path}' 경로에 저장된 비밀이 없습니다.")
     except Exception as e:
         print(f"오류 발생: {e}")
         exit(1)
 
-# 모든 환경변수를 저장
+# (1)모든 환경변수를 저장
 def save_ts_env_variables(base_engine_path):
-    ts_env_variables = {key: value for key, value in os.environ.items() if key.startswith("VAULT_")}
-    db_env_variables = {key: value for key, value in os.environ.items() if key.startswith("DB_")}
+    vault_env_variables = {key: value for key, value in os.environ.items() if key.startswith("VAULT_")}
+    back_env_variables = {key: value for key, value in os.environ.items() if key.startswith("BACK_")}
     front_env_variables = {key: value for key, value in os.environ.items() if key.startswith("FRONT_")}
 
     def save_env_to_vault(env_dict, sub_path):
@@ -65,18 +64,15 @@ def save_ts_env_variables(base_engine_path):
                     secret=secret_data,
                     mount_point=base_engine_path
                 )
-                print(f"비밀 '{key}'가 '{sub_path}'에 저장되었습니다.")
             except Exception as e:
                 print(f"비밀 '{key}' 저장 중 오류 발생: {e}")
                 exit(1)
 
-    # 각각의 환경변수를 다른 경로로 저장
-    save_env_to_vault(ts_env_variables, "vault")
-    save_env_to_vault(db_env_variables, "db")
+    # (2)각각의 환경변수를 다른 경로로 저장
+    save_env_to_vault(vault_env_variables, "vault")
+    save_env_to_vault(back_env_variables, "back")
     save_env_to_vault(front_env_variables, "front")
     
-    # print(f"'{base_engine_path}' 경로에 {len(ts_env_variables) + len(db_env_variables) + len(front_env_variables)}개의 환경변수가 저장되었습니다.")
-
 # 기존 데이터 삭제 및 환경변수 저장
 delete_all_secrets(VAULT_ENGINE_PATH)
 save_ts_env_variables(VAULT_ENGINE_PATH)

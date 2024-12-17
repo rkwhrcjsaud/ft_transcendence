@@ -18,11 +18,15 @@ RUN pip install --no-cache-dir -r /requirements.txt
 
 # 스크립트 및 설정 파일 복사
 COPY ./tools/setup.sh /
+COPY ./tools/backrole.sh /
+COPY ./tools/frontrole.sh /
 COPY ./tools/secret.py /
 COPY ./tools/local.json /
 
 # 실행 권한 부여
 RUN chmod +x /setup.sh
+RUN chmod +x /backrole.sh
+RUN chmod +x /frontrole.sh
 
 # Vault 서버 실행
 ENTRYPOINT ["/setup.sh"]

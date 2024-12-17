@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 import sys
 import os
-from ..vault import *
+from vault import *
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from manage import getSecretValue

@@ -5,7 +5,7 @@ import requests
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import authenticate
 from accounts.models import User, UserStats
-from ..vault import *
+from vault import *
 import sys
 import os
 

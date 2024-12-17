@@ -13,5 +13,5 @@ vault write auth/approle/role/frontend-role \
     token_ttl=24h \
     token_max_ttl=24h
 
-vault read -format=json auth/approle/role/frontend-role/role-id > /vault-data/approle/role-id.json
-vault write -f -format=json auth/approle/role/frontend-role/secret-id > /vault-data/approle/secret-id.json
+vault read -format=json auth/approle/role/frontend-role/role-id > /vault-data/approle/front/role-id.json
+vault write -f -format=json auth/approle/role/frontend-role/secret-id > /vault-data/approle/front/secret-id.json

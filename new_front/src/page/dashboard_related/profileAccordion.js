@@ -38,7 +38,9 @@ export function ProfileAccordion() {
                   </a>
                 </button>
                 <button class="profile-button">
-                  <i class="fas fa-lock"></i> 비밀번호 변경
+                  <a href="/change_password" data-router-link>
+                    <i class="fas fa-lock"></i> 비밀번호 변경
+                  </a>
                 </button>
               </div>
             </div>

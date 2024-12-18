@@ -5,11 +5,13 @@ import { loadMultyGame } from "./page/multyGame";
 import { socialLogin } from "./auth/socialLogin";
 import { loadDashboard } from "./page/dashboard_related/dashboard";
 import { loadEditProfile } from "./page/editProfile";
+import { loadChangePassword } from "./page/changePassword";
 
 const routes = {
   // '/': () => loadLanding(),
   "/dashboard": () => loadDashboard(),
   "/edit_profile": () => loadEditProfile(),
+  "/change_password": () => loadChangePassword(),
   "/multygame": () => loadMultyGame(),
   // '/profile': () => loadProfile(),
 

@@ -142,7 +142,8 @@
     margin-top: 2.5rem;
 }
 
-.cancel-btn, .save-btn {
+.edit-profile-cancel-btn,
+.edit-profile-save-btn {
     width: 48%;
     padding: .65rem 2rem;
     font-size: .85rem;
@@ -155,8 +156,8 @@
     color: #fff;
 }
 
-.cancel-btn:hover,
-.save-btn:hover {
+.edit-profile-cancel-btn:hover,
+.edit-profile-save-btn:hover {
     background-color: #ee532c;
     filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));
 }

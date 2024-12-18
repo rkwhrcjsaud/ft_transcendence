@@ -39,8 +39,8 @@ export function loadEditProfile() {
                     </div>
                 </form>
                 <div class="form-buttons">
-                    <button type="button" id="cancelBtn" class="cancel-btn">탈퇴하기</button>
-                    <button type="submit" id="saveBtn" class="save-btn">저장하기</button>
+                    <button type="button" class="edit-profile-cancel-btn">탈퇴하기</button>
+                    <button type="submit" class="edit-profile-save-btn">저장하기</button>
                 </div>
             </div>
         </div>

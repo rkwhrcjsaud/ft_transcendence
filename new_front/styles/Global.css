@@ -21,6 +21,11 @@ body {
   padding: 2rem 1rem;
 }
 
+a {
+  color: unset;
+  text-decoration: none;
+}
+
 .modal-header {
   border-bottom: unset;
   --bs-modal-header-padding: 1.6rem;

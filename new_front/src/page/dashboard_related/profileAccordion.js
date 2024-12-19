@@ -33,10 +33,14 @@ export function ProfileAccordion() {
               <h2 class="profile-name">ranchoi</h2>
               <div class="profile-buttons">
                 <button class="profile-button profile-setting-btn">
-                  <i class="fas fa-cog"></i> 프로필 수정
+                  <a href="/edit_profile" data-router-link>
+                    <i class="fas fa-cog"></i> 프로필 수정
+                  </a>
                 </button>
                 <button class="profile-button">
-                  <i class="fas fa-lock"></i> 비밀번호 변경
+                  <a href="/change_password" data-router-link>
+                    <i class="fas fa-lock"></i> 비밀번호 변경
+                  </a>
                 </button>
               </div>
             </div>

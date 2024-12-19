@@ -53,21 +53,21 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="languageDropdown">
               <li class="dropdown-item active">
-                <img src="./public/korean.png" alt="Korean" /> 한국어
+                <img src="./public/korean.png" alt="Korean" />한국어
                 <i class="active_lang fa-solid fa-check"></i>
               </li>
               <li class="dropdown-item">
-                <img src="./public/english.png" alt="English" /> English
+                <img src="./public/english.png" alt="English" />English
                 <i class="active_lang fa-solid fa-check"></i>
               </li>
               <li class="dropdown-item">
-                <img src="./public/french.png" alt="French" /> French
+                <img src="./public/french.png" alt="French" />French
                 <i class="active_lang fa-solid fa-check"></i>
               </li>
             </ul>
           </div>
           <button id="auth-button" class="btn btn-outline-danger">
-            로그인
+            <a href="/login">로그인</a>
           </button>
         </div>
       </div>
@@ -100,16 +100,16 @@
       });
     });
 
-    // Authentication button logic
-    authButton.addEventListener("click", () => {
-      if (authButton.textContent === "Login") {
-        window.location.href = "/login";
-      } else {
-        // Implement logout logic
-        alert("Logged out!");
-        authButton.textContent = "Login";
-      }
-    });
+    // // Authentication button logic
+    // authButton.addEventListener("click", () => {
+    //   if (authButton.textContent === "Login") {
+    //     window.location.href = "/login";
+    //   } else {
+    //     // Implement logout logic
+    //     alert("Logged out!");
+    //     authButton.textContent = "Login";
+    //   }
+    // });
 
     // Highlight active link
     const navLinks = document.querySelectorAll(".nav-link");

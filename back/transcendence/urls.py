@@ -21,9 +21,6 @@ import sys
 import os
 from vault import *
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from manage import getSecretValue
-
 urlpatterns = [
     path(getSecretValue('back/BACK_API_USER'), admin.site.urls),
     path(getSecretValue('back/BACK_API_ACCOUNT'), include('accounts.urls')),

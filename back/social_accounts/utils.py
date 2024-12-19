@@ -9,9 +9,6 @@ from vault import *
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from manage import getSecretValue
-
 def RegisterSocialAccount(email, username, nickname, firstName, lastName, img_URL):
     user = User.objects.filter(email=email)
     if user.exists():

@@ -1,10 +1,10 @@
-from rest_framework import APIView, status
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Friend
 from django.contrib.auth.models import User
 
-class AddFriend(APIView):
+class AddFriend(generics.GenericAPIView):
     premission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
@@ -18,7 +18,7 @@ class AddFriend(APIView):
         Friend.objects.create(user=request.user, friend=friend)
         return Response({'message': 'Friend added'}, status=status.HTTP_201_CREATED)
     
-class RemoveFriend(APIView):
+class RemoveFriend(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
@@ -32,7 +32,7 @@ class RemoveFriend(APIView):
         Friend.objects.get(user=request.user, friend=friend).delete()
         return Response({'message': 'Friend removed'}, status=status.HTTP_200_OK)
     
-class FriendList(APIView):
+class FriendList(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):

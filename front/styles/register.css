@@ -8,7 +8,7 @@
 
 .register-card {
   width: 100%;
-  max-width: 480px;
+  max-width: 600px;
   padding: 2.5rem 3.5rem;
   background-color: #efefef;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -17,22 +17,37 @@
 
 .register-title {
   color: #ee532c;
-  margin-bottom: 30px;
-  font-size: 24px;
+  margin-bottom: 60px;
+  font-size: 1.6rem;
 }
 
 .form-group {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
+  width: 100%;
+}
+
+.confirm-password-group {
+  margin-bottom: 0;
 }
 
 .form-label {
+  width: 120px;
+  min-width: 120px;
+  margin-bottom: 0;
+  text-align: left;
+  padding-right: 20px;
   font-weight: 500;
   color: #888;
-  margin-bottom: 0.2rem;
-  font-size: 0.9rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .form-input {
+  flex-grow: 1; /* 남은 공간 채우기 */
+  max-width: 300px;
   width: 100%;
   padding: 13px;
   border: 1px solid #ccc;
@@ -49,8 +64,11 @@
 }
 
 .password-input-wrapper,
-.confirm-password-input-wrapper {
+.confirm-password-input-wrapper,
+.form-input-container {
   position: relative;
+  width: 300px;
+  flex-shrink: 0;
 }
 
 .toggle-btn {
@@ -69,6 +87,8 @@
   color: #ee532c;
   font-weight: 500;
   visibility: hidden;
+  text-align: right;
+  padding: 5px 0 30px;
 }
 
 .submit-btn {

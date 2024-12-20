@@ -1,2 +1,13 @@
 tail -f /var/log/nginx/modsec_audit.log
 실시간 로그 확인
+
+curl -k "https://localhost?input=<img src=x onerror=alert('XSS')>"
+-> curl -k "https://localhost?input=javascript%3Aalert%28%27XSS%27%29"
+
+curl -k "https://localhost?input=javascript:alert('XSS')"
+
+curl -k "https://localhost?user=admin' -- "
+-> curl -k "https://localhost?user=admin%27%20--%20"
+
+curl -k "https://localhost?user=admin' OR '1'='1"
+-> curl -k "https://localhost?user=admin%27%20OR%20%271%27%3D%271"

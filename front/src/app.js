@@ -12,7 +12,7 @@ const routes = {
   "/dashboard": () => loadDashboard(),
   "/edit_profile": () => loadEditProfile(),
   "/change_password": () => loadChangePassword(),
-  "/multygame": () => loadMultyGame(),
+  "/play": () => loadMultyGame(),
   // '/profile': () => loadProfile(),
 
   "/login": () => loadLogin(),

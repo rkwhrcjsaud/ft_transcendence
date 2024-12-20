@@ -15,22 +15,30 @@ export function loadRegister() {
         <form id="register-form">
           <div class="form-group">
             <label for="email" class="form-label">이메일</label>
-            <input type="email" id="email" class="form-input" placeholder="Email" required>
+            <div class="form-input-container">
+              <input type="email" id="email" class="form-input" placeholder="Email" required>
+            </div>
           </div>
           
           <div class="form-group">
             <label for="username" class="form-label">닉네임</label>
-            <input type="text" id="username" class="form-input" placeholder="Username" required>
+            <div class="form-input-container">
+              <input type="text" id="username" class="form-input" placeholder="Username" required>
+            </div>
           </div>
           
           <div class="form-group">
             <label for="first_name" class="form-label">성</label>
-            <input type="text" id="first_name" class="form-input" placeholder="First Name" required>
+            <div class="form-input-container">
+              <input type="text" id="first_name" class="form-input" placeholder="First Name" required>
+            </div>
           </div>
           
           <div class="form-group">
             <label for="last_name" class="form-label">이름</label>
-            <input type="text" id="last_name" class="form-input" placeholder="Last Name" required>
+            <div class="form-input-container">
+              <input type="text" id="last_name" class="form-input" placeholder="Last Name" required>
+            </div>
           </div>
           
           <div class="form-group">
@@ -43,7 +51,7 @@ export function loadRegister() {
             </div>
           </div>
           
-          <div class="form-group">
+          <div class="form-group confirm-password-group">
             <label for="password2" class="form-label">비밀번호 확인</label>
             <div class="confirm-password-input-wrapper">
               <input type="password" id="password2" class="form-input" placeholder="Confirm Password" required minLength="8">
@@ -51,9 +59,9 @@ export function loadRegister() {
                 <i id="password-icon2" class="bi bi-eye"></i>
               </button>
             </div>
-            <div id="register_newPwIncorrectMsg" class="new-pw-incorrect-msg">
-                비밀번호가 일치하지 않습니다. 비밀번호를 확인해주세요.
-              </div>
+          </div>
+          <div id="register_newPwIncorrectMsg" class="new-pw-incorrect-msg">
+            비밀번호가 일치하지 않습니다. 비밀번호를 확인해주세요.
           </div>
           
           <button type="submit" class="submit-btn">가입 완료하기</button>

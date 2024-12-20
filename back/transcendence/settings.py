@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+from vault import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,7 @@ DEBUG = True
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-u$-1ts6r&@^1oi85zikn73ibrm83d=e!v()i+stx-zu_9de*7t'
+SECRET_KEY = getSecretValue("django/DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,13 +88,13 @@ MIDDLEWARE = [
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ORIGIN_WHITELIST = [
-    'https://localhost',
-    'http://localhost:5173'
+    getSecretValue("django/DJANGO_LOCALHOST"),
+    getSecretValue("django/DJANGO_VITE")
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://localhost',
-    'http://localhost:5173'
+    getSecretValue("django/DJANGO_LOCALHOST"),
+    getSecretValue("django/DJANGO_VITE")
 ]
 
 ROOT_URLCONF = 'transcendence.urls'
@@ -124,8 +125,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': getSecretValue("django/DJANGO_DATABASE_USER"),
+        'PASSWORD': getSecretValue("django/DJANGO_DATABASE_PASSWORD"),
         'HOST': 'postgres',
         'PORT': 5432,
     }
@@ -193,9 +194,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # social accounts settings
 
-SOCIAL_AUTH_PASSWORD = 'social_auth_password'
-CLIENT_ID_42 = 'u-s4t2ud-e3d3b1d27051c80f8dff74e972c4008a67f3d2b24359eb41b4b59f90e699e32d'
-CLIENT_SECRET_42 = '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'
+SOCIAL_AUTH_PASSWORD = getSecretValue("django/DJANGO_SOCIAL_AUTH_PASSWORD")
+CLIENT_ID_42 = getSecretValue("django/DJANGO_CLIENT_ID_42")
+CLIENT_SECRET_42 = getSecretValue("django/DJANGO_CLIENT_SECRET_42")
 DOMAIN = 'localhost'
 
 # Email settings
@@ -204,5 +205,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your email address'
-EMAIL_HOST_PASSWORD = 'your email password'
+EMAIL_HOST_USER = getSecretValue("django/DJANGO_EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = getSecretValue("django/DJANGO_EMAIL_HOST_PASSWORD")

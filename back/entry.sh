@@ -5,7 +5,7 @@ while ! nc -z postgres 5432; do
   sleep 0.1
 done
 
-sleep 6
+sleep 12
 
 export DJANGO_SETTINGS_MODULE=transcendence.settings
 

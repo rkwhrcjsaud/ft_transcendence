@@ -48,7 +48,7 @@ function loadVerifyEmail() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_CN_URL}/api/v1/auth/verify-email/`,
+        `${import.meta.env.VITE_CN_URL}/api/accounts/verify/`,
         { otp: otp, email: email },
         { headers: { "Content-Type": "application/json" } }
       );

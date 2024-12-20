@@ -1,8 +1,7 @@
 import { loadCSS } from "../../utils/loadcss";
-import { AccordionIconRotation } from "../../utils/accordionIconHandler";
 
 export function ProfileAccordion() {
-  loadCSS('../../styles/profileAccordion.css');
+  loadCSS("../../styles/profileAccordion.css");
 
   const html = `
     <div class="accordion" id="profileAccordion">
@@ -34,10 +33,14 @@ export function ProfileAccordion() {
               <h2 class="profile-name">ranchoi</h2>
               <div class="profile-buttons">
                 <button class="profile-button profile-setting-btn">
-                  <i class="fas fa-cog"></i> 프로필 수정
+                  <a href="/edit_profile" data-router-link>
+                    <i class="fas fa-cog"></i> 프로필 수정
+                  </a>
                 </button>
                 <button class="profile-button">
-                  <i class="fas fa-lock"></i> 비밀번호 변경
+                  <a href="/change_password" data-router-link>
+                    <i class="fas fa-lock"></i> 비밀번호 변경
+                  </a>
                 </button>
               </div>
             </div>
@@ -47,7 +50,5 @@ export function ProfileAccordion() {
     </div>
   `;
 
-  document.getElementById('app').innerHTML += html;
-
-  AccordionIconRotation('profileContent', '[data-bs-target="#profileContent"]');
+  document.getElementById("app").innerHTML += html;
 }

@@ -5,6 +5,9 @@ import requests
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import authenticate
 from accounts.models import User, UserStats
+from vault import *
+import sys
+import os
 
 def RegisterSocialAccount(email, username, nickname, firstName, lastName, img_URL):
     user = User.objects.filter(email=email)
@@ -60,7 +63,7 @@ class SocialAccount42:
             "redirect_uri": f"https://{settings.DOMAIN}/42"
         } # 42 API로 보낼 파라미터
         response = requests.post(
-            "https://api.intra.42.fr/oauth/token",
+            getSecretValue("back/BACK_API_OAUTH_TOKEN"),
             params=Params,
             headers={'Accept': 'application/json'}
         )
@@ -72,7 +75,7 @@ class SocialAccount42:
     @staticmethod
     def Get42User(access_token): # 42 API로부터 유저 정보를 받아옴
         response = requests.get(
-            "https://api.intra.42.fr/v2/me",
+            getSecretValue("back/BACK_API_USER"),
             headers={'Authorization': f"Bearer {access_token}"}
         )
         response.raise_for_status()

@@ -14,6 +14,9 @@ if [ ! -f /vault-data/initialized ]; then
 
     # 초기화 완료 플래그 파일 생성
     touch /vault-data/initialized
+
+    # 기존 초기화 파일 삭제
+    rm -rf /vault-data/init-output.txt
 fi
 # Vault 언실
 vault operator unseal $(cat $VAULT_UNSEAL_KEY)
@@ -21,5 +24,11 @@ vault operator unseal $(cat $VAULT_UNSEAL_KEY)
 vault login $(cat $VAULT_ROOT_TOKEN)
 # KV 엔진이 없는 경우 생성
 vault secrets list | grep -q '^transcendence/' || vault secrets enable -path=transcendence kv
+
+# AppRole 설정
+vault auth enable approle
+sh backrole.sh
+sh frontrole.sh
+
 python3 /secret.py
 wait

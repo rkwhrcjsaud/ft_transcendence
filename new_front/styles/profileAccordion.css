@@ -1,95 +1,94 @@
 .accordion {
-    --bs-border-radius: 1.8rem;
-  }
-  
-  #profileAccordion {
-    margin-bottom: 30px;
-  }
-  
-  #profileAccordion .accordion-button {
-    color: #ee532c;
-    background-color: #f7f7f7;
-    font-size: 1.2rem;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: none;
-    --bs-accordion-btn-padding-x: 2.7rem;
-    --bs-accordion-btn-padding-y: 2rem;
-  }
-  
-#profileAccordion .accordion-button::after {
-    display: none; /* 기본 화살표 제거 */
+  --bs-border-radius: 1.8rem;
 }
-  
+
+#profileAccordion {
+  margin-bottom: 30px;
+  border-color: #ee532c;
+}
+
+#profileAccordion .accordion-button {
+  color: #ee532c;
+  background-color: #f7f7f7;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  --bs-accordion-btn-padding-x: 2.7rem;
+  --bs-accordion-btn-padding-y: 2rem;
+}
+
+#profileAccordion .accordion-button::after {
+  display: none; /* 기본 화살표 제거 */
+}
+
 #profileAccordion .accordion-button i {
-    font-size: 1.2rem;
-    transition: transform 0.3s ease; /* 회전 애니메이션 */
+  font-size: 1.2rem;
+  transition: transform 0.3s ease; /* 회전 애니메이션 */
 }
 
 .accordion-button:not(.collapsed) {
-    box-shadow: unset;
+  box-shadow: unset;
 }
 
 #profileAccordion .accordion-button.collapsed i {
-    transform: rotate(-180deg); /* 닫혔을 때 아이콘 회전 */
+  transform: rotate(-180deg); /* 닫혔을 때 아이콘 회전 */
 }
-  
-.accordion-item {
-    border: 1px solid #ee532c;
+
+#profileAccordion .accordion-item {
+  border: 1px solid #ee532c;
 }
-  
-  .accordion-body {
-    padding-bottom: 4rem;
-    background-color: #f7f7f7;
-    border-radius: 0 0 1.8rem 1.8rem;
-  }
-  
-  .profile-container {
-    text-align: center;
-  }
-  
-  .profile-image img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-color: #ccc;
-    display: block;
-    margin: 0 auto 20px;
-    border: 1px solid #ee532c;
-  }
-  
-  .profile-name {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 40px;
-  }
-  
-  .profile-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-  }
-  
-  .profile-button {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: transparent;
-    border: 1px solid #ee532c;
-    border-radius: 20px;
-    padding: 10px 20px;
-    font-size: 0.9rem;
-    color: #ee532c;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  .profile-button:hover {
-    background-color: #ee532c;
-    color: #fff;
-  }
-  
+
+.accordion-body {
+  padding-bottom: 4rem;
+  background-color: #f7f7f7;
+  border-radius: 0 0 1.8rem 1.8rem;
+}
+
+.profile-container {
+  text-align: center;
+}
+
+.profile-image img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: block;
+  margin: 0 auto 20px;
+  border: 1px solid #ee532c;
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.profile-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: transparent;
+  border: 1px solid #ee532c;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  color: #ee532c;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.profile-button:hover {
+  background-color: #ee532c;
+  color: #fff;
+}

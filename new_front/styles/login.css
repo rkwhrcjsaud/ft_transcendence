@@ -1,0 +1,113 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 2.5rem 3.5rem;
+  background-color: #efefef;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 2rem;
+}
+
+.login-title {
+  color: #ee532c;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.form-group.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #888;
+    margin-bottom: .2rem;
+    font-size: .9rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: .9rem;
+  color: #ccc;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    border-color: #ee532c;
+    outline: none;
+    color: #333;
+}
+
+.password-input-wrapper {
+  position: relative;
+}
+
+.toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+}
+
+.submit-btn {
+    margin: 15px 0 15px 0;
+}
+
+.submit-btn,
+.social-btn {
+  width: 100%;
+  padding: 12px;
+  background: #666;
+  color: white;
+  border: none;
+  border-radius: 1.2rem;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all .3s ease;
+}
+
+.submit-btn:hover,
+.social-btn:hover {
+    background-color: #ee532c;
+}
+
+.register-link {
+  text-align: center;
+  font-size: .8rem;
+  margin-top: 40px;
+}
+
+.register-link span {
+    margin-right: 7px;
+    color: #666;
+}
+
+.register-link a {
+  color: #666;
+  text-decoration: none;
+  text-decoration: underline;
+  transition: all .3s ease;
+}
+
+.register-link a:hover {
+    color: #ee532c;
+}
+
+.alert-danger {
+  background-color: #ffede6;
+  color: #ee532c;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,119 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 2.5rem 3.5rem;
+  background-color: #efefef;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 2rem;
+}
+
+.register-title {
+  color: #ee532c;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #888;
+  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #ccc;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: #ee532c;
+  outline: none;
+  color: #333;
+}
+
+.password-input-wrapper,
+.confirm-password-input-wrapper {
+  position: relative;
+}
+
+.toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+}
+
+.new-pw-incorrect-msg {
+  font-size: 0.725rem;
+  color: #ee532c;
+  font-weight: 500;
+  visibility: hidden;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: #666;
+  color: white;
+  border: none;
+  border-radius: 1.2rem;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #ee532c;
+}
+
+.login-link {
+  text-align: center;
+  font-size: 0.8rem;
+  margin-top: 40px;
+}
+
+.login-link span {
+  margin-right: 7px;
+  color: #666;
+}
+
+.login-link a {
+  color: #666;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.login-link a:hover {
+  color: #ee532c;
+  text-decoration: underline;
+}
+
+.alert-danger {
+  background-color: #ffe6e6;
+  color: #ee532c;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}

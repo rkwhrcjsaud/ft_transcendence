@@ -1,5 +1,6 @@
 import { loadCSS } from "../../utils/loadcss";
 
+
 export function MatchHistoryAccordion() {
   loadCSS("../../styles/matchHistoryAccordion.css");
 

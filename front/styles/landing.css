@@ -1,0 +1,112 @@
+body {
+  position: relative;
+}
+
+#app {
+  padding: 0 1rem;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 70%;
+  max-width: 1400px;
+  transform: translate(-50%, 6%);
+}
+
+.navbar {
+  box-shadow: none;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.navbar-center {
+  visibility: hidden;
+}
+
+/* 전체 레이아웃 */
+.landing-page {
+  display: flex;
+  justify-content: center;
+  background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.ball-container {
+  position: relative;
+  display: inline-block;
+  padding: 0 100px;
+}
+
+/* 공 이미지 */
+.landing-ball {
+  display: block;
+  margin: auto;
+  width: 90%;
+  z-index: 2;
+  transition: transform 0.3s cubic-bezier(0, 0, 0.58, 1);
+  /* object-fit: cover; */
+}
+
+.bouncy-effect {
+  position: absolute;
+  width: 20%;
+  bottom: -5%;
+  right: 0%;
+  transform: translate(-50%, -50%);
+}
+
+/* 버튼 그룹 */
+.landing-button-group {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+/* 버튼 스타일 */
+.landing-button {
+  display: block;
+  padding: 0.6rem 2rem;
+  margin: 10px auto;
+  line-height: 40px;
+  background-color: #ffffff;
+  color: #ee532c;
+  border: 1.5px solid #ee532c;
+  border-radius: 3rem;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 500;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.landing-button:hover {
+  background-color: #ee532c;
+  color: #ffffff;
+}
+
+.landing-dashboard-btn {
+  margin-bottom: 1.2rem;
+}
+
+/* 각 버튼의 번호 스타일 */
+.landing-button::before {
+  content: attr(data-number);
+  position: absolute;
+  bottom: -6px;
+  font-size: 26px;
+  font-weight: 400;
+  color: #fff;
+  font-style: italic;
+}
+
+.landing-dashboard-btn::before {
+  content: "01";
+  left: -40px;
+}
+
+.landing-play-btn::before {
+  content: "02";
+  right: -40px;
+}

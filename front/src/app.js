@@ -1,3 +1,4 @@
+import { loadLanding } from "./page/landing";
 import { loadLogin } from "./page/login";
 import { loadRegister } from "./page/register";
 import { loadVerifyEmail } from "./auth/verifyEmail";
@@ -8,12 +9,11 @@ import { loadEditProfile } from "./page/editProfile";
 import { loadChangePassword } from "./page/changePassword";
 
 const routes = {
-  // '/': () => loadLanding(),
+  '/': () => loadLanding(),
   "/dashboard": () => loadDashboard(),
   "/edit_profile": () => loadEditProfile(),
   "/change_password": () => loadChangePassword(),
   "/play": () => loadMultyGame(),
-  // '/profile': () => loadProfile(),
 
   "/login": () => loadLogin(),
   "/register": () => loadRegister(),

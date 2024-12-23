@@ -40,7 +40,7 @@ export function loadChangePassword() {
               </div>
             </div>
           </form>
-          <div class="form-buttons">
+          <div class="change-pw-form-buttons">
             <button type="button" class="pw-cancel-btn">
                 <a href="/dashboard" data-router-link>뒤로가기</a>
             </button>

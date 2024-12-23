@@ -1,5 +1,6 @@
 import { loadCSS } from "../../utils/loadcss";
 
+
 export function GreetingBox() {
   loadCSS("../../styles/greetingBox.css");
   // 시간대에 따라 `hours` 메시지를 반환하는 함수
@@ -42,7 +43,11 @@ export function GreetingBox() {
           </h4>
           <div class="greeting-row">
             <p class="greeting-message">${getGreetingMessage()}</p>
-            <button class="greeting-button">게임하러 가기</button>
+            <button class="greeting-button">
+               <a href="/play" data-router-link>
+                게임하러 가기
+              </a>
+            </button>
           </div>
         </div>
       </div>

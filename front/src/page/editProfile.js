@@ -9,7 +9,7 @@ export function loadEditProfile() {
         <div class="edit-profile-content">
             <div class="profile-section">
                 <div class="profile-image-wrapper">
-                    <img id="profileImage" src="default_profile.jpeg" alt="Profile" class="profile-image">
+                    <img id="profileImage" src="default_profile.jpeg" alt="Profile" class="edit-profile-image">
                     <button id="deleteImageBtn" class="delete-image-btn">
                         <i class="fa-solid fa-circle-xmark"></i>
                     </button>

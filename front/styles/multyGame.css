@@ -6,12 +6,29 @@
       height: 100%;
       background-color: rgba(0, 0, 0, 0.7);
       z-index: 1000;
-      visibility: hidden;
-      display: flex;
+      display: none;
       align-items: flex-start;
       justify-content: center;
       padding: 20px;
       color: black;
       font-size: 48px;
       text-align: center;
+}
+
+.pong-area {
+    position: relative;
+    display: none;
+    z-index: 100;
+}
+
+.game-rules {
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    color: black;
+    font-size: 12px;
 }

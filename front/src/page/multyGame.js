@@ -30,7 +30,8 @@ export function loadMultyGame() {
   const gameRules = document.getElementById('game-rules');
   const overlay = document.getElementById('overlay');
 
-  let ws;
+  let ws = null;
+  let animationId = null;
   let gameState = '1';
   let paddles = {
     left: { top: "50%" },
@@ -47,11 +48,19 @@ export function loadMultyGame() {
       ws.send(JSON.stringify({ type: 'start_game' }));
       gameState = '2';
       gameRules.style.display = 'none';
+      pongArea.style.display = 'block';
       initGame();
     }
   });
 
+  function handleOverlayClick() {
+    reset_game();
+    overlay.removeEventListener('click', handleOverlayClick);
+  };
+
   function renderMessage() {
+    if (message === 'menu')
+      overlay.addEventListener('click', handleOverlayClick);
     if (message !== 'none') {
       overlay.style.visibility = 'visible';
       overlay.innerHTML = message;
@@ -121,19 +130,44 @@ export function loadMultyGame() {
 
   initWebSocket();
 
+  function reset_game() {
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+    gameState = '1';
+    scores = { left: 0, right: 0 };
+    paddles = {
+      left: { top: "50%" },
+      right: { top: "50%" }
+    };
+    ballPosition = { x: "50%", y: "50%" };
+    minutes = 0;
+    seconds = 0;
+    message = 'none';
+
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'reset_game' }));
+    }
+
+    overlay.style.display = 'none';
+    gameRules.style.display = 'block';
+    pongArea.style.display = 'none';
+  };
+
   function handleKeyDown(event) {
     const key = event.key;
     if (key === 'ArrowUp' || key === 'ArrowDown') {
       event.preventDefault();
     }
-    if (["w", "s", "ArrowUp", "ArrowDown"].includes(key) && ws.readyState === WebSocket.OPEN) {
+    if (["w", "s", "ArrowUp", "ArrowDown"].includes(key) && ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "keydown", key }));
     }
   };
 
   function handleKeyUp(event) {
     const key = event.key;
-    if (["w", "s", "ArrowUp", "ArrowDown"].includes(key) && ws.readyState === WebSocket.OPEN) {
+    if (["w", "s", "ArrowUp", "ArrowDown"].includes(key) && ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "keyup", key }));
     }
   };
@@ -142,12 +176,11 @@ export function loadMultyGame() {
   window.addEventListener('keyup', handleKeyUp);
 
   function initGame() {
+    pongArea.style.display = 'visible';
+    overlay.style.display = 'block';
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-400, 400, -300, 300, 1, 1000);
-    const renderer = new THREE.WebGLRenderer({
-      canvas: pongArea,
-      antialias: true,
-    });
+    const renderer = new THREE.WebGLRenderer({ canvas: pongArea });
 
     const backgroundGeometry = new THREE.BoxGeometry(800, 600);
     const backgroundMaterial = new THREE.MeshStandardMaterial({ color: "skyblue" });
@@ -198,7 +231,7 @@ export function loadMultyGame() {
     scene.add(timeText);
 
     function animate() {
-      requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
       leftPaddle.position.y = convertToThreeCoordinate(46, parseFloat(paddles.left.top) * 6, 800, 600).y;
       RightPaddle.position.y = convertToThreeCoordinate(754, parseFloat(paddles.right.top) * 6, 800, 600).y;
       const temp = convertToThreeCoordinate(parseFloat(ballPosition.x) * 8, parseFloat(ballPosition.y) * 6, 800, 600);

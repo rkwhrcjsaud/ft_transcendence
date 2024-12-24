@@ -25,20 +25,35 @@ export function loadLanding() {
   `;
 
   document.getElementById("app").innerHTML = html;
-
-  // 탁구공 사진 패럴랙스 효과 추가
-  const landingBall = document.querySelector(".landing-ball");
-  const ballContainer = document.querySelector(".ball-container");
-
-  ballContainer.addEventListener("mousemove", (event) => {
-    const rect = ballContainer.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 40;
-    const y = ((event.clientY - rect.top) / rect.height - 0.5) * 40;
-
-    landingBall.style.transform = `translate(${x}px, ${y}px)`;
+  
+  function setPageClass() {
+    const path = window.location.pathname;
+    // body의 모든 클래스를 제거
+    document.body.className = '';
+    
+    // 현재 경로가 랜딩 페이지일 때만 클래스 추가
+    if (path === "/") {
+      document.body.classList.add("body-landing-only");
+    }
+    
+    // 인라인 스타일 초기화
+    document.body.style.cssText = "";
+  }
+  
+  // 페이지 전환 감지
+  window.addEventListener("popstate", setPageClass);
+  
+  // 링크 클릭 시 클래스 제거를 위한 이벤트 리스너
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-router-link]');
+    if (link) {
+      // 다른 페이지로 이동할 때 landing 클래스 제거
+      if (link.getAttribute('href') !== '/') {
+        document.body.classList.remove('body-landing-only');
+      }
+    }
   });
-
-  ballContainer.addEventListener("mouseleave", () => {
-    landingBall.style.transform = "translate(0, 0)";
-  });
+  
+  // 페이지 최초 로드 시 초기화
+  setPageClass();
 }

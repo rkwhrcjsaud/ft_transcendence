@@ -1,8 +1,8 @@
-body {
+.body-landing-only {
   position: relative;
 }
 
-#app {
+.body-landing-only #app {
   padding: 0 1rem;
   position: absolute;
   top: 0;
@@ -12,12 +12,12 @@ body {
   transform: translate(-50%, 6%);
 }
 
-.navbar {
+.body-landing-only .navbar {
   box-shadow: none;
   background-color: rgba(255, 255, 255, 0);
 }
 
-.navbar-center {
+.body-landing-only .navbar-center {
   visibility: hidden;
 }
 
@@ -36,14 +36,13 @@ body {
   padding: 0 100px;
 }
 
-/* 공 이미지 */
 .landing-ball {
   display: block;
   margin: auto;
   width: 90%;
   z-index: 2;
   transition: transform 0.3s cubic-bezier(0, 0, 0.58, 1);
-  /* object-fit: cover; */
+  object-fit: cover;
 }
 
 .bouncy-effect {

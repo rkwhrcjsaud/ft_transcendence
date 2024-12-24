@@ -120,7 +120,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 if counter == 0:
                     await self.send_message(custom_message = 'menu')
                     counter = 4
-                    sent = False    
+                    sent = True  
                     await self.set_game_state(GameState.SETTING)
                 continue
 
@@ -159,6 +159,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.handle_keydown(key)
         elif event_type == 'start_game':
             await self.set_game_state(GameState.GAME_START)
+        elif event_type == 'reset_game':
+            await self.set_game_state(GameState.SETTING)
     
     async def handle_keydown(self, key):
         if key == 'w':

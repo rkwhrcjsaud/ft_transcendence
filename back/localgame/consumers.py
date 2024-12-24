@@ -16,8 +16,8 @@ class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.paddles = {
-            'left': {'left': 40, 'top': 300, 'keydown': False, 'keyup': False},
-            'right': {'left': 748, 'top': 300, 'keydown': False, 'keyup': False}
+            'left': {'left': 46, 'top': 300, 'keydown': False, 'keyup': False},
+            'right': {'left': 754, 'top': 300, 'keydown': False, 'keyup': False}
         }
         self.paddle_speed = 10
         self.paddle_height = 120
@@ -27,8 +27,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.width = 800
         self.last_update = time.time()
         
-        self.leftPaddle_x = 40
-        self.rightPaddle_x = 748
+        self.leftPaddle_x = 46
+        self.rightPaddle_x = 754
 
         self.ball_x = self.width / 2
         self.ball_y = self.height / 2
@@ -51,8 +51,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.ball_y = self.height / 2
         self.ball_speed_x = random.randint(3, 5) * random.choice([1, -1])
         self.ball_speed_y = random.randint(3, 5) * random.choice([1, -1])
-        self.paddles['left']['top'] = self.height / 2 - self.paddle_height / 2
-        self.paddles['right']['top'] = self.height / 2 - self.paddle_height / 2
+        self.paddles['left']['top'] = self.height / 2
+        self.paddles['right']['top'] = self.height / 2
         await self.send_update()
 
     async def game_over_message(self): # 게임이 끝났을 때 메시지를 보내는 함수
@@ -132,8 +132,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.ball_y = self.height / 2
             self.ball_speed_x = random.randint(3, 5) * random.choice([1, -1])
             self.ball_speed_y = random.randint(3, 5) * random.choice([1, -1])
-            self.paddles['left']['top'] = self.height / 2 - self.paddle_height / 2
-            self.paddles['right']['top'] = self.height / 2 - self.paddle_height / 2
+            self.paddles['left']['top'] = self.height / 2
+            self.paddles['right']['top'] = self.height / 2
             self.game_state = GameState.GOAL
             await self.send_paddle_positions()
     
@@ -195,12 +195,12 @@ class PongConsumer(AsyncWebsocketConsumer):
         # 왼쪽 패들과 부딪히면 방향을 바꿈
         if self.ball_speed_x < 0 \
             and self.ball_x - self.ball_radius \
-            <= self.paddles['left']['left'] + self.paddle_width \
-            and self.paddles['left']['left']\
+            <= self.paddles['left']['left'] + self.paddle_width / 2 \
+            and self.paddles['left']['left'] - self.paddle_width / 2\
             >= self.ball_x - self.ball_radius\
-            and self.paddles['left']['top']\
+            and self.paddles['left']['top'] - self.paddle_height / 2\
             <= self.ball_y + self.ball_radius\
-            <= self.paddles['left']['top'] + self.paddle_height:
+            <= self.paddles['left']['top'] + self.paddle_height / 2:
             self.ball_speed_x = abs(self.ball_speed_x) + 1
 
             # 패들의 방향에 따라 공에게 추가 속도를 줌
@@ -212,12 +212,12 @@ class PongConsumer(AsyncWebsocketConsumer):
         # 오른쪽 패들과 부딪히면 방향을 바꿈
         if self.ball_speed_x > 0 \
             and self.ball_x + self.ball_radius \
-            >= self.paddles['right']['left']\
+            >= self.paddles['right']['left'] - self.paddle_width / 2\
             and self.ball_x + self.ball_radius\
-            <= self.paddles['right']['left'] + self.paddle_width\
-            and self.paddles['right']['top']\
+            <= self.paddles['right']['left'] + self.paddle_width / 2\
+            and self.paddles['right']['top'] - self.paddle_height / 2\
             <= self.ball_y + self.ball_radius\
-            <= self.paddles['right']['top'] + self.paddle_height:
+            <= self.paddles['right']['top'] + self.paddle_height / 2:
             self.ball_speed_x = -abs(self.ball_speed_x) - 1
 
             # 패들의 방향에 따라 공에게 추가 속도를 줌
@@ -261,9 +261,9 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.paddles['right']['top'] -= self.paddle_speed
             moved = True
 
-        height = self.height - self.paddle_height
-        self.paddles['left']['top'] = max(0, min(height, self.paddles['left']['top']))
-        self.paddles['right']['top'] = max(0, min(height, self.paddles['right']['top']))
+        height = self.height - self.paddle_height / 2
+        self.paddles['left']['top'] = max(self.paddle_height / 2, min(height, self.paddles['left']['top']))
+        self.paddles['right']['top'] = max(self.paddle_height / 2, min(height, self.paddles['right']['top']))
         
         if moved:
             await self.send_paddle_positions()

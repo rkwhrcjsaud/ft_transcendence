@@ -1,0 +1,92 @@
+/* 이메일 인증 페이지 관련 스타일 */
+.verify-email-container {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 2.5rem 3.5rem;
+  background-color: #efefef;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 2rem;
+}
+
+.verify-email-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 3rem;
+  text-align: left;
+  color: #ee532c;
+}
+
+.email-form-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.email-form-input-container {
+  width: 72%;
+}
+
+.form-label { /* 입력 폼 레이블 스타일 */
+  font-weight: 500;
+  color: #888;
+  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
+}
+
+.form-input { /* 입력 폼 스타일 */
+  width: 100%;
+  border: none;
+  outline: none;
+  width: 100%;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  padding: 13px;
+  color: #ccc;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.form-input::placeholder {
+  color: #ccc;
+}
+
+.form-input:focus {
+  border-color: #ee532c;
+  outline: none;
+  color: #333;
+}
+
+.send-email-btn { /* 이메일 인증번호 전송 버튼 스타일 */
+  width: 140px;
+  border: none;
+  background-color: #ee532c;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 0px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.send-email-btn:hover {
+  background-color: #555;
+}
+
+.verify-email-submit-btn { /* 인증하기 버튼 스타일 */
+  margin-top: 2rem;
+  margin: 2rem 0 0.6rem;
+  padding: 0.65rem 2rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 1.2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #666;
+  color: #fff;
+}
+
+.verify-email-submit-btn:hover {
+  background-color: #ee532c;
+  filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));
+}

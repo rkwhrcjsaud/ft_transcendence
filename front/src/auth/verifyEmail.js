@@ -1,21 +1,33 @@
 import axios from "axios";
+import { loadCSS } from "../utils/loadcss";
 
 function loadVerifyEmail() {
+  loadCSS("../styles/verifyEmail.css");
+
   const content = document.getElementById("app");
+
   content.innerHTML = `
-    <div class="container mt-5">
-      <h3 class="text-center text-muted mb-4">A code has been sent to your email</h3>
+    <div class="verify-email-container mt-5">
+      <h1 class="verify-email-title">이메일 인증</h1>
       <div id="alert-container"></div>
       <form id="verify-email-form">
-        <div class="mb-3">
-          <label for="email" class="form-label">Enter your email</label>
-          <input type="email" id="email" class="form-control" placeholder="Enter your email" required />
+        <div class="form-group mb-3">
+          <label for="email" class="form-label">이메일</label>
+          <div class="email-form-wrapper">
+            <div class="email-form-input-container">
+              <input type="email" id="email" class="form-input" placeholder="이메일을 입력해 주세요" required>
+            </div>
+            <button class="send-email-btn">인증코드 받기</button>
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="otp" class="form-label">Enter your code</label>
-          <input type="text" id="otp" class="form-control" placeholder="Enter your OTP code" required />
+
+        <div class="form-group mb-3">
+          <label for="otp" class="form-label">인증 코드</label>
+          <div class="otp-form-input-container">
+            <input type="text" id="otp" class="form-input" placeholder="인증코드를 입력해 주세요" required />
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Verify</button>
+        <button type="submit" class="verify-email-submit-btn btn btn-primary w-100">인증하기</button>
       </form>
     </div>
   `;

@@ -33,7 +33,11 @@ export function loadLogin() {
         </form>
         
         <div class="social-login">
-          <button id="social-login" class="social-btn">42 소셜 로그인</button>
+          <button id="social-login" class="social-btn">
+            <a href="/42" data-router-link>
+              <img src="../../public/42_logo_white.png" alt="42" class="login-btn-42logo">소셜 로그인
+            </a>
+          </button>
         </div>
         
         <div class="register-link">

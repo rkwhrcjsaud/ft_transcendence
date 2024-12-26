@@ -18,7 +18,7 @@
   font-size: 24px;
 }
 
-.form-group.form-group {
+.form-group {
   margin-bottom: 20px;
 }
 
@@ -82,6 +82,12 @@
     background-color: #ee532c;
 }
 
+
+.login-btn-42logo {
+  width: 22px;
+  margin-right: 7px;
+  padding-bottom: 3px;
+}
 .register-link {
   text-align: center;
   font-size: .8rem;

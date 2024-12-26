@@ -178,6 +178,8 @@
   margin-right: 10px;
 }
 
+input:focus {outline:none;}
+
 .search-input::placeholder {
   color: #ccc;
 }

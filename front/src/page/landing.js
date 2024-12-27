@@ -1,8 +1,9 @@
 import { loadCSS } from "../utils/loadcss";
+import { language } from "../utils/language";
 
 export function loadLanding() {
   loadCSS("../styles/landing.css");
-
+  const languageKey = localStorage.getItem("selectedLanguage");
   const html = `
     <div class="landing-page">
       <div class="ball-container">
@@ -10,13 +11,13 @@ export function loadLanding() {
         <img src="/bouncy.png" alt="bouncy effect" class="bouncy-effect" />
         <div class="landing-button-group">
           <button class="landing-button landing-dashboard-btn" id="landing-btn-dashboard">
-            <a href="/dashboard" data-router-link>
-              dashboard
+            <a id="dashboard" href="/dashboard" data-router-link>
+              ${language[languageKey]["Dashboard"]}
             </a>
           </button>
           <button class="landing-button landing-play-btn" id="landing-btn-play">
-            <a href="/play" data-router-link>
-              🏓 play 🏓
+            <a id="play" href="/play" data-router-link>
+              ${language[languageKey]["Play"]}
             </a>
           </button>
         </div>
@@ -25,7 +26,6 @@ export function loadLanding() {
   `;
 
   document.getElementById("app").innerHTML = html;
-  
   function setPageClass() {
     const path = window.location.pathname;
     // body의 모든 클래스를 제거

@@ -1,36 +1,37 @@
 import { loadCSS } from "../../utils/loadcss";
-
+import { language } from "../../utils/language";
 
 export function GreetingBox() {
   loadCSS("../../styles/greetingBox.css");
+  const languageKey = localStorage.getItem("selectedLanguage");
   // 시간대에 따라 `hours` 메시지를 반환하는 함수
   const getHoursMessage = () => {
     const currentHour = new Date().getHours();
 
     if (currentHour >= 6 && currentHour < 11) {
-      return "좋은 아침이예요 🌞";
+      return language[languageKey]["GreetingMorning"];
     } else if (currentHour >= 11 && currentHour < 18) {
-      return "좋은 오후예요 🍀";
+      return language[languageKey]["GreetingAfternoon"];
     } else {
-      return "좋은 저녁이예요 🌝";
+      return language[languageKey]["GreetingEvening"];
     }
   };
 
   // 시간대에 따라 `prefix` 메시지를 반환하는 함수
   const getGreetingMessage = () => {
-    const postfix = "🏓 핑퐁🏓  한 판 어떠세요?";
+    const postfix = language[languageKey]["Postfix"];
     const currentHour = new Date().getHours();
 
     if (currentHour >= 6 && currentHour < 11) {
-      return `하루의 시작, ${postfix}`;
+      return language[languageKey]["Morning"]+`, ${postfix}`;
     } else if (currentHour >= 11 && currentHour < 14) {
-      return `식후 ${postfix}`;
+      return language[languageKey]["Launch"]+ `, ${postfix}`;
     } else if (currentHour >= 14 && currentHour < 18) {
-      return `나른한 오후, ${postfix}`;
+      return language[languageKey]["Afternoon"] + `, ${postfix}`;
     } else if (currentHour >= 18 && currentHour < 21) {
-      return `식후 ${postfix}`;
+      return language[languageKey]["Dinner"] + `, ${postfix}`;
     } else {
-      return `심심할 때 ${postfix}`;
+      return language[languageKey]["Bored"] + `${postfix}`;
     }
   };
 
@@ -39,13 +40,16 @@ export function GreetingBox() {
       <div class="greeting-box">
         <div class="greeting-subbox">
           <h4 class="greeting-user">
-            <strong>ranchoi 님! ${getHoursMessage()}</strong>
+            <strong> ${language[languageKey]["Hello"]} </strong>
+            <strong> ranchoi</strong>
+            <strong id="Term"> </strong>
+            <strong> ${getHoursMessage()}</strong>
           </h4>
           <div class="greeting-row">
             <p class="greeting-message">${getGreetingMessage()}</p>
             <button class="greeting-button">
                <a href="/play" data-router-link>
-                게임하러 가기
+                ${language[languageKey]["Playing"]}
               </a>
             </button>
           </div>
@@ -57,7 +61,12 @@ export function GreetingBox() {
   const container = document.querySelector("#app");
   if (container) {
     container.innerHTML += greetingBoxHTML;
-
+  
+    if (languageKey == "한국어")
+      document.getElementById("Term").innerText = "님!";
+    else
+      document.getElementById("Term").innerText = "!";
+  
     // "게임하러 가기" 버튼 클릭 이벤트
     const button = container.querySelector(".greeting-button");
     button.addEventListener("click", (e) => {

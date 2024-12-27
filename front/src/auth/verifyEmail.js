@@ -1,33 +1,33 @@
 import axios from "axios";
 import { loadCSS } from "../utils/loadcss";
-
+import { language } from "../utils/language";
 function loadVerifyEmail() {
   loadCSS("../styles/verifyEmail.css");
-
+  const languageKey = localStorage.getItem("selectedLanguage");
   const content = document.getElementById("app");
 
   content.innerHTML = `
     <div class="verify-email-container mt-5">
-      <h1 class="verify-email-title">이메일 인증</h1>
+      <h1 class="verify-email-title">${language[languageKey]["VerifyEmail"]}</h1>
       <div id="alert-container"></div>
       <form id="verify-email-form">
         <div class="form-group mb-3">
-          <label for="email" class="form-label">이메일</label>
+          <label for="email" class="form-label">${language[languageKey]["Email"]}</label>
           <div class="email-form-wrapper">
             <div class="email-form-input-container">
-              <input type="email" id="email" class="form-input" placeholder="이메일을 입력해 주세요" required>
+              <input type="email" id="email" class="form-input" placeholder=${language[languageKey]["InputEmail"]} required>
             </div>
-            <button class="send-email-btn">인증코드 받기</button>
+            <button class="send-email-btn">${language[languageKey]["SendEmail"]}</button>
           </div>
         </div>
 
         <div class="form-group mb-3">
-          <label for="otp" class="form-label">인증 코드</label>
+          <label for="otp" class="form-label">${language[languageKey]["VerifyCode"]}</label>
           <div class="otp-form-input-container">
-            <input type="text" id="otp" class="form-input" placeholder="인증코드를 입력해 주세요" required />
+            <input type="text" id="otp" class="form-input" placeholder="${language[languageKey]["InputVerifyCode"]}" required />
           </div>
         </div>
-        <button type="submit" class="verify-email-submit-btn btn btn-primary w-100">인증하기</button>
+        <button type="submit" class="verify-email-submit-btn btn btn-primary w-100">${language[languageKey]["Verify"]}</button>
       </form>
     </div>
   `;
@@ -54,7 +54,7 @@ function loadVerifyEmail() {
     e.preventDefault();
 
     if (!email || !otp) {
-      alertContainer.innerHTML = `<div class="alert alert-danger">Both email and OTP code are required</div>`;
+      alertContainer.innerHTML = `<div class="alert alert-danger">${language[languageKey]["Requirement"]}</div>`;
       return;
     }
 
@@ -70,19 +70,19 @@ function loadVerifyEmail() {
           window.location.href = "/"; // 성공 시 홈으로 이동
           break;
         case 204:
-          alertMessage = "You are already registered";
+          alertMessage = language[languageKey]["DuplicateEmail"];
           alertColour = "warning";
           break;
         case 404:
-          alertMessage = "Please provide your code";
+          alertMessage = language[languageKey]["PleaseCode"];
           alertColour = "danger";
           break;
         default:
-          alertMessage = "An unexpected error occurred";
+          alertMessage = language[languageKey]["Error"];
           alertColour = "danger";
       }
     } catch (error) {
-      alertMessage = "An error occurred. Please check your connection.";
+      alertMessage = language[languageKey]["Error"];
       alertColour = "danger";
     }
 

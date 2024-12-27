@@ -1,11 +1,12 @@
 import { loadCSS } from "../utils/loadcss";
+import { language } from "../utils/language";
 
 export function loadEditProfile() {
     loadCSS("../styles/editProfile.css");
-    
+    const languageKey = localStorage.getItem("selectedLanguage");
     const html = `
     <div class="edit-profile-container">
-        <h1 class="edit-profile-title">계정 정보 수정</h1>
+        <h1 class="edit-profile-title">${language[languageKey]["EditAccount"]}</h1>
         <div class="edit-profile-content">
             <div class="profile-section">
                 <div class="profile-image-wrapper">
@@ -15,32 +16,32 @@ export function loadEditProfile() {
                     </button>
                 </div>
                 <label for="imageUpload" class="upload-btn">
-                    <i class="fa-solid fa-arrow-up-from-bracket"></i>사진 업로드
+                    <i class="fa-solid fa-arrow-up-from-bracket"></i>${language[languageKey]["ImageUpload"]}
                 </label>
                 <input id="imageUpload" type="file" accept="image/*" style="display: none;">
             </div>
             <div class="form-section">
                 <form class="edit-profile-form">
                     <div class="form-group">
-                        <label class="form-label">닉네임</label>
+                        <label class="form-label">${language[languageKey]["Nickname"]}</label>
                         <input type="text" id="nickname" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">이름</label>
+                        <label class="form-label">${language[languageKey]["LastName"]}</label>
                         <input type="text" id="lastName" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">성</label>
+                        <label class="form-label">${language[languageKey]["FirstName"]}</label>
                         <input type="text" id="firstName" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">이메일</label>
+                        <label class="form-label">${language[languageKey]["Email"]}</label>
                         <input type="text" id="email" class="form-input">
                     </div>
                 </form>
                 <div class="form-buttons">
-                    <button type="button" class="edit-profile-cancel-btn">탈퇴하기</button>
-                    <button type="submit" class="edit-profile-save-btn">저장하기</button>
+                    <button type="button" class="edit-profile-cancel-btn">${language[languageKey]["DeleteAccount"]}</button>
+                    <button type="submit" class="edit-profile-save-btn">${language[languageKey]["Save"]}</button>
                 </div>
             </div>
         </div>

@@ -1,34 +1,34 @@
 import { loadCSS } from "../../utils/loadcss";
-
+import { language } from "../../utils/language";
 export function FriendListAccordion() {
   loadCSS("../../styles/friendListAccordion.css");
-
+  const languageKey = localStorage.getItem("selectedLanguage");
   const friends = [
     {
       id: 1,
       name: "gibkim",
-      status: "online",
+      status: language[languageKey]["Online"],
       avatar: "/default_profile.jpeg",
       isFriend: true,
     },
     {
       id: 2,
       name: "haekang",
-      status: "offline",
+      status: language[languageKey]["Offline"],
       avatar: "/default_profile.jpeg",
       isFriend: false,
     },
     {
       id: 3,
       name: "jaehyji",
-      status: "offline",
+      status: language[languageKey]["Offline"],
       avatar: "/default_profile.jpeg",
       isFriend: true,
     },
     {
       id: 4,
       name: "dongwook",
-      status: "online",
+      status: language[languageKey]["Online"],
       avatar: "/default_profile.jpeg",
       isFriend: false,
     },
@@ -73,9 +73,10 @@ export function FriendListAccordion() {
                 data-bs-target="#friendListContent"
                 aria-expanded="true"
                 aria-controls="friendListContent"
-                >친구 목록
-                    <span class="friend-count">${
-                      friends.filter((friend) => friend.isFriend).length
+                >
+                <span>${language[languageKey]["FriendList"]}</span>
+                <span class="friend-count">${
+                  friends.filter((friend) => friend.isFriend).length
                     }</span>
                 <i class="fa-solid fa-chevron-down ms-2"></i>
                 </button>
@@ -96,13 +97,13 @@ export function FriendListAccordion() {
                         <input
                         type="text"
                         class="search-input"
-                        placeholder="친구를 찾아보세요!"
+                        placeholder=${language[languageKey]["SearchMessage"]}
                         />
-                        <button class="search-btn">검색</button>
+                        <button class="search-btn">${language[languageKey]["SearchFriend"]}</button>
                     </div>
 
                     <div class="search-results" style="display: none;">
-                        <p class="no-results" style="display: none;">검색결과가 없어요!</p>
+                        <p class="no-results" style="display: none;">${language[languageKey]["SearchNone"]}</p>
                         <div class="search-results-list"></div>
                     </div>
                 </div>
@@ -115,14 +116,14 @@ export function FriendListAccordion() {
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="deleteFriendModalLabel">정말 친구를 목록에서 삭제하시겠어요? 🤔</h5>
+                <h5 class="modal-title" id="deleteFriendModalLabel">${language[languageKey]["DeleteCheckMessage"]}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">뒤로가기</button>
-                <button type="button" class="btn btn-primary">삭제하기</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${language[languageKey]["Undo"]}</button>
+                <button type="button" class="btn btn-primary">${language[languageKey]["DeleteFriend"]}</button>
               </div>
             </div>
           </div>
@@ -173,7 +174,7 @@ export function FriendListAccordion() {
               ${
                 friend.isFriend
                   ? `<button type="button" class="friend-result-remove-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteFriendModal"><i class="fa-solid fa-user-minus"></i>친구 삭제</button>`
-                  : `<button class="friend-result-add-btn"><i class="fa-solid fa-user-plus"></i>친구 추가</button>`
+                  : `<button class="friend-result-add-btn"><i class="fa-solid fa-user-plus"></i>${language[languageKey]["AddFriend"]}</button>`
               }
             </div>
           </div>

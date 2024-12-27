@@ -1,15 +1,15 @@
 import { loadCSS } from "../utils/loadcss";
-
+import { language } from "../utils/language";
 export function loadChangePassword() {
   loadCSS("../styles/changePassword.css");
-
+  const languageKey = localStorage.getItem("selectedLanguage");
   const html = `<div class="change-pw-container">
-      <h1 class="change-pw-title">비밀번호 변경</h1>
+      <h1 class="change-pw-title">${language[languageKey]["ChangePassword"]}</h1>
       <div class="change-pw-content">
         <div class="form-section">
           <form class="change-pw-form">
             <div class="form-group">
-              <label class="form-label">현재 비밀번호</label>
+              <label class="form-label">${language[languageKey]["CurrentPassword"]}</label>
               <div class="password-input-container">
                 <input type="password" id="currentPassword" class="form-input">
                 <span class="password-toggle" data-for="currentPassword">
@@ -18,17 +18,17 @@ export function loadChangePassword() {
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">새 비밀번호</label>
+              <label class="form-label">${language[languageKey]["NewPassword"]}</label>
               <div class="password-input-container">
                 <input type="password" id="newPassword" class="form-input">
                 <span class="password-toggle" data-for="newPassword">
                   <i class="fa-regular fa-eye-slash"></i>
                 </span>
               </div>
-              <div class="pw-rules-msg">(예시)*영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10~16자</div>
+              <div class="pw-rules-msg">${language[languageKey]["PasswordRule"]}</div>
             </div>
             <div class="form-group">
-              <label class="form-label">새 비밀번호 확인</label>
+              <label class="form-label">${language[languageKey]["ConfirmPassword"]}</label>
               <div class="password-input-container">
                 <input type="password" id="newPassword_retype" class="form-input">
                 <span class="password-toggle" data-for="newPassword_retype">
@@ -36,15 +36,15 @@ export function loadChangePassword() {
                 </span>
               </div>
               <div id="newPwIncorrectMsg" class="new-pw-incorrect-msg">
-                비밀번호가 일치하지 않습니다. 새 비밀번호를 확인해주세요.
+              ${language[languageKey]["IncorrectPassword"]}
               </div>
             </div>
           </form>
           <div class="change-pw-form-buttons">
             <button type="button" class="pw-cancel-btn">
-                <a href="/dashboard" data-router-link>뒤로가기</a>
+                <a href="/dashboard" data-router-link>${language[languageKey]["Back"]}</a>
             </button>
-            <button type="submit" class="pw-save-btn">변경하기</button>
+            <button type="submit" class="pw-save-btn">${language[languageKey]["Change"]}</button>
           </div>
         </div>
       </div>
@@ -91,9 +91,9 @@ export function loadChangePassword() {
   saveBtn.addEventListener("click", (e) => {
     e.preventDefault();
     if (newPassword.value === newPasswordRetype.value) {
-      alert("비밀번호가 성공적으로 변경되었습니다!");
+      alert(language[languageKey]["SuccessPasswordChange"]);
     } else {
-      alert("비밀번호가 일치하지 않습니다.");
+      alert(language[languageKey]["FailPasswordChange"]);
     }
   });
 }

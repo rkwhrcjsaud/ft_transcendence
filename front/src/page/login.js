@@ -2,25 +2,25 @@ import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { getSecretValue } from "../vault";
 import { loadCSS } from "../utils/loadcss";
-
+import { language } from "../utils/language";
 //기존 js 코드 온전히 유지한채로 구조와 스타일만 변경함
 export function loadLogin() {
   loadCSS("../styles/login.css");
-
+  const languageKey = localStorage.getItem("selectedLanguage");
   const html = `
     <div class="login-container">
       <div class="login-card">
-        <h3 class="login-title">로그인</h3>
+        <h3 class="login-title">${language[languageKey]["Login"]}</h3>
         <div id="alert-container"></div>
         
         <form id="login-form">
           <div class="form-group">
-            <label for="email" class="form-label">이메일</label>
+            <label for="email" class="form-label">${language[languageKey]["Email"]}</label>
             <input type="email" id="email" class="form-input" placeholder="Email">
           </div>
           
           <div class="form-group">
-            <label for="password" class="form-label">비밀번호</label>
+            <label for="password" class="form-label">${language[languageKey]["Password"]}</label>
             <div class="password-input-wrapper">
               <input type="password" id="password" class="form-input" placeholder="Password">
               <button type="button" id="toggle-password" class="toggle-btn">
@@ -29,20 +29,20 @@ export function loadLogin() {
             </div>
           </div>
           
-          <button type="submit" class="submit-btn">로그인</button>
+          <button type="submit" class="submit-btn">${language[languageKey]["Login"]}</button>
         </form>
         
         <div class="social-login">
           <button id="social-login" class="social-btn">
             <a href="/42" data-router-link>
-              <img src="/42_logo_white.png" alt="42" class="login-btn-42logo">소셜 로그인
+              <img src="/42_logo_white.png" alt="42" class="login-btn-42logo">${language[languageKey]["SocialLogin"]}
             </a>
           </button>
         </div>
         
         <div class="register-link">
-          <span>아직 계정이 없으신가요?</span>
-          <a href="/register">가입 하러가기 🏓</a>
+          <span>${language[languageKey]["RegisterMessage"]}</span>
+          <a href="/register">${language[languageKey]["RegisterPage"]}</a>
         </div>
       </div>
     </div>

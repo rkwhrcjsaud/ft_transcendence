@@ -2,47 +2,47 @@ import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { getSecretValue } from "../vault";
 import { loadCSS } from "../utils/loadcss";
-
+import { language } from "../utils/language";
 export function loadRegister() {
   loadCSS("../styles/register.css");
-
+  const languageKey = localStorage.getItem("selectedLanguage");
   const html = `
     <div class="register-container">
       <div class="register-card">
-        <h3 class="register-title">회원가입</h3>
+        <h3 class="register-title">${language[languageKey]["Register"]}</h3>
         <div id="alert-container"></div>
         
         <form id="register-form">
           <div class="form-group">
-            <label for="email" class="form-label">이메일</label>
+            <label for="email" class="form-label">${language[languageKey]["Email"]}</label>
             <div class="form-input-container">
               <input type="email" id="email" class="form-input" placeholder="Email" required>
             </div>
           </div>
           
           <div class="form-group">
-            <label for="username" class="form-label">닉네임</label>
+            <label for="username" class="form-label">${language[languageKey]["NickName"]}</label>
             <div class="form-input-container">
               <input type="text" id="username" class="form-input" placeholder="Username" required>
             </div>
           </div>
           
           <div class="form-group">
-            <label for="first_name" class="form-label">성</label>
+            <label for="first_name" class="form-label">${language[languageKey]["FirstName"]}</label>
             <div class="form-input-container">
               <input type="text" id="first_name" class="form-input" placeholder="First Name" required>
             </div>
           </div>
           
           <div class="form-group">
-            <label for="last_name" class="form-label">이름</label>
+            <label for="last_name" class="form-label">${language[languageKey]["LastName"]}</label>
             <div class="form-input-container">
               <input type="text" id="last_name" class="form-input" placeholder="Last Name" required>
             </div>
           </div>
           
           <div class="form-group">
-            <label for="password" class="form-label">비밀번호</label>
+            <label for="password" class="form-label">${language[languageKey]["Password"]}</label>
             <div class="password-input-wrapper">
               <input type="password" id="password" class="form-input" placeholder="Password" required minLength="8">
               <button type="button" id="toggle-password" class="toggle-btn">
@@ -52,7 +52,7 @@ export function loadRegister() {
           </div>
           
           <div class="form-group confirm-password-group">
-            <label for="password2" class="form-label">비밀번호 확인</label>
+            <label for="password2" class="form-label">${language[languageKey]["ConfirmPassword"]}</label>
             <div class="confirm-password-input-wrapper">
               <input type="password" id="password2" class="form-input" placeholder="Confirm Password" required minLength="8">
               <button type="button" id="toggle-password2" class="toggle-btn">
@@ -61,15 +61,15 @@ export function loadRegister() {
             </div>
           </div>
           <div id="register_newPwIncorrectMsg" class="new-pw-incorrect-msg">
-            비밀번호가 일치하지 않습니다. 비밀번호를 확인해주세요.
+          ${language[languageKey]["IncorrectPassword"]}
           </div>
           
-          <button type="submit" class="submit-btn">가입 완료하기</button>
+          <button type="submit" class="submit-btn">${language[languageKey]["Submit"]}</button>
         </form>
         
         <div class="login-link">
-          <span>이미 회원이신가요?</span>
-          <a href="/login">로그인 하러가기 🏓</a>
+          <span>${language[languageKey]["AccountExist"]}</span>
+          <a href="/login">${language[languageKey]["LoginPage"]}</a>
         </div>
       </div>
     </div>
@@ -136,7 +136,7 @@ export function loadRegister() {
     const password2 = password2Input.value;
 
     if (password !== password2) {
-      showAlert("Passwords do not match");
+      showAlert(language[languageKey]["IncorrectPassword"]);
       return;
     }
 
@@ -163,10 +163,10 @@ export function loadRegister() {
     } catch (error) {
       if (error.response) {
         showAlert(
-          error.response.data.error || "An error occurred. Please try again"
+          error.response.data.error || language[languageKey]["Error"]
         );
       } else {
-        showAlert("An unknown error occurred");
+        showAlert(language[languageKey]["Error"]);
       }
     }
   });

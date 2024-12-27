@@ -1,9 +1,9 @@
+import { language } from "../../utils/language";
 import { loadCSS } from "../../utils/loadcss";
-
 
 export function MatchHistoryAccordion() {
   loadCSS("../../styles/matchHistoryAccordion.css");
-
+  const languageKey = localStorage.getItem("selectedLanguage");
   // 목데이터: 매치 통계
   const stats = {
     total: 7,
@@ -13,6 +13,7 @@ export function MatchHistoryAccordion() {
   };
 
   // 목데이터: 매치 히스토리
+  // 아직 다국어 적용하지 않음 (매치 데이터를 반영하기 동적으로 때문)
   const matchData = [
     {
       date: "12월 24일",
@@ -77,7 +78,7 @@ export function MatchHistoryAccordion() {
                 aria-expanded="true"
                 aria-controls="matchHistoryContent"
             >
-            매치 히스토리
+            ${language[languageKey]["MatchHistory"]}
             <i class="fa-solid fa-chevron-down ms-2"></i>
           </button>
         </h2>
@@ -94,28 +95,28 @@ export function MatchHistoryAccordion() {
               <div class="card">
                 <div class="card-body">
                   <div class="stat-value">${stats.total}</div>
-                  <div class="stat-label">TOTAL</div>
+                  <div class="stat-label">${language[languageKey]["Total"]}</div>
                 </div>
               </div>
-              <!-- 이긴 횟수 카드 -->
+              <!-- 승리 카드 -->
               <div class="card">
                 <div class="card-body">
                   <div class="stat-value">${stats.wins}</div>
-                  <div class="stat-label">이긴 횟수</div>
+                  <div class="stat-label">${language[languageKey]["Victory"]}</div>
                 </div>
               </div>
-              <!-- 진 횟수 카드 -->
+              <!-- 패배 카드 -->
               <div class="card">
                 <div class="card-body">
                   <div class="stat-value">${stats.losses}</div>
-                  <div class="stat-label">진 횟수</div>
+                  <div class="stat-label">${language[languageKey]["Loss"]}</div>
                 </div>
               </div>
-              <!-- 비긴 횟수 카드 -->
+              <!-- 무승부 카드 -->
               <div class="card">
                 <div class="card-body">
                   <div class="stat-value">${stats.draws}</div>
-                  <div class="stat-label">비긴 횟수</div>
+                  <div class="stat-label">${language[languageKey]["Draw"]}</div>
                 </div>
               </div>
             </div>

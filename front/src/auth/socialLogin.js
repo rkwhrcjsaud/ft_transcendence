@@ -32,7 +32,7 @@ export async function socialLogin() {
                 social_error = error.response.data;
                 status = error.response.status;
             } else {
-                social_error = "Unknown error try again later";
+                social_error = language[languageKey]["Error"];
                 status = 500;
             }
             

@@ -66,7 +66,7 @@
             </ul>
           </div>
           <button id="auth-button" class="btn btn-outline-danger">
-            <a href="/login">로그인</a>
+            <a href="/login">Login</a>
           </button>
         </div>
       </div>
@@ -83,34 +83,49 @@
     const authButton = document.getElementById("auth-button");
     const langDropdown = document.getElementById("languageDropdown");
     const langItems = document.querySelectorAll(".dropdown-item");
-
-    // Language selection logic
+    
+    // 초기 선택된 언어가 없으면 한국어로 설정
+    if (!localStorage.getItem("selectedLanguage")) {
+      localStorage.setItem("selectedLanguage", "한국어");
+    }
+    
+    // 언어 선택 로직
     langItems.forEach((item) => {
       item.addEventListener("click", (e) => {
         e.preventDefault();
-
-        // 드롭다운 버튼에서 텍스트만 변경 (아이콘 제외)
+        
+        // 선택된 언어 텍스트만 가져오기 (아이콘 제외)
         const selectedText = item.textContent.trim(); // 선택된 언어의 텍스트
         langDropdown.querySelector(".dropdown-text").textContent = selectedText;
-
+        
+        // localStorage에 선택된 언어 저장
+        localStorage.setItem("selectedLanguage", selectedText);
+  
         // 활성화 상태 업데이트
         langItems.forEach((lang) => lang.classList.remove("active"));
         item.classList.add("active");
+  
+        // 언어 변경 후 페이지 새로 고침
+        window.location.reload();
       });
     });
-
-    // // Authentication button logic
+  
+    // 초기 언어 표시 (localStorage에서 가져온 값에 맞게)
+    const initialLanguage = localStorage.getItem("selectedLanguage");
+    langDropdown.querySelector(".dropdown-text").textContent = initialLanguage;
+  
+    // // 인증 버튼 로직
     // authButton.addEventListener("click", () => {
     //   if (authButton.textContent === "Login") {
     //     window.location.href = "/login";
     //   } else {
-    //     // Implement logout logic
+    //     // 로그아웃 로직 구현
     //     alert("Logged out!");
     //     authButton.textContent = "Login";
     //   }
     // });
-
-    // Highlight active link
+  
+    // 활성화된 링크 표시
     const navLinks = document.querySelectorAll(".nav-link");
     navLinks.forEach((link) => {
       link.addEventListener("click", (e) => {
@@ -119,4 +134,5 @@
       });
     });
   });
+  
 </script>

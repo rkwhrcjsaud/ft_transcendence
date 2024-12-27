@@ -1,8 +1,9 @@
+import { language } from "../../utils/language";
 import { loadCSS } from "../../utils/loadcss";
 
 export function ProfileAccordion() {
   loadCSS("../../styles/profileAccordion.css");
-
+  const languageKey = localStorage.getItem("selectedLanguage");
   const html = `
     <div class="accordion" id="profileAccordion">
       <div class="accordion-item">
@@ -14,10 +15,10 @@ export function ProfileAccordion() {
                 data-bs-target="#profileContent"
                 aria-expanded="true"
                 aria-controls="profileContent"
-            >
-            프로필
-            <i class="fa-solid fa-chevron-down ms-2"></i>
-          </button>
+              >
+              ${language[languageKey]["Profile"]}
+              <i class="fa-solid fa-chevron-down ms-2"></i>
+              </button>
         </h2>
         <div
             id="profileContent"
@@ -33,13 +34,15 @@ export function ProfileAccordion() {
               <h2 class="profile-name">ranchoi</h2>
               <div class="profile-buttons">
                 <button class="profile-button profile-setting-btn">
+                  <i class="fas fa-cog"></i>
                   <a href="/edit_profile" data-router-link>
-                    <i class="fas fa-cog"></i> 프로필 수정
+                    ${language[languageKey]["ProfileEdit"]}
                   </a>
                 </button>
                 <button class="profile-button">
+                  <i class="fas fa-lock"></i>
                   <a href="/change_password" data-router-link>
-                    <i class="fas fa-lock"></i> 비밀번호 변경
+                    ${language[languageKey]["PasswordChange"]}
                   </a>
                 </button>
               </div>

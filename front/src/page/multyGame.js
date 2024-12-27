@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import { Text } from 'troika-three-text';
 import { loadCSS } from '../utils/loadcss';
+import { language } from "../utils/language";
 
 export function loadMultyGame() {
   loadCSS('../styles/multyGame.css');
+  const languageKey = localStorage.getItem("selectedLanguage");
 
   const html = `
     <div class="game-container">
@@ -13,12 +15,12 @@ export function loadMultyGame() {
 
       <div id="game-rules" class="game-rules">
         <Button id="start-game" class="start-game">
-          Start
+          ${language[languageKey]["Start"]}
         </Button>
-        <h4 className="game-rules-title">Pong Rules:</h4>
-        <p>The first player to 11 points, or with the most points when the time runs out wins!</p>
-        <p><b>Left</b> player controls: W (up), S (down).</p>
-        <p><b>Right</b> player controls: ArrowUp (up), ArrowDown (down).</p>
+        <h4 className="game-rules-title">${language[languageKey]["PongRules"]}</h4>
+        <p>${language[languageKey]["FirstTo11"]}</p>
+        <p>${language[languageKey]["LeftPlayer"]}</p>
+        <p>${language[languageKey]["RightPlayer"]}</p>
       </div>
     </div>
   `

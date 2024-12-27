@@ -28,7 +28,7 @@ export function ProfileAccordion() {
           <div class="accordion-body">
             <div class="profile-container">
               <div class="profile-image">
-                <img src="../../../public/default_profile.jpeg" alt="Profile" />
+                <img src="/default_profile.jpeg" alt="Profile" />
               </div>
               <h2 class="profile-name">ranchoi</h2>
               <div class="profile-buttons">

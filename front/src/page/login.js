@@ -35,7 +35,7 @@ export function loadLogin() {
         <div class="social-login">
           <button id="social-login" class="social-btn">
             <a href="/42" data-router-link>
-              <img src="../../public/42_logo_white.png" alt="42" class="login-btn-42logo">소셜 로그인
+              <img src="/42_logo_white.png" alt="42" class="login-btn-42logo">소셜 로그인
             </a>
           </button>
         </div>

@@ -19,11 +19,11 @@ export function MatchHistoryAccordion() {
       score: "2 : 1",
       player1: {
         name: "testUser1",
-        profileImg: "../../../public/default_profile.jpeg",
+        profileImg: "/default_profile.jpeg",
       },
       player2: {
         name: "testUser2",
-        profileImg: "../../../public/default_profile.jpeg",
+        profileImg: "/default_profile.jpeg",
       },
     },
     {
@@ -31,11 +31,11 @@ export function MatchHistoryAccordion() {
       score: "1 : 2",
       player1: {
         name: "testUser1",
-        profileImg: "../../../public/default_profile.jpeg",
+        profileImg: "/default_profile.jpeg",
       },
       player2: {
         name: "testUser2",
-        profileImg: "../../../public/default_profile.jpeg",
+        profileImg: "/default_profile.jpeg",
       },
     },
   ];

@@ -6,8 +6,8 @@ export function loadLanding() {
   const html = `
     <div class="landing-page">
       <div class="ball-container">
-        <img src="../../public/ball.png" alt="Ping Pong Ball" class="landing-ball" />
-        <img src="../../public/bouncy.png" alt="bouncy effect" class="bouncy-effect" />
+        <img src="/ball.png" alt="Ping Pong Ball" class="landing-ball" />
+        <img src="/bouncy.png" alt="bouncy effect" class="bouncy-effect" />
         <div class="landing-button-group">
           <button class="landing-button landing-dashboard-btn" id="landing-btn-dashboard">
             <a href="/dashboard" data-router-link>

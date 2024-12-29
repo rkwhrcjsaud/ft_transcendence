@@ -245,100 +245,11 @@ export function loadGame() {
     });
     renderer.setSize(800, 600);
 
-      // 4분면 스포트라이트 설정
-    const quadSpotLights = [
-      { pos: [-175, 200, -125], target: [-175, 0, -125] }, // 왼쪽 상단
-      { pos: [-175, 200, 125], target: [-175, 0, 125] },   // 왼쪽 하단
-      { pos: [175, 200, -125], target: [175, 0, -125] },   // 오른쪽 상단
-      { pos: [175, 200, 125], target: [175, 0, 125] }      // 오른쪽 하단
-    ];
-
-  // 각 사분면의 스포트라이트 생성
-  quadSpotLights.forEach(({ pos, target }) => {
-    const spotLight = new THREE.SpotLight(0xffffff, 0.8);
-    spotLight.position.set(...pos);
-    spotLight.target.position.set(...target);
-    spotLight.angle = Math.PI / 8;  // 더 좁은 각도로 수정
-    spotLight.penumbra = 0.05;      // 더 날카로운 그림자 경계
-    spotLight.decay = 1.0;
-    spotLight.distance = 400;
-
-    // 그림자 설정 개선
-    spotLight.castShadow = true;
-    spotLight.shadow.mapSize.width = 2048;    // 그림자 해상도 증가
-    spotLight.shadow.mapSize.height = 2048;
-    spotLight.shadow.camera.near = 10;
-    spotLight.shadow.camera.far = 400;
-    spotLight.shadow.bias = -0.001;
-    spotLight.shadow.radius = 1;    // 그림자 선명도 조정
-    
-    scene.add(spotLight);
-    scene.add(spotLight.target);
-  });
-    // 기본 주변광 설정
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
-    
-    // 메인 스포트라이트 - 테이블 중앙 위에서 비추는 주 조명
-    const mainSpotLight = new THREE.SpotLight(0xffffff, 1);
-    mainSpotLight.position.set(0, 400, 0);
-    mainSpotLight.angle = Math.PI / 3;
-    mainSpotLight.penumbra = 0.3;
-    mainSpotLight.decay = 1.5;
-    mainSpotLight.distance = 1000;
-    mainSpotLight.castShadow = true;
-    mainSpotLight.shadow.bias = -0.0001;
-    mainSpotLight.shadow.mapSize.width = 2048;
-    mainSpotLight.shadow.mapSize.height = 2048;
-    mainSpotLight.shadow.camera.near = 100;
-    mainSpotLight.shadow.camera.far = 1000;
-    scene.add(mainSpotLight);
-    
-    // 왼쪽 패들 강조 조명
-    const leftPaddleLight = new THREE.SpotLight(0x4169E1, 0.8); // 로열블루
-    leftPaddleLight.position.set(-350, 100, 0);
-    leftPaddleLight.angle = Math.PI / 6;
-    leftPaddleLight.penumbra = 0.4;
-    leftPaddleLight.decay = 1.5;
-    leftPaddleLight.distance = 300;
-    leftPaddleLight.castShadow = true;
-    scene.add(leftPaddleLight);
-    
-    // 오른쪽 패들 강조 조명
-    const rightPaddleLight = new THREE.SpotLight(0xFF4500, 0.8); // 오렌지레드
-    rightPaddleLight.position.set(350, 100, 0);
-    rightPaddleLight.angle = Math.PI / 6;
-    rightPaddleLight.penumbra = 0.4;
-    rightPaddleLight.decay = 1.5;
-    rightPaddleLight.distance = 300;
-    rightPaddleLight.castShadow = true;
-    scene.add(rightPaddleLight);
-    
-    // 네 모서리에 부드러운 포인트 조명 추가
-    const cornerLights = [
-      { pos: [-300, 50, -200], color: 0x1E90FF, intensity: 0.4 }, // 파란색
-      { pos: [-300, 50, 200], color: 0x32CD32, intensity: 0.4 },  // 라임그린
-      { pos: [300, 50, -200], color: 0xFF69B4, intensity: 0.4 },  // 핫핑크
-      { pos: [300, 50, 200], color: 0xFFD700, intensity: 0.4 }    // 골드
-    ];
-
-    cornerLights.forEach(({ pos, color, intensity }) => {
-      const light = new THREE.PointLight(color, intensity);
-      light.position.set(...pos);
-      light.distance = 400;
-      light.decay = 2;
-      scene.add(light);
-    });
-    
-    // 공을 따라다니는 동적 조명
-    const ballLight = new THREE.PointLight(0xffffff, 0.6);
-    ballLight.distance = 200;
-    ballLight.decay = 1.5;
-    scene.add(ballLight);   
-
-    // 렌더러의 그림자 설정 강화
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // 렌더러 설정
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
@@ -349,7 +260,6 @@ export function loadGame() {
       color: 0xCEB195,
       roughness: 0.8,
       metalness: 0.2,
-      envMapIntensity: 1.0
     });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
@@ -363,7 +273,6 @@ export function loadGame() {
       color: 0x1B5E20,
       roughness: 0.7,
       metalness: 0.1,
-      shadowSide: THREE.DoubleSide
     });
     const tableTop = new THREE.Mesh(tableTopGeometry, tableTopMaterial);
     tableTop.position.y = 0;
@@ -374,8 +283,6 @@ export function loadGame() {
   // 테이블 라인들 생성
   const lineMaterial = new THREE.MeshBasicMaterial({ 
     color: 0xFFFFFF,
-    emissive: 0xFFFFFF,
-    emissiveIntensity: 0.5
 });
   // 중앙선
   const centerLineGeometry = new THREE.PlaneGeometry(700, 2);
@@ -422,7 +329,6 @@ export function loadGame() {
       color: isLeft ? 0x4169E1 : 0xFF4500,
       roughness: 0.6,
       metalness: 0.3,
-      envMapIntensity: 1.0
     });
   
     const paddle = new THREE.Mesh(paddleGeometry, paddleMaterial);
@@ -441,12 +347,11 @@ export function loadGame() {
 
   // 공 생성
   const ballGeometry = new THREE.SphereGeometry(6);
-  // 공의 재질 수정 (더 선명한 그림자를 위해)
+  // 공의 재질 수정
   const ballMaterial = new THREE.MeshStandardMaterial({ 
     color: 0xffffff,
     roughness: 0.2,
     metalness: 0.7,
-    shadowSide: THREE.FrontSide
   });
 
   ball = new THREE.Mesh(ballGeometry, ballMaterial);
@@ -487,22 +392,6 @@ export function loadGame() {
 // 애니메이션 함수 수정
 function animate() {
   animationId = requestAnimationFrame(animate);
-
-  // 공을 따라다니는 조명 업데이트
-  if (ball) {
-    ballLight.position.copy(ball.position);
-    ballLight.position.y += 20; // 공 위쪽에 위치
-  }
-
-  // 패들 조명 위치 업데이트
-  if (leftPaddle) {
-    leftPaddleLight.position.z = leftPaddle.position.z;
-    leftPaddleLight.target = leftPaddle;
-  }
-  if (rightPaddle) {
-    rightPaddleLight.position.z = rightPaddle.position.z;
-    rightPaddleLight.target = rightPaddle;
-  }
 
   // 텍스트 업데이트
   scoreText.text = `${scores.left} - ${scores.right}`;

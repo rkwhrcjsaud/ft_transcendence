@@ -14,13 +14,15 @@ export function loadMultyGame() {
       <canvas id="pong-area" class="pong-area"></canvas>
 
       <div id="game-rules" class="game-rules">
-        <Button id="start-game" class="start-game">
-          ${language[languageKey]["Start"]}
-        </Button>
-        <h4 className="game-rules-title">${language[languageKey]["PongRules"]}</h4>
+        <h4 className="game-rules-title" class="game-rules-title">${language[languageKey]["PongRules"]}</h4>
         <p>${language[languageKey]["FirstTo11"]}</p>
         <p>${language[languageKey]["LeftPlayer"]}</p>
         <p>${language[languageKey]["RightPlayer"]}</p>
+        <div class="start-game-wrapper">
+          <Button id="start-game" class="start-game">
+            ${language[languageKey]["Start"]}
+          </Button>
+        </div>
       </div>
     </div>
   `
@@ -63,6 +65,7 @@ export function loadMultyGame() {
   function renderMessage() {
     if (message === 'menu')
       overlay.addEventListener('click', handleOverlayClick);
+      overlay.style.cursor = 'pointer';
     if (message !== 'none') {
       overlay.style.visibility = 'visible';
       overlay.innerHTML = message;
@@ -73,8 +76,8 @@ export function loadMultyGame() {
 
   const scoreText = new Text();
   scoreText.text = `${scores.left} - ${scores.right}`;
-  scoreText.fontSize = 100;
-  scoreText.color = 0x000000;
+  scoreText.fontSize = 60;
+  scoreText.color = 0xffffff;
   scoreText.position.set(0, -250, 0);
   scoreText.rotation.x = Math.PI;
   scoreText.textAlign = 'center';
@@ -84,9 +87,9 @@ export function loadMultyGame() {
 
   const timeText = new Text();
   timeText.text = `${minutes}:${seconds}`;
-  timeText.fontSize = 20;
-  timeText.color = 0x000000;
-  timeText.position.set(250, -250, 0);
+  timeText.fontSize = 16;
+  timeText.color = 0xffffff;
+  timeText.position.set(350, -280, 0);
   timeText.rotation.x = Math.PI;
   timeText.textAlign = 'right';
   timeText.anchorX = 'right';
@@ -179,13 +182,13 @@ export function loadMultyGame() {
 
   function initGame() {
     pongArea.style.display = 'visible';
-    overlay.style.display = 'block';
+    overlay.style.display = 'flex';
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-400, 400, -300, 300, 1, 1000);
     const renderer = new THREE.WebGLRenderer({ canvas: pongArea });
 
     const backgroundGeometry = new THREE.BoxGeometry(800, 600);
-    const backgroundMaterial = new THREE.MeshStandardMaterial({ color: "skyblue" });
+    const backgroundMaterial = new THREE.MeshStandardMaterial({ color: "0xffffff" });
     const background = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
     background.position.set(0, 0, 0);
     scene.add(background);
@@ -215,14 +218,15 @@ export function loadMultyGame() {
     const convertBallPosition = convertToThreeCoordinate(400, 300, 800, 600);
 
     const paddleGeometry = new THREE.BoxGeometry(12, 120, 12);
-    const paddleMeterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-    const leftPaddle = new THREE.Mesh(paddleGeometry, paddleMeterial);
-    const RightPaddle = new THREE.Mesh(paddleGeometry, paddleMeterial);
+    const leftPaddleMeterial = new THREE.MeshStandardMaterial({ color: 0xFF6F00 });
+    const rightPaddleMeterial = new THREE.MeshStandardMaterial({ color: 0xee });
+    const leftPaddle = new THREE.Mesh(paddleGeometry, leftPaddleMeterial);
+    const RightPaddle = new THREE.Mesh(paddleGeometry, rightPaddleMeterial);
     leftPaddle.position.set(leftPaddlePosition.x, leftPaddlePosition.y, 6);
     RightPaddle.position.set(rightPaddlePosition.x, rightPaddlePosition.y, 6);
 
     const ballGeometry = new THREE.SphereGeometry(6);
-    const ballMaterial = new THREE.MeshStandardMaterial({ color: "white" });
+    const ballMaterial = new THREE.MeshStandardMaterial({ color: 0xFF6F00 });
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
     ball.position.set(convertBallPosition.x, convertBallPosition.y, 6);
 

@@ -66,7 +66,7 @@ export const language = {
   
       //loadMultyGame
       Start: "게임시작",
-      PongRules: "퐁규칙:",
+      PongRules: "퐁 규칙",
       FirstTo11: "11점 선점 또는 시간 종료 시 가장 많은 점수를 가진 플레이어가 승리합니다!",
       LeftPlayer: "왼쪽 플레이어 조작: W (위), S (아래).",
       RightPlayer: "오른쪽 플레이어 조작: ArrowUp (위), ArrowDown (아래).",
@@ -163,7 +163,7 @@ export const language = {
   
       //loadMultyGame
       Start: "Start Game",
-      PongRules: "Pong Rules:",
+      PongRules: "Pong Rules",
       FirstTo11: "The first player to reach 11 points or the player with the most points when time runs out wins!",
       LeftPlayer: "Left player controls: W (Up), S (Down).",
       RightPlayer: "Right player controls: ArrowUp (Up), ArrowDown (Down).",
@@ -260,7 +260,7 @@ export const language = {
   
       //loadMultyGame
       Start: "Démarrer le jeu",
-      PongRules: "Règles de Pong :",
+      PongRules: "Règles de Pong",
       FirstTo11: "Le premier à atteindre 11 points ou le joueur avec le plus de points lorsque le temps est écoulé gagne !",
       LeftPlayer: "Contrôles du joueur gauche : W (Haut), S (Bas).",
       RightPlayer: "Contrôles du joueur droit : Flèche haut (Haut), Flèche bas (Bas).",

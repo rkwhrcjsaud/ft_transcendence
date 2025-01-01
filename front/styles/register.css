@@ -8,7 +8,7 @@
 
 .register-card {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   padding: 2.5rem 3.5rem;
   background-color: #efefef;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -33,7 +33,7 @@
 }
 
 .form-label {
-  width: 120px;
+  width: 300px;
   min-width: 120px;
   margin-bottom: 0;
   text-align: left;

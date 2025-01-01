@@ -9,6 +9,11 @@
   border-radius: 2rem;
 }
 
+#verify-email-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
 .verify-email-title {
   font-size: 1.8rem;
   font-weight: 600;
@@ -23,17 +28,19 @@
 }
 
 .email-form-input-container {
-  width: 72%;
+  width: 80%;
 }
 
-.form-label { /* 입력 폼 레이블 스타일 */
+.verify-form-label {
+  /* 입력 폼 레이블 스타일 */
   font-weight: 500;
   color: #888;
   margin-bottom: 0.2rem;
   font-size: 0.9rem;
 }
 
-.form-input { /* 입력 폼 스타일 */
+.verify-form-input {
+  /* 입력 폼 스타일 */
   width: 100%;
   border: none;
   outline: none;
@@ -56,8 +63,9 @@
   color: #333;
 }
 
-.send-email-btn { /* 이메일 인증번호 전송 버튼 스타일 */
-  width: 140px;
+.send-email-btn {
+  /* 이메일 인증번호 전송 버튼 스타일 */
+  width: 18%;
   border: none;
   background-color: #ee532c;
   color: #fff;
@@ -72,7 +80,8 @@
   background-color: #555;
 }
 
-.verify-email-submit-btn { /* 인증하기 버튼 스타일 */
+.verify-email-submit-btn {
+  /* 인증하기 버튼 스타일 */
   margin-top: 2rem;
   margin: 2rem 0 0.6rem;
   padding: 0.65rem 2rem;

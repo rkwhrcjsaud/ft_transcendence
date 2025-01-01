@@ -21,7 +21,15 @@ const routes = {
   "/verify": () => loadVerifyEmail(),
 };
 
+function clearAppContent() {
+  const app = document.getElementById("app");
+  if (app) {
+      app.innerHTML = ""; // 기존 내용을 초기화
+  }
+}
+
 function loadPage(path) {
+  clearAppContent();
   const route = routes[path];
   if (route) {
     route();

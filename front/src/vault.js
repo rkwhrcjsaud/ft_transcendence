@@ -1,6 +1,9 @@
-/*
-ranchoi : vault.js가 CommonJS 방식(module.exports)으로 작성됐는데 모듈 방식 (import { } from)으로 불러오려고 해서 충돌이 발생하는거 같습니다. 아래 주석처리된 코드는 프론트 작업 렌더링 하기 위해 임시로 넣은 코드입니다!
-*/
+// const axios = require('axios');
+// const fs = require('fs');
+
+// const VAULT_ADDR = process.env.VAULT_ADDR;
+// const ROLE_ID_FILE = process.env.ROLE_ID_FILE;
+// const SECRET_ID_FILE = process.env.SECRET_ID_FILE;
 
 export async function getVaultToken() {
     const roleId = JSON.parse(fs.readFileSync(ROLE_ID_FILE, 'utf-8')).data.role_id;
@@ -32,12 +35,6 @@ export async function getSecretValue(secretPath) {
 }
 
 
-// const axios = require('axios');
-// const fs = require('fs');
-
-// const VAULT_ADDR = process.env.VAULT_ADDR;
-// const ROLE_ID_FILE = process.env.ROLE_ID_FILE;
-// const SECRET_ID_FILE = process.env.SECRET_ID_FILE;
 
 // async function getVaultToken() {
 //     // Role ID와 Secret ID 읽기

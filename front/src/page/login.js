@@ -3,6 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { getSecretValue } from "../vault";
 import { loadCSS } from "../utils/loadcss";
 import { language } from "../utils/language";
+
 //기존 js 코드 온전히 유지한채로 구조와 스타일만 변경함
 export function loadLogin() {
   loadCSS("../styles/login.css");
@@ -15,8 +16,8 @@ export function loadLogin() {
         
         <form id="login-form">
           <div class="form-group">
-            <label for="email" class="form-label">${language[languageKey]["Email"]}</label>
-            <input type="email" id="email" class="form-input" placeholder="Email">
+            <label for="login-email" class="form-label">${language[languageKey]["Email"]}</label>
+            <input type="email" id="login-email" class="form-input" placeholder="Email">
           </div>
           
           <div class="form-group">
@@ -129,7 +130,7 @@ export function loadLogin() {
 //         <form id="login-form">
 //             <div class="mb-3">
 //             <label for="email" class="form-label">Email</label>
-//             <input type="email" id="email" class="form-control" placeholder="Email">
+//             <input type="email"  class="form-control" placeholder="Email">
 //             </div>
 //             <div class="mb-3">
 //             <label for="password" class="form-label">Password</label>

@@ -1,21 +1,21 @@
 import axios from "axios";
 import { loadCSS } from "../utils/loadcss";
 import { language } from "../utils/language";
+
 function loadVerifyEmail() {
   loadCSS("../styles/verifyEmail.css");
   const languageKey = localStorage.getItem("selectedLanguage");
-  const content = document.getElementById("app");
 
-  content.innerHTML = `
+  const html = `
     <div class="verify-email-container mt-5">
       <h1 class="verify-email-title">${language[languageKey]["VerifyEmail"]}</h1>
       <div id="alert-container"></div>
       <form id="verify-email-form">
         <div class="form-group mb-3">
-          <label for="email" class="form-label">${language[languageKey]["Email"]}</label>
+          <label for="verify-email" class="form-label">${language[languageKey]["Email"]}</label>
           <div class="email-form-wrapper">
             <div class="email-form-input-container">
-              <input type="email" id="email" class="form-input" placeholder=${language[languageKey]["InputEmail"]} required>
+              <input type="email" id="verify-email" class="form-input" placeholder="${language[languageKey]["InputEmail"]}">
             </div>
             <button class="send-email-btn">${language[languageKey]["SendEmail"]}</button>
           </div>
@@ -24,13 +24,15 @@ function loadVerifyEmail() {
         <div class="form-group mb-3">
           <label for="otp" class="form-label">${language[languageKey]["VerifyCode"]}</label>
           <div class="otp-form-input-container">
-            <input type="text" id="otp" class="form-input" placeholder="${language[languageKey]["InputVerifyCode"]}" required />
+            <input type="text" id="otp" class="form-input" placeholder="${language[languageKey]["InputVerifyCode"]}">
           </div>
         </div>
         <button type="submit" class="verify-email-submit-btn btn btn-primary w-100">${language[languageKey]["Verify"]}</button>
       </form>
     </div>
   `;
+
+  document.getElementById("app").innerHTML += html;
 
   const verifyEmailForm = document.getElementById("verify-email-form");
   const emailInput = document.getElementById("email");
@@ -73,10 +75,10 @@ function loadVerifyEmail() {
           alertMessage = language[languageKey]["DuplicateEmail"];
           alertColour = "warning";
           break;
-        case 404:
-          alertMessage = language[languageKey]["PleaseCode"];
-          alertColour = "danger";
-          break;
+        // case 404: 이메일/otp 중 하나라도 입력을 안 했을 시 처리하는 로직이 위에 이미 명시되어 있으므로 주석처리
+        //   alertMessage = language[languageKey]["PleaseCode"];
+        //   alertColour = "danger";
+        //   break;
         default:
           alertMessage = language[languageKey]["Error"];
           alertColour = "danger";

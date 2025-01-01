@@ -2,9 +2,9 @@ import { loadCSS } from "../utils/loadcss";
 import { language } from "../utils/language";
 
 export function loadEditProfile() {
-    loadCSS("../styles/editProfile.css");
-    const languageKey = localStorage.getItem("selectedLanguage");
-    const html = `
+  loadCSS("../styles/editProfile.css");
+  const languageKey = localStorage.getItem("selectedLanguage");
+  const html = `
     <div class="edit-profile-container">
         <h1 class="edit-profile-title">${language[languageKey]["EditAccount"]}</h1>
         <div class="edit-profile-content">
@@ -36,7 +36,7 @@ export function loadEditProfile() {
                     </div>
                     <div class="form-group">
                         <label class="form-label">${language[languageKey]["Email"]}</label>
-                        <input type="text" id="email" class="form-input">
+                        <input type="text"  class="form-input">
                     </div>
                 </form>
                 <div class="form-buttons">
@@ -47,37 +47,37 @@ export function loadEditProfile() {
         </div>
     </div>`;
 
-    document.getElementById('app').innerHTML = html;
+  document.getElementById("app").innerHTML = html;
 
-    // JavaScript 로직
-    const profileImage = document.getElementById('profileImage');
-    const deleteImageBtn = document.getElementById('deleteImageBtn');
-    const imageUpload = document.getElementById('imageUpload');
+  // JavaScript 로직
+  const profileImage = document.getElementById("profileImage");
+  const deleteImageBtn = document.getElementById("deleteImageBtn");
+  const imageUpload = document.getElementById("imageUpload");
 
-    imageUpload.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                profileImage.src = e.target.result;
-                deleteImageBtn.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
+  imageUpload.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        profileImage.src = e.target.result;
+        deleteImageBtn.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  deleteImageBtn.addEventListener("click", () => {
+    profileImage.src = "default_profile.jpeg";
+  });
+
+  const formInputs = document.querySelectorAll(".form-input");
+  formInputs.forEach((input) => {
+    input.addEventListener("focus", (e) => {
+      e.target.classList.add("active");
     });
 
-    deleteImageBtn.addEventListener('click', () => {
-        profileImage.src = 'default_profile.jpeg';
+    input.addEventListener("blur", (e) => {
+      e.target.classList.remove("active");
     });
-
-    const formInputs = document.querySelectorAll('.form-input');
-    formInputs.forEach(input => {
-        input.addEventListener('focus', (e) => {
-            e.target.classList.add('active');
-        });
-
-        input.addEventListener('blur', (e) => {
-            e.target.classList.remove('active');
-        });
-    });
+  });
 }

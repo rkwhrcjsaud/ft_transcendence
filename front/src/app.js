@@ -2,7 +2,7 @@ import { loadLanding } from "./page/landing";
 import { loadLogin } from "./page/login";
 import { loadRegister } from "./page/register";
 import { loadVerifyEmail } from "./auth/verifyEmail";
-import { loadMultyGame } from "./page/game/gameManger";
+import { loadGame } from "./page/game";
 import { socialLogin } from "./auth/socialLogin";
 import { loadDashboard } from "./page/dashboard_related/dashboard";
 import { loadEditProfile } from "./page/editProfile";
@@ -13,7 +13,7 @@ const routes = {
   "/dashboard": () => loadDashboard(),
   "/edit_profile": () => loadEditProfile(),
   "/change_password": () => loadChangePassword(),
-  "/play": () => loadMultyGame(),
+  "/play": () => loadGame(),
 
   "/login": () => loadLogin(),
   "/register": () => loadRegister(),

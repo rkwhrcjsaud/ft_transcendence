@@ -3,8 +3,8 @@ import { Text } from 'troika-three-text';
 import { loadCSS } from '../utils/loadcss';
 import { language } from "../utils/language";
 
-export function loadMultyGame() {
-  loadCSS('../styles/multyGame.css');
+export function loadGame() {
+  loadCSS('../styles/game.css');
   const languageKey = localStorage.getItem("selectedLanguage");
 
   const html = `
@@ -188,7 +188,7 @@ export function loadMultyGame() {
     const renderer = new THREE.WebGLRenderer({ canvas: pongArea });
 
     const backgroundGeometry = new THREE.BoxGeometry(800, 600);
-    const backgroundMaterial = new THREE.MeshStandardMaterial({ color: "0xffffff" });
+    const backgroundMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
     const background = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
     background.position.set(0, 0, 0);
     scene.add(background);

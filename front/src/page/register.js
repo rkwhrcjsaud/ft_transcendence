@@ -3,6 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { getSecretValue } from "../vault";
 import { loadCSS } from "../utils/loadcss";
 import { language } from "../utils/language";
+
 export function loadRegister() {
   loadCSS("../styles/register.css");
   const languageKey = localStorage.getItem("selectedLanguage");
@@ -14,37 +15,37 @@ export function loadRegister() {
         
         <form id="register-form">
           <div class="form-group">
-            <label for="email" class="form-label">${language[languageKey]["Email"]}</label>
+            <label for="register-email" class="form-label">${language[languageKey]["Email"]}</label>
             <div class="form-input-container">
-              <input type="email" id="email" class="form-input" placeholder="Email" required>
+              <input type="email" id="register-email" class="form-input" placeholder="${language[languageKey]["Email"]}" required>
             </div>
           </div>
           
           <div class="form-group">
-            <label for="username" class="form-label">${language[languageKey]["NickName"]}</label>
+            <label for="username" class="form-label">${language[languageKey]["Nickname"]}</label>
             <div class="form-input-container">
-              <input type="text" id="username" class="form-input" placeholder="Username" required>
+              <input type="text" id="username" class="form-input" placeholder="${language[languageKey]["Nickname"]}" required>
             </div>
           </div>
           
           <div class="form-group">
             <label for="first_name" class="form-label">${language[languageKey]["FirstName"]}</label>
             <div class="form-input-container">
-              <input type="text" id="first_name" class="form-input" placeholder="First Name" required>
+              <input type="text" id="first_name" class="form-input" placeholder="${language[languageKey]["FirstName"]}" required>
             </div>
           </div>
           
           <div class="form-group">
             <label for="last_name" class="form-label">${language[languageKey]["LastName"]}</label>
             <div class="form-input-container">
-              <input type="text" id="last_name" class="form-input" placeholder="Last Name" required>
+              <input type="text" id="last_name" class="form-input" placeholder="${language[languageKey]["LastName"]}" required>
             </div>
           </div>
           
           <div class="form-group">
             <label for="password" class="form-label">${language[languageKey]["Password"]}</label>
             <div class="password-input-wrapper">
-              <input type="password" id="password" class="form-input" placeholder="Password" required minLength="8">
+              <input type="password" id="password" class="form-input" placeholder="${language[languageKey]["Password"]}" required minLength="8">
               <button type="button" id="toggle-password" class="toggle-btn">
                 <i id="password-icon" class="bi bi-eye"></i>
               </button>
@@ -52,9 +53,9 @@ export function loadRegister() {
           </div>
           
           <div class="form-group confirm-password-group">
-            <label for="password2" class="form-label">${language[languageKey]["ConfirmPassword"]}</label>
+            <label for="password2" class="form-label">${language[languageKey]["RegisterConfirmPassword"]}</label>
             <div class="confirm-password-input-wrapper">
-              <input type="password" id="password2" class="form-input" placeholder="Confirm Password" required minLength="8">
+              <input type="password" id="password2" class="form-input" placeholder="${language[languageKey]["RegisterConfirmPassword"]}" required minLength="8">
               <button type="button" id="toggle-password2" class="toggle-btn">
                 <i id="password-icon2" class="bi bi-eye"></i>
               </button>
@@ -64,7 +65,11 @@ export function loadRegister() {
           ${language[languageKey]["IncorrectPassword"]}
           </div>
           
-          <button type="submit" class="submit-btn">${language[languageKey]["Submit"]}</button>
+          <button type="submit" class="submit-btn">
+            <a href="/verify" data-router-link>
+              ${language[languageKey]["Submit"]}
+            </a>
+          </button>
         </form>
         
         <div class="login-link">
@@ -162,9 +167,7 @@ export function loadRegister() {
       }
     } catch (error) {
       if (error.response) {
-        showAlert(
-          error.response.data.error || language[languageKey]["Error"]
-        );
+        showAlert(error.response.data.error || language[languageKey]["Error"]);
       } else {
         showAlert(language[languageKey]["Error"]);
       }

@@ -79,10 +79,11 @@ export const language = {
   
       //loadRegister
       Register: "회원가입",
-      Submit: "가입 완료하기",
+      Submit: "다음 ➡️",
       AccountExist: "이미 계정이 있으신가요?",
       LoginPage: "로그인 하러가기 🏓",
       Error: "오류가 발생했습니다.",
+      RegisterConfirmPassword: "비밀번호 확인",
   
       //verifyEmail
       VerifyEmail: "이메일 인증",
@@ -90,9 +91,9 @@ export const language = {
       VerifyCode: "인증 코드",
       Verify: "인증하기",
       InputEmail: "이메일을 입력해 주세요",
-      InputVerifyCxode: "인증코드를 입력해 주세요",
+      InputVerifyCode: "인증코드를 입력해 주세요",
       Requirement: "이메일과 OTP코드는 필수입니다.",
-      PleaseCode: "코드를 입력해주세요",
+      // PleaseCode: "코드를 입력해주세요",
       DuplicateEmail: "이미 사용중인 계정입니다.",
     },
   
@@ -176,21 +177,22 @@ export const language = {
   
       //loadRegister
       Register: "Sign Up",
-      Submit: "Complete Registration",
+      Submit: "Next ➡️",
       AccountExist: "Already have an account?",
       LoginPage: "Go to Login 🏓",
       Error: "An error occurred.",
+      RegisterConfirmPassword: "Confirm Password",
   
       //verifyEmail
       VerifyEmail: "Email Verification",
-      SendEmail: "Get Verification Code",
+      SendEmail: "Send",
       VerifyCode: "Verification Code",
       Verify: "Verify",
-      InputEmail: "Please enter your email",
-      InputVerifyCxode: "Please enter the verification code",
+      InputEmail: "Enter your email",
+      InputVerifyCode: "Enter the verification code",
       Requirement: "Email and OTP code are required.",
-      PleaseCode: "Please enter the code",
-      DuplicateEmail: "This account is already in use.",
+      // PleaseCode: "Please enter the code",
+      DuplicateEmail: "This email is already in use.",
     },
   
     French: {
@@ -272,21 +274,22 @@ export const language = {
       RegisterPage: "Allez à l'inscription 🏓",
   
       //loadRegister
-      Register: "Inscription",
-      Submit: "Terminer l'inscription",
+      Register: "S'inscrire",
+      Submit: "Prochain ➡️",
       AccountExist: "Vous avez déjà un compte ?",
       LoginPage: "Allez à la connexion 🏓",
       Error: "Une erreur s'est produite.",
+      RegisterConfirmPassword: "confirmer le mot de passe",
   
       //verifyEmail
       VerifyEmail: "Vérification de l'email",
-      SendEmail: "Obtenir le code de vérification",
+      SendEmail: "Envoyer",
       VerifyCode: "Code de vérification",
       Verify: "Vérifier",
-      InputEmail: "Veuillez entrer votre email",
-      InputVerifyCxode: "Veuillez entrer le code de vérification",
+      InputEmail: "Entrer votre email",
+      InputVerifyCode: "Entrer le code de vérification",
       Requirement: "L'email et le code OTP sont obligatoires.",
-      PleaseCode: "Veuillez entrer le code",
+      // PleaseCode: "Veuillez entrer le code",
       DuplicateEmail: "Ce compte est déjà utilisé.",
     }
 }

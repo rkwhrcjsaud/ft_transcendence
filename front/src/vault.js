@@ -3,8 +3,8 @@ import axios from 'axios';
 const VAULT_ADDR = "https://localhost:443";
 
 export async function getVaultToken() {
-    const roleId = "b7cfeb48-28fb-8ad9-848f-7bf6307ce250";
-    const secretId = "a7da42dd-9ddd-3bc9-b61d-c4a4a0bc2e4b";
+    const roleId = "cc94c187-8260-b985-3089-505fe1c9f73a";
+    const secretId = "2f138fab-0ab2-2f6e-ba5c-fc3d4f9f2cf5";
 
     try {
         const response = await axios.post(`${VAULT_ADDR}/v1/auth/approle/login`, {

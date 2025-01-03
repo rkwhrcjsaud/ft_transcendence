@@ -7,18 +7,27 @@ import { socialLogin } from "./auth/socialLogin";
 import { loadDashboard } from "./page/dashboard_related/dashboard";
 import { loadEditProfile } from "./page/editProfile";
 import { loadChangePassword } from "./page/changePassword";
+import Auth from "./auth/authProvider";
 
 const routes = {
-  '/': () => loadLanding(),
-  "/dashboard": () => loadDashboard(),
-  "/edit_profile": () => loadEditProfile(),
-  "/change_password": () => loadChangePassword(),
-  "/play": () => loadGame(),
+  '/': () => protectRoute(loadLanding),
+  "/dashboard": () => protectRoute(loadDashboard),
+  "/edit_profile": () => protectRoute(loadEditProfile),
+  "/change_password": () => protectRoute(loadChangePassword),
+  "/play": () => protectRoute(loadGame),
 
   "/login": () => loadLogin(),
   "/register": () => loadRegister(),
   "/42": () => socialLogin(),
   "/verify": () => loadVerifyEmail(),
+};
+
+async function protectRoute(callback) {
+  if (await Auth.checkAuth()) {
+    callback();
+  } else {
+    window.location.href = "/login";
+  }
 };
 
 function clearAppContent() {

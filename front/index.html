@@ -79,7 +79,9 @@
 </html>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  import { checkAuth, logout, getAuthStatus } from "./authProvider";
+
+  document.addEventListener("DOMContentLoaded", async () => {
     const authButton = document.getElementById("auth-button");
     const langDropdown = document.getElementById("languageDropdown");
     const langItems = document.querySelectorAll(".dropdown-item");
@@ -114,16 +116,20 @@
     const initialLanguage = localStorage.getItem("selectedLanguage");
     langDropdown.querySelector(".dropdown-text").textContent = initialLanguage;
   
-    // // 인증 버튼 로직
-    // authButton.addEventListener("click", () => {
-    //   if (authButton.textContent === "Login") {
-    //     window.location.href = "/login";
-    //   } else {
-    //     // 로그아웃 로직 구현
-    //     alert("Logged out!");
-    //     authButton.textContent = "Login";
-    //   }
-    // });
+    // 로그인,로그아웃 버튼 로직
+    const isAuthenticated = await checkAuth();
+    authButton.textContent = isAuthenticated ? "Logout" : "Login";
+
+    authButton.addEventListener("click", () => {
+      if (getAuthStatus()) {
+        // 로그아웃 처리 후 랜딩페이지로 리디렉션
+        logout();
+        window.location.href = "/";
+      } else {
+        // 로그인 페이지로 이동
+        window.location.href = "/login";
+      }
+    });
   
     // 활성화된 링크 표시
     const navLinks = document.querySelectorAll(".nav-link");

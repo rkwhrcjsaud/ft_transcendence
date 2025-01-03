@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from transcendence import views 
 import sys
 import os
 from vault import *
@@ -26,4 +27,6 @@ urlpatterns = [
     path(getSecretValue('back/BACK_API_ACCOUNT'), include('accounts.urls')),
     path(getSecretValue('back/BACK_API_SOCIAL_ACCOUNTS'), include('social_accounts.urls')),
     path(getSecretValue('back/BACK_API_FRIENDS'), include('friends.urls')),
+    # path(getSecretValue('back/BACK_API_VAULT'), views.get_vault_data, name='get_vault_data'),
+    path('api/vault/', views.get_vault_data, name='get_vault_data'),
 ]

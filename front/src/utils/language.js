@@ -26,9 +26,9 @@ export const language = {
       //MatchHistoryAccordion
       MatchHistory: "매치 히스토리",
       Total: "전체",
-      Victory: "승리",
-      Loss: "패배",
-      Draw: "무승부",
+      Victory: "이긴 횟수",
+      Loss: "진 횟수",
+      Draw: "비긴 횟수",
   
       //FriendListAccordion
       FriendList: "친구목록",
@@ -66,7 +66,7 @@ export const language = {
   
       //loadMultyGame
       Start: "게임시작",
-      PongRules: "퐁 규칙",
+      PongRules: "게임 규칙",
       FirstTo11: "11점 선점 또는 시간 종료 시 가장 많은 점수를 가진 플레이어가 승리합니다!",
       LeftPlayer: "왼쪽 플레이어 조작: W (위), S (아래).",
       RightPlayer: "오른쪽 플레이어 조작: ArrowUp (위), ArrowDown (아래).",
@@ -107,13 +107,13 @@ export const language = {
       GreetingMorning: "Good morning 🌞",
       GreetingAfternoon: "Good afternoon 🍀",
       GreetingEvening: "Good evening 🌝",
-      Postfix: "🏓 How about a game of Ping Pong? 🏓",
+      Postfix: "🏓 Let's play Ping Pong! 🏓",
       Morning: "Start of the day",
       Launch: "After lunch",
       Afternoon: "Lazy afternoon",
       Dinner: "After dinner",
       Bored: "When you're bored",
-      Playing: "Let's play a game",
+      Playing: "Play now",
       Hello: "Hello",
   
       //ProfileAccordion
@@ -124,9 +124,9 @@ export const language = {
       //MatchHistoryAccordion
       MatchHistory: "Match History",
       Total: "Total",
-      Victory: "Victory",
-      Loss: "Loss",
-      Draw: "Draw",
+      Victory: "Wins",
+      Loss: "Losses",
+      Draw: "Draws",
   
       //FriendListAccordion
       FriendList: "Friend List",

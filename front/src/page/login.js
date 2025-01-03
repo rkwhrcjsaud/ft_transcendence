@@ -52,7 +52,7 @@ export function loadLogin() {
   document.getElementById("app").innerHTML += html;
 
   const loginForm = document.getElementById("login-form");
-  const emailInput = document.getElementById("email");
+  const emailInput = document.getElementById("login-email");
   const passwordInput = document.getElementById("password");
   const alertContainer = document.getElementById("alert-container");
   const togglePasswordBtn = document.getElementById("toggle-password");
@@ -76,7 +76,7 @@ export function loadLogin() {
     try {
       const response = await axios.post(
         await getSecretValue("front/FRONT_API_ACCOUNTS_LOGIN"),
-        { email, password },
+        { email, password, showPassword },
         {
           headers: {
             "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export function loadLogin() {
           email: response.data.email,
         };
         const { aceess_token, refresh_token } = response.data;
-        Auth.login(auser, aceess_token, refresh_token);
+        // Auth.login(auser, aceess_token, refresh_token);
         window.location.href = "/";
       }
     } catch (error) {

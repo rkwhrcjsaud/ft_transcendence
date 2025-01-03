@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 import dayjs from "dayjs";
 import { getSecretValue } from "../vault";
 
-const baseUrl = await getSecretValue("front/FORNT_API_BASEURL");
+const baseUrl = await getSecretValue("front/FRONT_API_BASEURL");
 
 const getAccessToken = () => localStorage.getItem("access_token");
 const getRefreshToken = () => localStorage.getItem("refresh_token");

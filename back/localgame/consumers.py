@@ -6,6 +6,7 @@ import math
 from enum import Enum
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+
 class GameState(Enum):
     SETTING = 0
     GAME_START = 1
@@ -20,9 +21,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.table_depth = 500  
         self.table_height = 0   
 
-        self.height = 600  
-        self.width = 800   
-        self.depth = self.table_depth  
 
         self.paddle_speed = 8
         self.max_ball_speed = 15
@@ -30,7 +28,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         self.paddle_max_distance = 200  
         self.paddle_initial_z = 0 
-     
+             
 
         self.paddles = {
             'left': {

@@ -1,7 +1,10 @@
 import * as THREE from 'three';
-import { Text } from 'troika-three-text';
 import { loadCSS } from '../utils/loadcss';
-import { language } from "../utils/language";
+import { language } from "../utils/language"
+import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines } from './gameObjects';
+
+let paddles, ballPosition, leftPaddle, rightPaddle, ball;
+let scoreText, timeText;
 
 export function loadGame() {
   loadCSS('../styles/game.css');
@@ -14,15 +17,13 @@ export function loadGame() {
       <canvas id="pong-area" class="pong-area"></canvas>
 
       <div id="game-rules" class="game-rules">
-        <h4 className="game-rules-title" class="game-rules-title">${language[languageKey]["PongRules"]}</h4>
+        <Button id="start-game" class="start-game">
+          ${language[languageKey]["Start"]}
+        </Button>
+        <h4 className="game-rules-title">${language[languageKey]["PongRules"]}</h4>
         <p>${language[languageKey]["FirstTo11"]}</p>
         <p>${language[languageKey]["LeftPlayer"]}</p>
         <p>${language[languageKey]["RightPlayer"]}</p>
-        <div class="start-game-wrapper">
-          <Button id="start-game" class="start-game">
-            ${language[languageKey]["Start"]}
-          </Button>
-        </div>
       </div>
     </div>
   `
@@ -37,11 +38,6 @@ export function loadGame() {
   let ws = null;
   let animationId = null;
   let gameState = '1';
-  let paddles = {
-    left: { top: "50%" },
-    right: { top: "50%" }
-  };
-  let ballPosition = { x: "50%", y: "50%" };
   let scores = { left: 0, right: 0 };
   let minutes = 0;
   let seconds = 0;
@@ -63,38 +59,28 @@ export function loadGame() {
   };
 
   function renderMessage() {
-    if (message === 'menu')
+    if (message === 'menu') {
       overlay.addEventListener('click', handleOverlayClick);
-      overlay.style.cursor = 'pointer';
-    if (message !== 'none') {
-      overlay.style.visibility = 'visible';
-      overlay.innerHTML = message;
-    } else {
-      overlay.style.visibility = 'hidden';
+      overlay.classList.add('game-over');
     }
-  };
-
-  const scoreText = new Text();
-  scoreText.text = `${scores.left} - ${scores.right}`;
-  scoreText.fontSize = 60;
-  scoreText.color = 0xffffff;
-  scoreText.position.set(0, -250, 0);
-  scoreText.rotation.x = Math.PI;
-  scoreText.textAlign = 'center';
-  scoreText.anchorX = 'center';
-  scoreText.anchorY = 'top';
-  scoreText.sync();
-
-  const timeText = new Text();
-  timeText.text = `${minutes}:${seconds}`;
-  timeText.fontSize = 16;
-  timeText.color = 0xffffff;
-  timeText.position.set(350, -280, 0);
-  timeText.rotation.x = Math.PI;
-  timeText.textAlign = 'right';
-  timeText.anchorX = 'right';
-  timeText.anchorY = 'top';
-  timeText.sync();
+    
+    if (message !== 'none') {
+      overlay.classList.remove('hidden');
+      overlay.innerHTML = message;
+      
+      // 게임 시작 카운트다운인 경우
+      if (message.includes('Game starts in')) {
+        overlay.classList.remove('game-over');
+      }
+      // 게임 종료 메시지인 경우
+      else if (message.includes('wins!') || message === 'Draw') {
+        overlay.classList.add('game-over');
+      }
+    } else {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('game-over');
+    }
+  }
 
   function initWebSocket() {
     const username = 'guest';
@@ -108,25 +94,55 @@ export function loadGame() {
       console.log("WebSocket opened");
     };
 
-    ws.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      if (data.type === "paddle_update") {
-        paddles.left.top = data.paddles.left.top;
-        paddles.right.top = data.paddles.right.top;
-      } else if (data.type === "ball_update") {
-        ballPosition.x = data.ball.x;
-        ballPosition.y = data.ball.y;
-      } else if (data.type === "update") {
-        scores.left = data.scores.left;
-        scores.right = data.scores.right;
-        minutes = data.time.min;
-        seconds = data.time.sec;
-      } else if (data.type === "message") {
-        message = data.message;
-        renderMessage();
-      }
-    };
+// game.js의 ws.onmessage 부분 수정
+ws.onmessage = (e) => {
+  const data = JSON.parse(e.data);
+  if (data.type === "paddle_update") {
+      // 2D 퍼센트 좌표를 3D 좌표로 변환
+      const leftY = ((data.paddles.left.top / 100) * 600) - 300;  // 600은 height
+      const rightY = ((data.paddles.right.top / 100) * 600) - 300;
 
+      leftPaddle.position.set(-354, 0, leftY);    // x: -350 (왼쪽)
+      rightPaddle.position.set(354, 0, rightY);   // x: 350 (오른쪽)
+  } 
+  else if (data.type === "ball_update") {
+      // 2D 퍼센트 좌표를 3D 좌표로 변환
+      const x = ((data.ball.x / 100) * 800) - 400;  // 800은 width
+      const z = ((data.ball.y / 100) * 600) - 300;  // 600은 height
+
+      // 공의 위치 업데이트
+      const y = Math.abs(Math.cos((x / 400) * Math.PI));
+
+      ball.position.set(x, 6 + 80 * y, z);
+    }
+  else if (data.type === "update") {
+      // 점수와 시간 업데이트
+      scores.left = data.scores.left;
+      scores.right = data.scores.right;
+      minutes = data.time.min;
+      seconds = data.time.sec;
+
+      // 패들과 공의 위치 업데이트
+      if (data.paddles) {
+          const leftY = ((data.paddles.left.top / 100) * 600) - 300;
+          const rightY = ((data.paddles.right.top / 100) * 600) - 300;
+
+          leftPaddle.position.set(-354, 0, leftY);
+          rightPaddle.position.set(354, 0, rightY);
+      }
+
+      if (data.ball) {
+          const x = ((data.ball.x / 100) * 800) - 400;
+          const z = ((data.ball.y / 100) * 600) - 300;
+          
+          ball.position.set(x, 36, z);
+      }
+  } 
+  else if (data.type === "message") {
+      message = data.message;
+      renderMessage();
+  }
+};
     ws.onclose = () => {
       console.log("WebSocket closed");
       ws = null;
@@ -155,11 +171,13 @@ export function loadGame() {
       ws.send(JSON.stringify({ type: 'reset_game' }));
     }
 
-    overlay.style.display = 'none';
+    overlay.classList.add('hidden');
+    overlay.classList.remove('game-over');
     gameRules.style.display = 'block';
     pongArea.style.display = 'none';
   };
 
+  // WebSocket 이벤트 핸들러
   function handleKeyDown(event) {
     const key = event.key;
     if (key === 'ArrowUp' || key === 'ArrowDown') {
@@ -168,88 +186,71 @@ export function loadGame() {
     if (["w", "s", "ArrowUp", "ArrowDown"].includes(key) && ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "keydown", key }));
     }
-  };
+  }
 
   function handleKeyUp(event) {
     const key = event.key;
     if (["w", "s", "ArrowUp", "ArrowDown"].includes(key) && ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "keyup", key }));
     }
-  };
+  }
 
   window.addEventListener('keydown', handleKeyDown);
   window.addEventListener('keyup', handleKeyUp);
 
+  // Three.js 초기 설정
   function initGame() {
-    pongArea.style.display = 'visible';
-    overlay.style.display = 'flex';
+
     const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-400, 400, -300, 300, 1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: pongArea });
+    scene.background = new THREE.Color(0x000000);
 
-    const backgroundGeometry = new THREE.BoxGeometry(800, 600);
-    const backgroundMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const background = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
-    background.position.set(0, 0, 0);
-    scene.add(background);
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-    const pointLight = new THREE.PointLight(0xffffff, 1, 3000, 0.01);
-    pointLight.position.set(-200, -200, -150);
-    scene.add(pointLight);
+    // 오버레이 초기 설정
+    overlay.classList.remove('hidden');
+    overlay.classList.remove('game-over');
+
+    const camera = new THREE.PerspectiveCamera(60, 800 / 600, 0.1, 1000);
+    camera.position.set(0, 600, 300);
+    camera.lookAt(0, 200, 100);
+    
+    const renderer = new THREE.WebGLRenderer({ 
+        canvas: pongArea,
+        antialias: true,
+        alpha: true
+    });
     renderer.setSize(800, 600);
-    camera.position.z = 600;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
 
-    overlay.style.width = "800px";
-    overlay.style.height = "600px";
-    const rect = pongArea.getBoundingClientRect();
-    overlay.style.top = rect.top + "px";
-    overlay.style.left = rect.left + "px";
-
-    function convertToThreeCoordinate(x, y, width, height) {
-      return {
-        x: (x - width / 2),
-        y: (height / 2 - y)
-      };
-    }
-
-    const leftPaddlePosition = convertToThreeCoordinate(46, 300, 800, 600);
-    const rightPaddlePosition = convertToThreeCoordinate(754, 300, 800, 600);
-    const convertBallPosition = convertToThreeCoordinate(400, 300, 800, 600);
-
-    const paddleGeometry = new THREE.BoxGeometry(12, 120, 12);
-    const leftPaddleMeterial = new THREE.MeshStandardMaterial({ color: 0xFF6F00 });
-    const rightPaddleMeterial = new THREE.MeshStandardMaterial({ color: 0xee });
-    const leftPaddle = new THREE.Mesh(paddleGeometry, leftPaddleMeterial);
-    const RightPaddle = new THREE.Mesh(paddleGeometry, rightPaddleMeterial);
-    leftPaddle.position.set(leftPaddlePosition.x, leftPaddlePosition.y, 6);
-    RightPaddle.position.set(rightPaddlePosition.x, rightPaddlePosition.y, 6);
-
-    const ballGeometry = new THREE.SphereGeometry(6);
-    const ballMaterial = new THREE.MeshStandardMaterial({ color: 0xFF6F00 });
-    const ball = new THREE.Mesh(ballGeometry, ballMaterial);
-    ball.position.set(convertBallPosition.x, convertBallPosition.y, 6);
-
+    // 각 오브젝트 생성
+    createLights(scene);
+    createTable(scene);
+    createTableLines(scene);
+    
+    leftPaddle = createPaddle(true);
+    rightPaddle = createPaddle(false);
     scene.add(leftPaddle);
-    scene.add(RightPaddle);
-    scene.add(ball);
-    scene.add(scoreText);
-    scene.add(timeText);
+    scene.add(rightPaddle);
+    
+    ball = createBall(scene);
+    
+    const texts = createGameTexts(scene, scores, minutes, seconds);
+    scoreText = texts.scoreText;
+    timeText = texts.timeText;
 
     function animate() {
-      animationId = requestAnimationFrame(animate);
-      leftPaddle.position.y = convertToThreeCoordinate(46, parseFloat(paddles.left.top) * 6, 800, 600).y;
-      RightPaddle.position.y = convertToThreeCoordinate(754, parseFloat(paddles.right.top) * 6, 800, 600).y;
-      const temp = convertToThreeCoordinate(parseFloat(ballPosition.x) * 8, parseFloat(ballPosition.y) * 6, 800, 600);
-      ball.position.x = temp.x;
-      ball.position.y = temp.y;
-      timeText.text = `${minutes}:${seconds}`;
-      timeText.sync();
-      scoreText.text = `${scores.left} - ${scores.right}`;
-      scoreText.sync();
-      renderer.render(scene, camera);
+        animationId = requestAnimationFrame(animate);
+        
+        scoreText.text = `${scores.left} - ${scores.right}`;
+        timeText.text = `${minutes}:${seconds}`;
+        scoreText.sync();
+        timeText.sync();
+        
+        renderer.render(scene, camera);
     }
-
+    
     animate();
-  };
+  }
 }

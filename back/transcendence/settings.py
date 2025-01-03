@@ -207,3 +207,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = getSecretValue("django/DJANGO_EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = getSecretValue("django/DJANGO_EMAIL_HOST_PASSWORD")
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}

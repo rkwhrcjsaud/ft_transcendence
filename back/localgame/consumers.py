@@ -207,9 +207,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 
             # 패들의 방향에 따라 공에게 추가 속도를 줌
             if self.paddles['left']['keydown']:
-                self.ball_speed_y += 4
-            elif self.paddles['left']['keyup']:
                 self.ball_speed_y -= 4
+            elif self.paddles['left']['keyup']:
+                self.ball_speed_y += 4
         
         # 오른쪽 패들과 부딪히면 방향을 바꿈
         if self.ball_speed_x > 0 \
@@ -224,9 +224,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 
             # 패들의 방향에 따라 공에게 추가 속도를 줌
             if self.paddles['right']['keydown']:
-                self.ball_speed_y += 4
-            elif self.paddles['right']['keyup']:
                 self.ball_speed_y -= 4
+            elif self.paddles['right']['keyup']:
+                self.ball_speed_y += 4
         
         # 공의 최고 속도를 제한
         self.ball_speed_x = max(-12, min(12, self.ball_speed_x))
@@ -251,16 +251,16 @@ class PongConsumer(AsyncWebsocketConsumer):
         moved = False
         
         if self.paddles['left']['keydown']:
-            self.paddles['left']['top'] += self.paddle_speed
-            moved = True
-        if self.paddles['left']['keyup']:
             self.paddles['left']['top'] -= self.paddle_speed
             moved = True
+        if self.paddles['left']['keyup']:
+            self.paddles['left']['top'] += self.paddle_speed
+            moved = True
         if self.paddles['right']['keydown']:
-            self.paddles['right']['top'] += self.paddle_speed
+            self.paddles['right']['top'] -= self.paddle_speed
             moved = True
         if self.paddles['right']['keyup']:
-            self.paddles['right']['top'] -= self.paddle_speed
+            self.paddles['right']['top'] += self.paddle_speed
             moved = True
 
         height = self.height - self.paddle_height / 2
@@ -312,9 +312,16 @@ class PongConsumer(AsyncWebsocketConsumer):
         }))
     
     async def send_update(self):
+        # 패들 위치를 퍼센트로 변환
+        left_paddle_percent = self.paddles['left']['top'] / (self.height) * 100
+        right_paddle_percent = self.paddles['right']['top'] / (self.height) * 100
+        
         await self.send(text_data=json.dumps({
             'type': 'update',
-            'paddles': self.paddles,
+            'paddles': {
+                'left': {'top': left_paddle_percent},
+                'right': {'top': right_paddle_percent}
+            },
             'ball': {'x': self.ball_x, 'y': self.ball_y},
             'scores': {'left': self.leftScore, 'right': self.rightScore},
             'time': {'min': self.minutes, 'sec': self.seconds}

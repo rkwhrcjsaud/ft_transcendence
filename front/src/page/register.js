@@ -83,7 +83,7 @@ export function loadRegister() {
   document.getElementById("app").innerHTML += html;
 
   const registerForm = document.getElementById("register-form");
-  const emailInput = document.getElementById("email");
+  const emailInput = document.getElementById("register-email");
   const usernameInput = document.getElementById("username");
   const firstNameInput = document.getElementById("first_name");
   const lastNameInput = document.getElementById("last_name");
@@ -146,6 +146,8 @@ export function loadRegister() {
     }
 
     try {
+      console.log("email : ", email);
+      console.log(await getSecretValue("front/FRONT_API_ACCOUNTS_REGISTER"));
       const response = await axios.post(
         await getSecretValue("front/FRONT_API_ACCOUNTS_REGISTER"),
         {
@@ -154,6 +156,8 @@ export function loadRegister() {
           first_name,
           last_name,
           password,
+          password2,
+          showPassword: false,
         },
         {
           headers: {
@@ -166,6 +170,7 @@ export function loadRegister() {
         window.location.href = "/verify";
       }
     } catch (error) {
+      console.log(error);
       if (error.response) {
         showAlert(error.response.data.error || language[languageKey]["Error"]);
       } else {

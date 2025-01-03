@@ -89,12 +89,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ORIGIN_WHITELIST = [
     getSecretValue("django/DJANGO_LOCALHOST"),
-    getSecretValue("django/DJANGO_VITE")
+    getSecretValue("django/DJANGO_VITE"),
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     getSecretValue("django/DJANGO_LOCALHOST"),
-    getSecretValue("django/DJANGO_VITE")
+    getSecretValue("django/DJANGO_VITE"),
 ]
 
 ROOT_URLCONF = 'transcendence.urls'

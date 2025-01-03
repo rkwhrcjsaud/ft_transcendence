@@ -29,7 +29,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.ball_radius = 6
 
         self.paddle_max_distance = 200  
-        self.paddle_initial_z = 0      
+        self.paddle_initial_z = 0 
+     
 
         self.paddles = {
             'left': {
@@ -47,7 +48,6 @@ class PongConsumer(AsyncWebsocketConsumer):
                 'keydown': False,
             }
         }
-
 
     async def game_start(self):
         # 점수 및 시간 초기화

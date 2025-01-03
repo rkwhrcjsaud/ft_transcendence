@@ -1,9 +1,11 @@
 import * as THREE from 'three';
-import { Text } from 'troika-three-text';
 import { loadCSS } from '../utils/loadcss';
-import { language } from "../utils/language";
+import { language } from "../utils/language"
+import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines } from './gameObjects';
 
-let leftPaddle, rightPaddle, ball
+
+let leftPaddle, rightPaddle, ball;
+let scoreText, timeText;
 
 export function loadGame() {
   loadCSS('../styles/game.css');
@@ -67,28 +69,6 @@ export function loadGame() {
       overlay.style.visibility = 'hidden';
     }
   };
-
-  const scoreText = new Text();
-  scoreText.text = `${scores.left} - ${scores.right}`;
-  scoreText.fontSize = 40;
-  scoreText.color = 0x000000;
-  scoreText.position.set(0, 1, -340);
-  scoreText.rotation.x = Math.PI;
-  scoreText.textAlign = 'center';
-  scoreText.anchorX = 'center';
-  scoreText.anchorY = 'top';
-  scoreText.sync();
-
-  const timeText = new Text();
-  timeText.text = `${minutes}:${seconds}`;
-  timeText.fontSize = 20;
-  timeText.color = 0x000000;
-  timeText.position.set(0, 1, -300)
-  timeText.rotation.x = Math.PI;
-  timeText.textAlign = 'right';
-  timeText.anchorX = 'right';
-  timeText.anchorY = 'top';
-  timeText.sync();
 
   function initWebSocket() {
     const username = 'guest';
@@ -155,8 +135,6 @@ export function loadGame() {
           renderMessage();
       }
   };
-  
-
     ws.onclose = () => {
       console.log("WebSocket closed");
       ws = null;
@@ -216,173 +194,49 @@ export function loadGame() {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
-    // 카메라 설정 - 탁구 테이블을 위에서 내려다보는 각도로 설정
     const camera = new THREE.PerspectiveCamera(60, 800 / 600, 0.1, 1000);
-    camera.position.set(0, 700, 0);  // 테이블 위쪽으로 이동
-    camera.lookAt(0, 0, 0);  // 테이블 중앙을 바라보도록 설정
+    camera.position.set(0, 700, 0);
+    camera.lookAt(0, 0, 0);
     
     const renderer = new THREE.WebGLRenderer({ 
-      canvas: pongArea,
-      antialias: true,
-      alpha: true
+        canvas: pongArea,
+        antialias: true,
+        alpha: true
     });
     renderer.setSize(800, 600);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-    scene.add(ambientLight);
-    // 렌더러 설정
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
 
-    // 바닥 생성
-    const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
-    const floorMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0xCEB195,
-      roughness: 0.8,
-      metalness: 0.2,
-    });
-    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -50;
-    floor.receiveShadow = true;
-    scene.add(floor);
-
-    // 탁구 테이블 상판 생성
-    const tableTopGeometry = new THREE.BoxGeometry(700, 4, 500);
-    const tableTopMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x1B5E20,
-      roughness: 0.7,
-      metalness: 0.1,
-    });
-    const tableTop = new THREE.Mesh(tableTopGeometry, tableTopMaterial);
-    tableTop.position.y = 0;
-    tableTop.castShadow = true;
-    tableTop.receiveShadow = true;
-    scene.add(tableTop);
-
-  // 테이블 라인들 생성
-  const lineMaterial = new THREE.MeshBasicMaterial({ 
-    color: 0xFFFFFF,
-});
-  // 중앙선
-  const centerLineGeometry = new THREE.PlaneGeometry(700, 2);
-  const centerLine = new THREE.Mesh(centerLineGeometry, lineMaterial);
-  centerLine.position.y = 2;  // 약간 위로 올려서 z-fighting 방지
-  centerLine.rotation.x = -Math.PI / 2;
-  scene.add(centerLine);
+    // 각 오브젝트 생성
+    createLights(scene);
+    createTable(scene);
+    createTableLines(scene);
     
-  // 추가적으로 수직 중앙선도 생성
-  const verticalCenterLineGeometry = new THREE.PlaneGeometry(2, 500);
-  const verticalCenterLine = new THREE.Mesh(verticalCenterLineGeometry, lineMaterial);
-  verticalCenterLine.position.y = 2;
-  verticalCenterLine.rotation.x = -Math.PI / 2;
-  scene.add(verticalCenterLine);
+    leftPaddle = createPaddle(true);
+    rightPaddle = createPaddle(false);
+    scene.add(leftPaddle);
+    scene.add(rightPaddle);
+    
+    ball = createBall(scene);
+    
+    const texts = createGameTexts(scene, scores, minutes, seconds);
+    scoreText = texts.scoreText;
+    timeText = texts.timeText;
 
-  // 사이드 라인들
-  const sideLineGeometry = new THREE.PlaneGeometry(700, 2);
-  const endLineGeometry = new THREE.PlaneGeometry(2, 500);
-
-  // 상단과 하단 라인
-  [-250, 250].forEach(z => {
-    const sideLine = new THREE.Mesh(sideLineGeometry, lineMaterial);
-    sideLine.position.set(0, 2, z);
-    sideLine.rotation.x = -Math.PI / 2;
-    scene.add(sideLine);
-  });
-
-  // 좌우 끝 라인
-  [-350, 350].forEach(x => {
-    const endLine = new THREE.Mesh(endLineGeometry, lineMaterial);
-    endLine.position.set(x, 2, 0);
-    endLine.rotation.x = -Math.PI / 2;
-    scene.add(endLine);
-  });
-
-  // 탁구 라켓 생성 함수
-  function createPaddle(isLeft) {
-    // 패들 그룹 생성
-    const paddleGroup = new THREE.Group();
-    // 직선 막대기 형태의 패들 생성
-    const paddleGeometry = new THREE.BoxGeometry(16, 2, 100); // 두께, 높이, 길이
-    const paddleMaterial = new THREE.MeshStandardMaterial({
-      color: isLeft ? 0x4169E1 : 0xFF4500,
-      roughness: 0.6,
-      metalness: 0.3,
-    });
-  
-    const paddle = new THREE.Mesh(paddleGeometry, paddleMaterial);
-    paddle.castShadow = true;
-    paddle.receiveShadow = true;
-  
-    paddleGroup.add(paddle);
-    return paddleGroup;
-  }
-  
-  // 양쪽 라켓 생성 및 추가
-  leftPaddle = createPaddle(true);
-  rightPaddle = createPaddle(false);
-  scene.add(leftPaddle);
-  scene.add(rightPaddle);
-
-  // 공 생성
-  const ballGeometry = new THREE.SphereGeometry(6);
-  // 공의 재질 수정
-  const ballMaterial = new THREE.MeshStandardMaterial({ 
-    color: 0xffffff,
-    roughness: 0.2,
-    metalness: 0.7,
-  });
-
-  ball = new THREE.Mesh(ballGeometry, ballMaterial);
-  ball.castShadow = true;
-  scene.add(ball);
-
-  // 점수 텍스트
-  const scoreText = new Text();
-  scoreText.text = `${scores.left} - ${scores.right}`;
-  scoreText.fontSize = 40;
-  scoreText.color = 0xffffff;
-  // 테이블 위에 떠 있도록 위치 조정
-  scoreText.position.set(0, 1, -340);
-  // 카메라에서 잘 보이도록 회전
-  scoreText.rotation.x = -Math.PI / 2;
-  scoreText.textAlign = 'center';
-  scoreText.anchorX = 'center';
-  scoreText.anchorY = 'center';
-  scoreText.sync();
-  scene.add(scoreText);
-
-  // 시간 텍스트
-  const timeText = new Text();
-  timeText.text = `${minutes}:${seconds}`;
-  timeText.fontSize = 20;
-  timeText.color = 0xffffff;
-  // 점수 텍스트 옆에 위치하도록 조정
-  timeText.position.set(0, 1, -300);
-  // 카메라에서 잘 보이도록 회전
-  timeText.rotation.x = -Math.PI / 2;
-  timeText.textAlign = 'center';
-  timeText.anchorX = 'center';
-  timeText.anchorY = 'center';
-  timeText.sync();
-  scene.add(timeText);
-
-
-// 애니메이션 함수 수정
-function animate() {
-  animationId = requestAnimationFrame(animate);
-
-  // 텍스트 업데이트
-  scoreText.text = `${scores.left} - ${scores.right}`;
-  timeText.text = `${minutes}:${seconds}`;
-  scoreText.sync();
-  timeText.sync();
-
-  renderer.render(scene, camera);
-}
-  animate();
+    function animate() {
+        animationId = requestAnimationFrame(animate);
+        
+        scoreText.text = `${scores.left} - ${scores.right}`;
+        timeText.text = `${minutes}:${seconds}`;
+        scoreText.sync();
+        timeText.sync();
+        
+        renderer.render(scene, camera);
+    }
+    
+    animate();
   }
 }

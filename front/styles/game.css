@@ -53,9 +53,9 @@
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  background-color: rgba(238, 83, 44, 0.8);
+  background-color: rgba(0, 0, 0, 0.7);  /* 반투명한 검정색 배경 */
   z-index: 1000;
-  display: none;
+  display: flex;  /* flexbox로 변경 */
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -65,6 +65,11 @@
   border-radius: 2.5rem;
   margin: 0 auto;
   cursor: pointer;
+  transition: opacity 0.3s ease;  /* 부드러운 전환 효과 */
+}
+
+.overlay.hidden {
+  display: none;
 }
 
 .pong-area {
@@ -73,4 +78,9 @@
   z-index: 100;
   border-radius: 2.5rem;
   margin: 0 auto;
+}
+
+/* 승리/패배 메시지를 위한 스타일 */
+.game-over {
+  background-color: rgba(238, 83, 44, 0.8) !important;
 }

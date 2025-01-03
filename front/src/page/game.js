@@ -3,8 +3,7 @@ import { loadCSS } from '../utils/loadcss';
 import { language } from "../utils/language"
 import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines } from './gameObjects';
 
-
-let leftPaddle, rightPaddle, ball;
+let paddles, ballPosition, leftPaddle, rightPaddle, ball;
 let scoreText, timeText;
 
 export function loadGame() {
@@ -60,15 +59,28 @@ export function loadGame() {
   };
 
   function renderMessage() {
-    if (message === 'menu')
+    if (message === 'menu') {
       overlay.addEventListener('click', handleOverlayClick);
-    if (message !== 'none') {
-      overlay.style.visibility = 'visible';
-      overlay.innerHTML = message;
-    } else {
-      overlay.style.visibility = 'hidden';
+      overlay.classList.add('game-over');
     }
-  };
+    
+    if (message !== 'none') {
+      overlay.classList.remove('hidden');
+      overlay.innerHTML = message;
+      
+      // 게임 시작 카운트다운인 경우
+      if (message.includes('Game starts in')) {
+        overlay.classList.remove('game-over');
+      }
+      // 게임 종료 메시지인 경우
+      else if (message.includes('wins!') || message === 'Draw') {
+        overlay.classList.add('game-over');
+      }
+    } else {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('game-over');
+    }
+  }
 
   function initWebSocket() {
     const username = 'guest';
@@ -82,59 +94,55 @@ export function loadGame() {
       console.log("WebSocket opened");
     };
 
-    ws.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      if (data.type === "paddle_update") {
-          // 패들의 3D 위치와 회전 업데이트
-          leftPaddle.position.x = data.paddles.left.x;
-          leftPaddle.position.y = data.paddles.left.y;
-          leftPaddle.position.z = data.paddles.left.z;
-  
-          rightPaddle.position.x = data.paddles.right.x;
-          rightPaddle.position.y = data.paddles.right.y;
-          rightPaddle.position.z = data.paddles.right.z;
-  
-      } else if (data.type === "ball_update") {
-          // 공의 3D 위치 업데이트
-          ball.position.set(
-              data.ball.x,
-              data.ball.y,
-              data.ball.z
-          );
-  
-      } else if (data.type === "update") {
-          // 전체 게임 상태 업데이트
-          scores.left = data.scores.left;
-          scores.right = data.scores.right;
-          minutes = data.time.min;
-          seconds = data.time.sec;
-  
-          // 패들과 공의 3D 위치 업데이트
-          if (data.paddles) {
-              leftPaddle.position.set(
-                  data.paddles.left.x,
-                  data.paddles.left.y,
-                  data.paddles.left.z
-              );
-              rightPaddle.position.set(
-                  data.paddles.right.x,
-                  data.paddles.right.y,
-                  data.paddles.right.z
-              );
-          }
-  
-          if (data.ball) {
-              ball.position.set(
-                  data.ball.x,
-                  data.ball.y,
-                  data.ball.z
-              );
-          }
-      } else if (data.type === "message") {
-          message = data.message;
-          renderMessage();
+// game.js의 ws.onmessage 부분 수정
+ws.onmessage = (e) => {
+  const data = JSON.parse(e.data);
+  if (data.type === "paddle_update") {
+      // 2D 퍼센트 좌표를 3D 좌표로 변환
+      const leftY = ((data.paddles.left.top / 100) * 600) - 300;  // 600은 height
+      const rightY = ((data.paddles.right.top / 100) * 600) - 300;
+
+      leftPaddle.position.set(-354, 0, leftY);    // x: -350 (왼쪽)
+      rightPaddle.position.set(354, 0, rightY);   // x: 350 (오른쪽)
+  } 
+  else if (data.type === "ball_update") {
+      // 2D 퍼센트 좌표를 3D 좌표로 변환
+      const x = ((data.ball.x / 100) * 800) - 400;  // 800은 width
+      const z = ((data.ball.y / 100) * 600) - 300;  // 600은 height
+
+      // 공의 위치 업데이트
+      const y = Math.abs(Math.cos((x / 400) * Math.PI));
+
+      ball.position.set(x, 6 + 80 * y, z);
+    }
+  else if (data.type === "update") {
+      // 점수와 시간 업데이트
+      scores.left = data.scores.left;
+      scores.right = data.scores.right;
+      minutes = data.time.min;
+      seconds = data.time.sec;
+
+      // 패들과 공의 위치 업데이트
+      if (data.paddles) {
+          const leftY = ((data.paddles.left.top / 100) * 600) - 300;
+          const rightY = ((data.paddles.right.top / 100) * 600) - 300;
+
+          leftPaddle.position.set(-354, 0, leftY);
+          rightPaddle.position.set(354, 0, rightY);
       }
-  };
+
+      if (data.ball) {
+          const x = ((data.ball.x / 100) * 800) - 400;
+          const z = ((data.ball.y / 100) * 600) - 300;
+          
+          ball.position.set(x, 36, z);
+      }
+  } 
+  else if (data.type === "message") {
+      message = data.message;
+      renderMessage();
+  }
+};
     ws.onclose = () => {
       console.log("WebSocket closed");
       ws = null;
@@ -163,7 +171,8 @@ export function loadGame() {
       ws.send(JSON.stringify({ type: 'reset_game' }));
     }
 
-    overlay.style.display = 'none';
+    overlay.classList.add('hidden');
+    overlay.classList.remove('game-over');
     gameRules.style.display = 'block';
     pongArea.style.display = 'none';
   };
@@ -191,12 +200,17 @@ export function loadGame() {
 
   // Three.js 초기 설정
   function initGame() {
+
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
+    // 오버레이 초기 설정
+    overlay.classList.remove('hidden');
+    overlay.classList.remove('game-over');
+
     const camera = new THREE.PerspectiveCamera(60, 800 / 600, 0.1, 1000);
-    camera.position.set(0, 700, 0);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(0, 600, 300);
+    camera.lookAt(0, 200, 100);
     
     const renderer = new THREE.WebGLRenderer({ 
         canvas: pongArea,

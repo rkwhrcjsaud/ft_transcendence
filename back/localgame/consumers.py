@@ -2,10 +2,8 @@ import random
 import time
 import json
 import asyncio
-import math
 from enum import Enum
 from channels.generic.websocket import AsyncWebsocketConsumer
-
 
 class GameState(Enum):
     SETTING = 0
@@ -17,70 +15,44 @@ class GameState(Enum):
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.table_width = 700    
-        self.table_depth = 500  
-        self.table_height = 0   
+        self.paddles = {
+            'left': {'left': 46, 'top': 300, 'keydown': False, 'keyup': False},
+            'right': {'left': 754, 'top': 300, 'keydown': False, 'keyup': False}
+        }
+        self.paddle_speed = 10
+        self.paddle_height = 120
+        self.paddle_width = 12
 
+        self.height = 600
+        self.width = 800
+        self.last_update = time.time()
+        
+        self.leftPaddle_x = 46
+        self.rightPaddle_x = 754
 
-        self.paddle_speed = 8
-        self.max_ball_speed = 15
+        self.ball_x = self.width / 2
+        self.ball_y = self.height / 2
+        self.ball_speed_x = 10
+        self.ball_speed_y = 10
         self.ball_radius = 6
 
-        self.paddle_max_distance = 200  
-        self.paddle_initial_z = 0 
-             
+        self.leftScore = 0
+        self.rightScore = 0
 
-        self.paddles = {
-            'left': {
-                'x': -358,  
-                'y': self.table_height + 2,  
-                'z': self.paddle_initial_z,   
-                'keyup': False,
-                'keydown': False,
-            },
-            'right': {
-                'x': 358,   
-                'y': self.table_height + 2,  
-                'z': self.paddle_initial_z,   
-                'keyup': False,
-                'keydown': False,
-            }
-        }
+        self.minutes = -1
+        self.seconds = -1
 
     async def game_start(self):
-        # 점수 및 시간 초기화
         self.leftScore = 0
         self.rightScore = 0
         self.minutes = 1
         self.seconds = 40
-
-        self.paddles['left'] = {
-            'x': -358,
-            'y': self.table_height + 2,
-            'z': self.paddle_initial_z,
-            'keyup': False,
-            'keydown': False,
-        }
-        self.paddles['right'] = {
-            'x': 358,
-            'y': self.table_height + 2,
-            'z': self.paddle_initial_z,
-            'keyup': False,
-            'keydown': False,
-        }
-
-        # 공 초기 위치 및 속도 설정 (3D)
-        self.ball_x = 0  # 중앙
-        self.ball_y = self.table_height + 50 # 테이블 위
-        self.ball_z = 0  # 중앙
-        
-        # 3D 공간에서의 초기 속도
-        speed = random.randint(2, 4)
-        angle = random.uniform(-0.5, 0.5)  # 좌우 랜덤 각도
-        self.ball_speed_x = speed * random.choice([-1, 1])  # 좌/우 랜덤
-        self.ball_speed_y = 0  # 처음에는 수직 속도 없음
-        self.ball_speed_z = speed * angle  # 약간의 각도
-
+        self.ball_x = self.width / 2
+        self.ball_y = self.height / 2
+        self.ball_speed_x = random.randint(3, 5) * random.choice([1, -1])
+        self.ball_speed_y = random.randint(3, 5) * random.choice([1, -1])
+        self.paddles['left']['top'] = self.height / 2
+        self.paddles['right']['top'] = self.height / 2
         await self.send_update()
 
     async def game_over_message(self): # 게임이 끝났을 때 메시지를 보내는 함수
@@ -156,21 +128,20 @@ class PongConsumer(AsyncWebsocketConsumer):
         if self.leftScore >= 11 or self.rightScore >= 11:
             await self.set_game_state(GameState.GAME_OVER)
         else:
-            # 공의 초기 위치를 테이블 중앙 위로 설정
-            self.ball_x = 0
-            self.ball_y = self.table_height + 10
-            self.ball_z = 0
-            
-            # 속도 재설정
-            speed = random.randint(2, 4)
-            angle = random.uniform(-0.5, 0.5)
-            self.ball_speed_x = speed * random.choice([-1, 1])
-            self.ball_speed_y = 0
-            self.ball_speed_z = speed * angle
+            self.ball_x = self.width / 2
+            self.ball_y = self.height / 2
+            self.ball_speed_x = random.randint(3, 5) * random.choice([1, -1])
+            self.ball_speed_y = random.randint(3, 5) * random.choice([1, -1])
+            self.paddles['left']['top'] = self.height / 2
+            self.paddles['right']['top'] = self.height / 2
+            self.game_state = GameState.GOAL
+            await self.send_paddle_positions()
     
     async def connect(self):
         self.game_state = GameState.SETTING
         print("ws 연결요청")
+        # self.user = self.scope['url_route']['kwargs']['username']
+        # print(f"유저 {self.user} 연결")
         await self.accept()
         self.move_task = asyncio.create_task(self.game_loop())
         asyncio.create_task(self.update())
@@ -193,165 +164,147 @@ class PongConsumer(AsyncWebsocketConsumer):
     
     async def handle_keydown(self, key):
         if key == 'w':
-            self.paddles['left']['keyup'] = True
-        elif key == 's':
             self.paddles['left']['keydown'] = True
-        elif key == 'ArrowUp': 
-            self.paddles['right']['keyup'] = True
-        elif key == 'ArrowDown':
+        elif key == 's':
+            self.paddles['left']['keyup'] = True
+        elif key == 'ArrowUp':
             self.paddles['right']['keydown'] = True
-
+        elif key == 'ArrowDown':
+            self.paddles['right']['keyup'] = True
+    
     async def handle_keyup(self, key):
         if key == 'w':
-            self.paddles['left']['keyup'] = False
-        elif key == 's':
             self.paddles['left']['keydown'] = False
+        elif key == 's':
+            self.paddles['left']['keyup'] = False
         elif key == 'ArrowUp':
-            self.paddles['right']['keyup'] = False
-        elif key == 'ArrowDown':
             self.paddles['right']['keydown'] = False
+        elif key == 'ArrowDown':
+            self.paddles['right']['keyup'] = False
     
     async def move_ball(self):
         if self.game_state != GameState.PLAYING:
             return
-        # 테이블 상하단 벽 충돌 처리
-        if abs(self.ball_z) >= self.table_depth/2 - self.ball_radius:
-            # 충돌 방향 반전
-            self.ball_z = (self.table_depth/2 - self.ball_radius) * (self.ball_z/abs(self.ball_z))
-            self.ball_speed_z *= -0.9  # 약간의 에너지 손실
-        # 공 위치 업데이트
         self.ball_x += self.ball_speed_x
         self.ball_y += self.ball_speed_y
-        self.ball_z += self.ball_speed_z
 
-        # 중력 효과
-        self.ball_speed_y -= 0.4
+        # 천장과 바닥에 부딪히면 방향을 바꿈
+        if self.ball_y - self.ball_radius < 0:
+            self.ball_speed_y = abs(self.ball_speed_y)
+        elif self.ball_y + self.ball_radius > self.height:
+            self.ball_speed_y = -abs(self.ball_speed_y)
         
-        # 탁구대 바운스
-        if self.ball_y <= self.table_height + self.ball_radius:
-            # 테이블 범위 내에서만 바운스
-            if (abs(self.ball_x) <= self.table_width/2 and 
-                abs(self.ball_z) <= self.table_depth/2):
-                self.ball_y = self.table_height + self.ball_radius
-                self.ball_speed_y = abs(self.ball_speed_y) * 0.7  # 에너지 손실
-            else:
-                # 테이블 밖으로 나가면 점수 처리
-                if self.ball_x < 0:
-                    self.rightScore += 1
-                else:
-                    self.leftScore += 1
-                await self.goal_reset()
-                return
+        # 왼쪽 패들과 부딪히면 방향을 바꿈
+        if self.ball_speed_x < 0 \
+            and self.ball_x - self.ball_radius \
+            <= self.paddles['left']['left'] + self.paddle_width / 2 \
+            and self.paddles['left']['left'] - self.paddle_width / 2\
+            >= self.ball_x - self.ball_radius\
+            and self.paddles['left']['top'] - self.paddle_height / 2\
+            <= self.ball_y + self.ball_radius\
+            <= self.paddles['left']['top'] + self.paddle_height / 2:
+            self.ball_speed_x = abs(self.ball_speed_x) + 1
 
-        # 속도 제한
-        for attr in ['ball_speed_x', 'ball_speed_y', 'ball_speed_z']:
-            speed = getattr(self, attr)
-            if abs(speed) > self.max_ball_speed:
-                setattr(self, attr, self.max_ball_speed * (speed/abs(speed)))
+            # 패들의 방향에 따라 공에게 추가 속도를 줌
+            if self.paddles['left']['keydown']:
+                self.ball_speed_y -= 4
+            elif self.paddles['left']['keyup']:
+                self.ball_speed_y += 4
+        
+        # 오른쪽 패들과 부딪히면 방향을 바꿈
+        if self.ball_speed_x > 0 \
+            and self.ball_x + self.ball_radius \
+            >= self.paddles['right']['left'] - self.paddle_width / 2\
+            and self.ball_x + self.ball_radius\
+            <= self.paddles['right']['left'] + self.paddle_width / 2\
+            and self.paddles['right']['top'] - self.paddle_height / 2\
+            <= self.ball_y + self.ball_radius\
+            <= self.paddles['right']['top'] + self.paddle_height / 2:
+            self.ball_speed_x = -abs(self.ball_speed_x) - 1
 
-        # 패들과의 충돌 검사
-        for side, paddle in self.paddles.items():
-            if ((side == 'left' and self.ball_speed_x < 0) or 
-                (side == 'right' and self.ball_speed_x > 0)):
-                
-                if (abs(self.ball_x - paddle['x']) <= 15 and
-                    abs(self.ball_y - paddle['y']) <= 20 and
-                    abs(self.ball_z - paddle['z']) <= 20):
-                    
-                    # 라켓에 맞으면 방향 전환
-                    self.ball_speed_x *= -1.1  # 약간 가속
-                    
-                    # 라켓의 위치에 따른 z축 방향 변화
-                    z_diff = self.ball_z - paddle['z']
-                    self.ball_speed_z += z_diff * 0.3
-                    
-                    # y축 방향 영향
-                    y_diff = self.ball_y - paddle['y']
-                    self.ball_speed_y += y_diff * 0.2
+            # 패들의 방향에 따라 공에게 추가 속도를 줌
+            if self.paddles['right']['keydown']:
+                self.ball_speed_y -= 4
+            elif self.paddles['right']['keyup']:
+                self.ball_speed_y += 4
+        
+        # 공의 최고 속도를 제한
+        self.ball_speed_x = max(-12, min(12, self.ball_speed_x))
+        self.ball_speed_y = max(-10, min(10, self.ball_speed_y))
 
+        # 왼쪽 벽에 부딪히면 오른쪽이 골
+        if self.ball_x - self.ball_radius < 0:
+            self.rightScore += 1
+            await self.goal_reset()
+        
+        # 오른쪽 벽에 부딪히면 왼쪽이 골
+        if self.ball_x + self.ball_radius > self.width:
+            self.leftScore += 1
+            await self.goal_reset()
+        
         await self.send_ball_position()
     
     async def move_paddles(self):
         if self.game_state != GameState.PLAYING:
             return
 
-        # 패들 이동 거리 계산
-        move_distance = self.paddle_speed
+        moved = False
+        
+        if self.paddles['left']['keydown']:
+            self.paddles['left']['top'] -= self.paddle_speed
+            moved = True
+        if self.paddles['left']['keyup']:
+            self.paddles['left']['top'] += self.paddle_speed
+            moved = True
+        if self.paddles['right']['keydown']:
+            self.paddles['right']['top'] -= self.paddle_speed
+            moved = True
+        if self.paddles['right']['keyup']:
+            self.paddles['right']['top'] += self.paddle_speed
+            moved = True
 
-        # 왼쪽 패들 이동 (좌우 방향만)
-        if self.paddles['left']['keyup']:  # 위로 이동
-            new_z = self.paddles['left']['z'] - move_distance  # 부호 변경
-            # 최대 이동 거리 제한
-            self.paddles['left']['z'] = max(
-                self.paddle_initial_z - self.paddle_max_distance,
-                new_z
-            )
-
-        if self.paddles['left']['keydown']:  # 아래로 이동
-            new_z = self.paddles['left']['z'] + move_distance  # 부호 변경
-            # 최대 이동 거리 제한
-            self.paddles['left']['z'] = min(
-                self.paddle_initial_z + self.paddle_max_distance,
-                new_z
-            )
-
-        # 오른쪽 패들 이동 (좌우 방향만)
-        if self.paddles['right']['keyup']:  # 위로 이동
-            new_z = self.paddles['right']['z'] - move_distance  # 부호 변경
-            self.paddles['right']['z'] = max(
-                self.paddle_initial_z - self.paddle_max_distance,
-                new_z
-            )
-
-        if self.paddles['right']['keydown']:  # 아래로 이동
-            new_z = self.paddles['right']['z'] + move_distance  # 부호 변경
-            self.paddles['right']['z'] = min(
-                self.paddle_initial_z + self.paddle_max_distance,
-                new_z
-            )
-
-        await self.send_paddle_positions()
-
-    # send_paddle_positions도 수정
+        height = self.height - self.paddle_height / 2
+        self.paddles['left']['top'] = max(self.paddle_height / 2, min(height, self.paddles['left']['top']))
+        self.paddles['right']['top'] = max(self.paddle_height / 2, min(height, self.paddles['right']['top']))
+        
+        if moved:
+            await self.send_paddle_positions()
+    
+    async def game_loop(self):
+        try:
+            while True:
+                await self.move_ball()
+                await self.move_paddles()
+                await asyncio.sleep(0.03)
+        except asyncio.CancelledError:
+                pass
+        except Exception as e:
+                print(e)
+    
+    # 패들의 위치를 클라이언트에게 보냄, 패들의 위치를 퍼센트로 변환
     async def send_paddle_positions(self):
+        left_paddle_percent = self.paddles['left']['top'] / (self.height) * 100
+        right_paddle_percent = self.paddles['right']['top'] / (self.height) * 100
+
         await self.send(text_data=json.dumps({
             'type': 'paddle_update',
             'paddles': {
-                'left': {
-                    'x': self.paddles['left']['x'],
-                    'y': self.paddles['left']['y'],
-                    'z': self.paddles['left']['z'],
-                },
-                'right': {
-                    'x': self.paddles['right']['x'],
-                    'y': self.paddles['right']['y'],
-                    'z': self.paddles['right']['z'],
-                }
+                'left': {'top': left_paddle_percent},
+                'right': {'top': right_paddle_percent}
             }
         }))
-
+    
+    # 공의 위치를 클라이언트에게 보냄, 공의 위치를 퍼센트로 변환
     async def send_ball_position(self):
-        # 3D 볼 위치 전송
+        ball_x_percent = self.ball_x * 100 / self.width
+        ball_y_percent = self.ball_y * 100 / self.height
+
         await self.send(text_data=json.dumps({
             'type': 'ball_update',
-            'ball': {
-                'x': self.ball_x,
-                'y': self.ball_y,
-                'z': self.ball_z
-            }
+            'ball': {'x': ball_x_percent, 'y': ball_y_percent}
         }))
 
-    async def game_loop(self):
-            try:
-                while True:
-                    await self.move_ball()
-                    await self.move_paddles()
-                    await asyncio.sleep(0.016)  # 약 60fps
-            except asyncio.CancelledError:
-                pass
-            except Exception as e:
-                print(e)
-    
+
     async def send_message(self, custom_message = None):
         await self.send(text_data=json.dumps({
             'type': 'message',
@@ -359,32 +312,17 @@ class PongConsumer(AsyncWebsocketConsumer):
         }))
     
     async def send_update(self):
-        # 3D 위치 정보를 포함한 업데이트 전송
+        # 패들 위치를 퍼센트로 변환
+        left_paddle_percent = self.paddles['left']['top'] / (self.height) * 100
+        right_paddle_percent = self.paddles['right']['top'] / (self.height) * 100
+        
         await self.send(text_data=json.dumps({
             'type': 'update',
             'paddles': {
-                'left': {
-                    'x': self.paddles['left']['x'],
-                    'y': self.paddles['left']['y'],
-                    'z': self.paddles['left']['z'],
-                },
-                'right': {
-                    'x': self.paddles['right']['x'],
-                    'y': self.paddles['right']['y'],
-                    'z': self.paddles['right']['z'],
-                }
+                'left': {'top': left_paddle_percent},
+                'right': {'top': right_paddle_percent}
             },
-            'ball': {
-                'x': self.ball_x,
-                'y': self.ball_y,
-                'z': self.ball_z
-            },
-            'scores': {
-                'left': self.leftScore,
-                'right': self.rightScore
-            },
-            'time': {
-                'min': self.minutes,
-                'sec': self.seconds
-            }
+            'ball': {'x': self.ball_x, 'y': self.ball_y},
+            'scores': {'left': self.leftScore, 'right': self.rightScore},
+            'time': {'min': self.minutes, 'sec': self.seconds}
         }))

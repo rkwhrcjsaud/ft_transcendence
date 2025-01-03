@@ -1,47 +1,51 @@
 import { getSecretValue } from "../vault";
+import { createAxiosInstance } from "../utils/axiosInterceptor";
 
+const Auth = {
+    isAuth: !!localStorage.getItem('access_token'),
+    user: JSON.parse(localStorage.getItem('user')) || null,
 
-
-let isAuth = false;
-let user = null;
-
-async function checkAuth() {
-    try {
-        const res = await axios.get(await getSecretValue('front/FRONT_API_ACCOUNTS_AUTH'));
-        if (res.status === 200) {
-            isAuth = true;
-            user = JSON.parse(localStorage.getItem('user'));
+    async checkAuth() {
+        try {
+            const authUrl = await getSecretValue('front/FRONT_API_ACCOUNTS_AUTH');
+            const instance = await createAxiosInstance();
+            console.log(authUrl);
+            const res = await instance.get(authUrl);
+            if (res.status === 200) {
+                this.isAuth = true;
+                this.user = JSON.parse(localStorage.getItem('user'));
+            }
+        } catch {
+            console.log('Failed to check auth');
+            this.isAuth = false;
+            this.user = null;
+            return false;
         }
-    } catch {
-        isAuth = false;
-    }
-    return isAuth;
-}
+        return this.isAuth;
+    },
 
-function login(userData, access_token, refresh_token) {
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('access_token', access_token);
-    localStorage.setItem('refresh_token', refresh_token);
-    isAuth = true;
-    user = userData;
-    window.location.href = '/';
-}
+    login(userData, access_token, refresh_token) {
+        console.log(JSON.stringify(userData));
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+        this.isAuth = true;
+        this.user = userData;
+        window.location.href = '/';
+    },
 
-function logout() {
-    localStorage.removeItem('user');
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    isAuth = false;
-    user = null;
-    window.location.href = '/login';
-}
+    logout() {
+        localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        this.isAuth = false;
+        this.user = null;
+        window.location.href = '/login';
+    },
 
-function getUser() {
-    return user;
-}
+    getUser() {
+        return this.user;
+    },
+};
 
-function getAuthStatus() {
-    return isAuth;
-}
-
-export { checkAuth, login, logout, getUser, getAuthStatus };
+export default Auth;

@@ -1,10 +1,9 @@
 import axios from "axios";
-import jwtDecode from "jwt-decode";
 import dayjs from "dayjs";
+import { jwtDecode } from "jwt-decode";
 import { getSecretValue } from "../vault";
 
-const baseUrl = await getSecretValue("front/FRONT_API_BASEURL");
-
+// 토큰 관련 함수들
 const getAccessToken = () => localStorage.getItem("access_token");
 const getRefreshToken = () => localStorage.getItem("refresh_token");
 const setAccessToken = (token) => localStorage.setItem("access_token", token);
@@ -14,26 +13,28 @@ const removeTokens = () => {
   localStorage.removeItem("user");
 };
 
+// 토큰 만료 여부 체크
 const isTokenExpired = (token) => {
   try {
-    const decodedToken = jwtDecode(token);
-    const exp = decodedToken.exp;
-    return dayjs.unix(exp).isBefore(dayjs());
+    const { exp } = jwtDecode(token);
+    return dayjs.unix(exp).diff(dayjs()) < 1;
   } catch (error) {
     console.error("Error decoding token:", error);
     return false;
   }
 };
 
+// 로그아웃 처리
 const handleLogout = async () => {
   try {
     const refresh_token = getRefreshToken();
     if (refresh_token) {
-      const res = await axios.post(`${baseUrl}/v1/auth/logout/`, {
+      const res = await axios.post(`${await getSecretValue("front/FRONT_API_BASEURL")}/accounts/logout/`, {
         refresh: refresh_token,
       });
       if (res.status === 200) {
         removeTokens();
+        axiosInstance.defaults.headers["Authorization"] = "";
         axios.defaults.headers["Authorization"] = "";
       }
     }
@@ -42,6 +43,7 @@ const handleLogout = async () => {
   }
 };
 
+// 요청 인터셉터
 const axiosRequestInterceptor = async (config) => {
   let access_token = getAccessToken();
   const refresh_token = getRefreshToken();
@@ -53,7 +55,7 @@ const axiosRequestInterceptor = async (config) => {
 
   if (refresh_token) {
     try {
-      const response = await axios.post(`${baseUrl}/v1/auth/token/refresh/`, {
+      const response = await axios.post(`${await getSecretValue("front/FRONT_API_BASEURL")}/accounts/token/refresh/`, {
         refresh: refresh_token,
       });
       if (response.status === 200) {
@@ -77,18 +79,21 @@ const axiosRequestInterceptor = async (config) => {
   return config;
 };
 
-// Create Axios instance with base URL and default headers
-const axiosInstance = axios.create({
-  baseURL: baseUrl,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: getAccessToken() ? `Bearer ${getAccessToken()}` : "",
-  },
-});
+// 비동기 함수에서 axiosInstance 생성하기
+export const createAxiosInstance = async () => {
+  const baseUrl = await getSecretValue("front/FRONT_API_BASEURL");
 
-// Add request interceptor
-axiosInstance.interceptors.request.use(axiosRequestInterceptor, (error) => {
-  return Promise.reject(error);
-});
+  const axiosInstance = axios.create({
+    baseURL: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: getAccessToken() ? `Bearer ${getAccessToken()}` : "",
+    },
+  });
 
-export default axiosInstance;
+  axiosInstance.interceptors.request.use(axiosRequestInterceptor, (error) => {
+    return Promise.reject(error);
+  });
+
+  return axiosInstance;
+};

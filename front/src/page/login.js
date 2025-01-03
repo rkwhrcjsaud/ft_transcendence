@@ -3,6 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { getSecretValue } from "../vault";
 import { loadCSS } from "../utils/loadcss";
 import { language } from "../utils/language";
+import Auth from "../auth/authProvider";
 
 //기존 js 코드 온전히 유지한채로 구조와 스타일만 변경함
 export function loadLogin() {
@@ -85,17 +86,19 @@ export function loadLogin() {
       );
 
       if (response.status === 200) {
+        console.log(response.data);
         const auser = {
           id: response.data.id,
-          username: response.data.email,
+          user: response.data.email,
           full_name: response.data.full_name,
           email: response.data.email,
         };
-        const { aceess_token, refresh_token } = response.data;
-        // Auth.login(auser, aceess_token, refresh_token);
-        window.location.href = "/";
+        const access_token = response.data.access_token;
+        const refresh_token = response.data.refresh_token;
+        Auth.login(auser, access_token, refresh_token);
       }
     } catch (error) {
+      console.log(error);
       if (error.response) {
         showAlert(
           error.response.data.error || "An error occurred. Please try again"

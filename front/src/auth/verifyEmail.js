@@ -1,6 +1,7 @@
 import axios from "axios";
 import { loadCSS } from "../utils/loadcss";
 import { language } from "../utils/language";
+import { getSecretValue } from "../vault";
 
 function loadVerifyEmail() {
   loadCSS("../styles/verifyEmail.css");
@@ -62,8 +63,8 @@ function loadVerifyEmail() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_CN_URL}/api/accounts/verify/`,
-        { otp: otp, email: email },
+        await getSecretValue("front/FRONT_API_ACCOUNTS_VERIFY"),
+        { email: email, code: otp },
         { headers: { "Content-Type": "application/json" } }
       );
 
@@ -75,17 +76,17 @@ function loadVerifyEmail() {
           alertMessage = language[languageKey]["DuplicateEmail"];
           alertColour = "warning";
           break;
-        // case 404: 이메일/otp 중 하나라도 입력을 안 했을 시 처리하는 로직이 위에 이미 명시되어 있으므로 주석처리
-        //   alertMessage = language[languageKey]["PleaseCode"];
-        //   alertColour = "danger";
-        //   break;
+        case 404:
+          alertMessage = language[languageKey]["PleaseCode"];
+          alertColour = "danger";
+          break;
         default:
           alertMessage = language[languageKey]["Error"];
           alertColour = "danger";
       }
     } catch (error) {
-      alertMessage = language[languageKey]["Error"];
       alertColour = "danger";
+      alertMessage = language[languageKey]["Error"];
     }
 
     if (alertMessage) {

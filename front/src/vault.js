@@ -1,13 +1,10 @@
-// const axios = require('axios');
-// const fs = require('fs');
+import axios from 'axios';
 
-// const VAULT_ADDR = process.env.VAULT_ADDR;
-// const ROLE_ID_FILE = process.env.ROLE_ID_FILE;
-// const SECRET_ID_FILE = process.env.SECRET_ID_FILE;
+const VAULT_ADDR = "https://localhost:443";
 
 export async function getVaultToken() {
-    const roleId = JSON.parse(fs.readFileSync(ROLE_ID_FILE, 'utf-8')).data.role_id;
-    const secretId = JSON.parse(fs.readFileSync(SECRET_ID_FILE, 'utf-8')).data.secret_id;
+    const roleId = "b7cfeb48-28fb-8ad9-848f-7bf6307ce250";
+    const secretId = "a7da42dd-9ddd-3bc9-b61d-c4a4a0bc2e4b";
 
     try {
         const response = await axios.post(`${VAULT_ADDR}/v1/auth/approle/login`, {

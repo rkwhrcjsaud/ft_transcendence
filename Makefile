@@ -16,7 +16,7 @@ reup: down
 
 # 파일 변경 감지 후 업데이트
 watch: mount
-	@docker compose watch
+	docker compose watch
 
 mount:
 	@mkdir -p volumes/vault-data/approle/back

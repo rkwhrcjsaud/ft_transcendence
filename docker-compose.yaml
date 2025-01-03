@@ -40,6 +40,7 @@ services:
       - static-data:/vol/static
       - media-data:/vol/media
       - ./volumes/vault-data/approle/back:/usr/src/app/approle
+      - ./volumes/vault-data/approle/front:/usr/src/app/approle/front
     networks:
       - transcendence
   

@@ -16,45 +16,33 @@ class GameState(Enum):
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.paddles = {
-            'left': {'left': 46, 'top': 300, 'keydown': False, 'keyup': False},
-            'right': {'left': 754, 'top': 300, 'keydown': False, 'keyup': False}
-        }
-        self.paddle_speed = 10
-        self.paddle_height = 0
-        self.paddle_width = 12
+        self.table_width = 700    
+        self.table_depth = 500  
+        self.table_height = 0   
 
-        self.table_width = 700    # 탁구대 가로
-        self.table_depth = 500  # 탁구대 세로
-        self.table_height = 0   # 탁구대 높이
+        self.height = 600  
+        self.width = 800   
+        self.depth = self.table_depth  
 
-        self.height = 600  # 게임 화면 높이
-        self.width = 800   # 게임 화면 너비
-        self.depth = self.table_depth  # 게임 공간 깊이
-
-        # 게임 상수
         self.paddle_speed = 8
         self.max_ball_speed = 15
         self.ball_radius = 6
 
-        # 라켓 이동 제한 추가
-        self.paddle_max_distance = 200  # 중앙에서 좌우로 최대 이동 가능 거리
-        self.paddle_initial_z = 0      # 라켓의 초기 z 위치 (테이블 중앙)
-        # 라켓 위치 설정 부분 수정 (초기화 부분)
+        self.paddle_max_distance = 200  
+        self.paddle_initial_z = 0      
+
         self.paddles = {
             'left': {
-                'x': -358,  # 테이블 왼쪽 끝
-                'y': self.table_height + 2,  # 테이블 바로 위
-                'z': self.paddle_initial_z,   # 중앙 시작
-                'rotation': {'x': 0, 'y': 0, 'z': 0},  # 회전 없음
+                'x': -358,  
+                'y': self.table_height + 2,  
+                'z': self.paddle_initial_z,   
                 'keyup': False,
                 'keydown': False,
             },
             'right': {
-                'x': 358,   # 테이블 오른쪽 끝
-                'y': self.table_height + 2,  # 테이블 바로 위
-                'z': self.paddle_initial_z,   # 중앙 시작
-                'rotation': {'x': 0, 'y': 0, 'z': 0},  # 회전 없음
+                'x': 358,   
+                'y': self.table_height + 2,  
+                'z': self.paddle_initial_z,   
                 'keyup': False,
                 'keydown': False,
             }
@@ -72,7 +60,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             'x': -358,
             'y': self.table_height + 2,
             'z': self.paddle_initial_z,
-            'rotation': {'x': 0, 'y': 0, 'z': 0},
             'keyup': False,
             'keydown': False,
         }
@@ -80,7 +67,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             'x': 358,
             'y': self.table_height + 2,
             'z': self.paddle_initial_z,
-            'rotation': {'x': 0, 'y': 0, 'z': 0},
             'keyup': False,
             'keydown': False,
         }
@@ -91,7 +77,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.ball_z = 0  # 중앙
         
         # 3D 공간에서의 초기 속도
-        speed = random.randint(3, 5)
+        speed = random.randint(2, 4)
         angle = random.uniform(-0.5, 0.5)  # 좌우 랜덤 각도
         self.ball_speed_x = speed * random.choice([-1, 1])  # 좌/우 랜덤
         self.ball_speed_y = 0  # 처음에는 수직 속도 없음
@@ -187,8 +173,6 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.game_state = GameState.SETTING
         print("ws 연결요청")
-        # self.user = self.scope['url_route']['kwargs']['username']
-        # print(f"유저 {self.user} 연결")
         await self.accept()
         self.move_task = asyncio.create_task(self.game_loop())
         asyncio.create_task(self.update())
@@ -339,13 +323,11 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'x': self.paddles['left']['x'],
                     'y': self.paddles['left']['y'],
                     'z': self.paddles['left']['z'],
-                    'rotation': self.paddles['left']['rotation']
                 },
                 'right': {
                     'x': self.paddles['right']['x'],
                     'y': self.paddles['right']['y'],
                     'z': self.paddles['right']['z'],
-                    'rotation': self.paddles['right']['rotation']
                 }
             }
         }))
@@ -387,13 +369,11 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'x': self.paddles['left']['x'],
                     'y': self.paddles['left']['y'],
                     'z': self.paddles['left']['z'],
-                    'rotation': self.paddles['left']['rotation']
                 },
                 'right': {
                     'x': self.paddles['right']['x'],
                     'y': self.paddles['right']['y'],
                     'z': self.paddles['right']['z'],
-                    'rotation': self.paddles['right']['rotation']
                 }
             },
             'ball': {

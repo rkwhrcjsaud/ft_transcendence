@@ -109,16 +109,10 @@ export function loadGame() {
           leftPaddle.position.x = data.paddles.left.x;
           leftPaddle.position.y = data.paddles.left.y;
           leftPaddle.position.z = data.paddles.left.z;
-          leftPaddle.rotation.x = data.paddles.left.rotation.x;
-          leftPaddle.rotation.y = data.paddles.left.rotation.y;
-          leftPaddle.rotation.z = data.paddles.left.rotation.z;
   
           rightPaddle.position.x = data.paddles.right.x;
           rightPaddle.position.y = data.paddles.right.y;
           rightPaddle.position.z = data.paddles.right.z;
-          rightPaddle.rotation.x = data.paddles.right.rotation.x;
-          rightPaddle.rotation.y = data.paddles.right.rotation.y;
-          rightPaddle.rotation.z = data.paddles.right.rotation.z;
   
       } else if (data.type === "ball_update") {
           // 공의 3D 위치 업데이트
@@ -142,21 +136,10 @@ export function loadGame() {
                   data.paddles.left.y,
                   data.paddles.left.z
               );
-              leftPaddle.rotation.set(
-                  data.paddles.left.rotation.x,
-                  data.paddles.left.rotation.y,
-                  data.paddles.left.rotation.z
-              );
-  
               rightPaddle.position.set(
                   data.paddles.right.x,
                   data.paddles.right.y,
                   data.paddles.right.z
-              );
-              rightPaddle.rotation.set(
-                  data.paddles.right.rotation.x,
-                  data.paddles.right.rotation.y,
-                  data.paddles.right.rotation.z
               );
           }
   
@@ -322,7 +305,6 @@ export function loadGame() {
   function createPaddle(isLeft) {
     // 패들 그룹 생성
     const paddleGroup = new THREE.Group();
-  
     // 직선 막대기 형태의 패들 생성
     const paddleGeometry = new THREE.BoxGeometry(16, 2, 100); // 두께, 높이, 길이
     const paddleMaterial = new THREE.MeshStandardMaterial({

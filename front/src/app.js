@@ -10,11 +10,11 @@ import { loadChangePassword } from "./page/changePassword";
 import Auth from "./auth/authProvider";
 
 const routes = {
-  '/': () => protectRoute(loadLanding),
-  "/dashboard": () => protectRoute(loadDashboard),
-  "/edit_profile": () => protectRoute(loadEditProfile),
-  "/change_password": () => protectRoute(loadChangePassword),
-  "/play": () => protectRoute(loadGame),
+  '/': () => loadLanding(),
+  "/dashboard": () => loadDashboard(),
+  "/edit_profile": () => loadEditProfile(),
+  "/change_password": () => loadChangePassword(),
+  "/play": () => loadGame(),
 
   "/login": () => loadLogin(),
   "/register": () => loadRegister(),

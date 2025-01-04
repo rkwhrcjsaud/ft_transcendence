@@ -1,12 +1,21 @@
 import * as THREE from 'three';
 import { loadCSS } from '../utils/loadcss';
 import { language } from "../utils/language"
-import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines, createCamera, updateTrailEffect} from './gameObjects';
+import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines, createCamera } from './gameObjects';
+import { updateTrailEffect } from './gameEffect';
 
 
 let scene, renderer;
 let paddles, ballPosition, leftPaddle, rightPaddle, ball;
 let scoreText, timeText;
+
+let ws = null;
+let animationId = null;
+let gameState = '1';
+let scores = { left: 0, right: 0 };
+let minutes = 0;
+let seconds = 0;
+let message = 'none';
 
 export function loadGame() {
   loadCSS('../styles/game.css');
@@ -36,14 +45,6 @@ export function loadGame() {
   const startGame = document.getElementById('start-game');
   const gameRules = document.getElementById('game-rules');
   const overlay = document.getElementById('overlay');
-
-  let ws = null;
-  let animationId = null;
-  let gameState = '1';
-  let scores = { left: 0, right: 0 };
-  let minutes = 0;
-  let seconds = 0;
-  let message = 'none';
 
   startGame.addEventListener('click', () => {
     if (ws && ws.readyState === 1) {
@@ -96,7 +97,6 @@ export function loadGame() {
       console.log("WebSocket opened");
     };
 
-    // game.js의 ws.onmessage 부분 수정
     ws.onmessage = (e) => {
       const data = JSON.parse(e.data);
       if (data.type === "paddle_update") {
@@ -119,37 +119,25 @@ export function loadGame() {
         const rightFinalTilt = rightY > 0 ? rightTiltX : -rightTiltX;
 
         // 위치 업데이트
-        leftPaddle.position.set(-354, 50, leftY);
-        rightPaddle.position.set(354, 50, rightY);
+        leftPaddle.position.set(-354, 75, leftY);
+        rightPaddle.position.set(354, 75, rightY);
         
         // 회전 업데이트 (X축 기준 회전)
         leftPaddle.rotation.x = leftFinalTilt;
         rightPaddle.rotation.x = rightFinalTilt;
         
-        // 부드러운 애니메이션을 위한 보간 처리 (선택사항)
-        const LERP_FACTOR = 0.1; // 0과 1 사이의 값, 높을수록 더 빠르게 변화
-        leftPaddle.rotation.x = THREE.MathUtils.lerp(
-            leftPaddle.rotation.x,
-            leftFinalTilt,
-            LERP_FACTOR
-        );
-        rightPaddle.rotation.x = THREE.MathUtils.lerp(
-            rightPaddle.rotation.x,
-            rightFinalTilt,
-            LERP_FACTOR
-        );
       }
       else if (data.type === "ball_update") {
         // 2D 퍼센트 좌표를 3D 좌표로 변환
-        const x = ((data.ball.x / 100) * 800) - 400;  // 800은 width
-        const z = ((data.ball.y / 100) * 600) - 300;  // 600은 height
-
-        // 공의 높이를 x 위치에 따라 동적으로 계산 (포물선 운동)
+        const x = ((data.ball.x / 100) * 800) - 400;
+        const z = ((data.ball.y / 100) * 600) - 300;
+        
+        // 공의 높이를 x 위치에 따라 동적으로 계산
         const y = Math.abs(Math.cos((x / 400) * Math.PI));
-      
-        // 새로 추가한 updatePosition 메서드 사용
-        ball.position.set(x, 6 + 80 * y, z);
-      }
+        const newY = 10 + 80 * y;
+        
+        ball.position.set(x, newY, z);
+    }
       else if (data.type === "update") {
         // 점수와 시간 업데이트
         scores.left = data.scores.left;
@@ -162,8 +150,8 @@ export function loadGame() {
             const leftY = ((data.paddles.left.top / 100) * 600) - 300;
             const rightY = ((data.paddles.right.top / 100) * 600) - 300;
 
-            leftPaddle.position.set(-354, 50, leftY);
-            rightPaddle.position.set(354, 50, rightY);
+            leftPaddle.position.set(-354, 75, leftY);
+            rightPaddle.position.set(354, 75, rightY);
         }
 
         if (data.ball) {

@@ -19,7 +19,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             'left': {'left': 46, 'top': 300, 'keydown': False, 'keyup': False},
             'right': {'left': 754, 'top': 300, 'keydown': False, 'keyup': False}
         }
-        self.paddle_speed = 10
+        self.paddle_speed = 12
         self.paddle_height = 120
         self.paddle_width = 12
 
@@ -264,8 +264,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             moved = True
 
         height = self.height - self.paddle_height / 2
-        self.paddles['left']['top'] = max(self.paddle_height / 2, min(height, self.paddles['left']['top']))
-        self.paddles['right']['top'] = max(self.paddle_height / 2, min(height, self.paddles['right']['top']))
+        self.paddles['left']['top'] = max(self.paddle_height / 2 - 50, min(height + 50, self.paddles['left']['top']))
+        self.paddles['right']['top'] = max(self.paddle_height / 2 - 50, min(height + 50, self.paddles['right']['top']))
         
         if moved:
             await self.send_paddle_positions()

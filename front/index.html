@@ -115,7 +115,7 @@
     // 초기 언어 표시 (localStorage에서 가져온 값에 맞게)
     const initialLanguage = localStorage.getItem("selectedLanguage");
     langDropdown.querySelector(".dropdown-text").textContent = initialLanguage;
-  
+
     // 로그인,로그아웃 버튼 로직
     const isAuthenticated = await Auth.checkAuth();
     authButton.textContent = isAuthenticated ? "Logout" : "Login";

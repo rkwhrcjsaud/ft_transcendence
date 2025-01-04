@@ -1,10 +1,21 @@
 import * as THREE from 'three';
 import { loadCSS } from '../utils/loadcss';
 import { language } from "../utils/language"
-import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines } from './gameObjects';
+import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines, createCamera } from './gameObjects';
+import { updateTrailEffect } from './gameEffect';
 
+
+let scene, renderer;
 let paddles, ballPosition, leftPaddle, rightPaddle, ball;
 let scoreText, timeText;
+
+let ws = null;
+let animationId = null;
+let gameState = '1';
+let scores = { left: 0, right: 0 };
+let minutes = 0;
+let seconds = 0;
+let message = 'none';
 
 export function loadGame() {
   loadCSS('../styles/game.css');
@@ -34,14 +45,6 @@ export function loadGame() {
   const startGame = document.getElementById('start-game');
   const gameRules = document.getElementById('game-rules');
   const overlay = document.getElementById('overlay');
-
-  let ws = null;
-  let animationId = null;
-  let gameState = '1';
-  let scores = { left: 0, right: 0 };
-  let minutes = 0;
-  let seconds = 0;
-  let message = 'none';
 
   startGame.addEventListener('click', () => {
     if (ws && ws.readyState === 1) {
@@ -94,55 +97,75 @@ export function loadGame() {
       console.log("WebSocket opened");
     };
 
-// game.js의 ws.onmessage 부분 수정
-ws.onmessage = (e) => {
-  const data = JSON.parse(e.data);
-  if (data.type === "paddle_update") {
-      // 2D 퍼센트 좌표를 3D 좌표로 변환
-      const leftY = ((data.paddles.left.top / 100) * 600) - 300;  // 600은 height
-      const rightY = ((data.paddles.right.top / 100) * 600) - 300;
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if (data.type === "paddle_update") {
+        // 2D 퍼센트 좌표를 3D 좌표로 변환
+        const leftY = ((data.paddles.left.top / 100) * 600) - 300;  // 600은 height
+        const rightY = ((data.paddles.right.top / 100) * 600) - 300;
 
-      leftPaddle.position.set(-354, 0, leftY);    // x: -350 (왼쪽)
-      rightPaddle.position.set(354, 0, rightY);   // x: 350 (오른쪽)
-  } 
-  else if (data.type === "ball_update") {
-      // 2D 퍼센트 좌표를 3D 좌표로 변환
-      const x = ((data.ball.x / 100) * 800) - 400;  // 800은 width
-      const z = ((data.ball.y / 100) * 600) - 300;  // 600은 height
+        // 최대 기울기 각도 (90도)를 라디안으로 변환
+        const MAX_TILT = Math.PI / 2;
+        
+        // y 위치의 최대값 (절대값)
+        const MAX_Y = 300;
+        
+        // y 위치에 따른 기울기 계산 (절대값이 클수록 더 많이 기울어짐)
+        const leftTiltX = (Math.abs(leftY) / MAX_Y) * MAX_TILT;
+        const rightTiltX = (Math.abs(rightY) / MAX_Y) * MAX_TILT;
+        
+        // 위로 움직일 때는 앞으로(-), 아래로 움직일 때는 뒤로(+) 기울어지도록 부호 조정
+        const leftFinalTilt = leftY > 0 ? leftTiltX : -leftTiltX;
+        const rightFinalTilt = rightY > 0 ? rightTiltX : -rightTiltX;
 
-      // 공의 위치 업데이트
-      const y = Math.abs(Math.cos((x / 400) * Math.PI));
-
-      ball.position.set(x, 6 + 80 * y, z);
+        // 위치 업데이트
+        leftPaddle.position.set(-354, 75, leftY);
+        rightPaddle.position.set(354, 75, rightY);
+        
+        // 회전 업데이트 (X축 기준 회전)
+        leftPaddle.rotation.x = leftFinalTilt;
+        rightPaddle.rotation.x = rightFinalTilt;
+        
+      }
+      else if (data.type === "ball_update") {
+        // 2D 퍼센트 좌표를 3D 좌표로 변환
+        const x = ((data.ball.x / 100) * 800) - 400;
+        const z = ((data.ball.y / 100) * 600) - 300;
+        
+        // 공의 높이를 x 위치에 따라 동적으로 계산
+        const y = Math.abs(Math.cos((x / 400) * Math.PI));
+        const newY = 10 + 80 * y;
+        
+        ball.position.set(x, newY, z);
     }
-  else if (data.type === "update") {
-      // 점수와 시간 업데이트
-      scores.left = data.scores.left;
-      scores.right = data.scores.right;
-      minutes = data.time.min;
-      seconds = data.time.sec;
+      else if (data.type === "update") {
+        // 점수와 시간 업데이트
+        scores.left = data.scores.left;
+        scores.right = data.scores.right;
+        minutes = data.time.min;
+        seconds = data.time.sec;
 
-      // 패들과 공의 위치 업데이트
-      if (data.paddles) {
-          const leftY = ((data.paddles.left.top / 100) * 600) - 300;
-          const rightY = ((data.paddles.right.top / 100) * 600) - 300;
+        // 패들과 공의 위치 업데이트
+        if (data.paddles) {
+            const leftY = ((data.paddles.left.top / 100) * 600) - 300;
+            const rightY = ((data.paddles.right.top / 100) * 600) - 300;
 
-          leftPaddle.position.set(-354, 0, leftY);
-          rightPaddle.position.set(354, 0, rightY);
+            leftPaddle.position.set(-354, 75, leftY);
+            rightPaddle.position.set(354, 75, rightY);
+        }
+
+        if (data.ball) {
+            const x = ((data.ball.x / 100) * 800) - 400;
+            const z = ((data.ball.y / 100) * 600) - 300;
+            
+            ball.position.set(x, 36, z);
+        }
+      } 
+      else if (data.type === "message") {
+          message = data.message;
+          renderMessage();
       }
-
-      if (data.ball) {
-          const x = ((data.ball.x / 100) * 800) - 400;
-          const z = ((data.ball.y / 100) * 600) - 300;
-          
-          ball.position.set(x, 36, z);
-      }
-  } 
-  else if (data.type === "message") {
-      message = data.message;
-      renderMessage();
-  }
-};
+    };
     ws.onclose = () => {
       console.log("WebSocket closed");
       ws = null;
@@ -200,19 +223,14 @@ ws.onmessage = (e) => {
 
   // Three.js 초기 설정
   function initGame() {
-
-    const scene = new THREE.Scene();
+    scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
     // 오버레이 초기 설정
     overlay.classList.remove('hidden');
     overlay.classList.remove('game-over');
-
-    const camera = new THREE.PerspectiveCamera(60, 800 / 600, 0.1, 1000);
-    camera.position.set(0, 600, 300);
-    camera.lookAt(0, 200, 100);
     
-    const renderer = new THREE.WebGLRenderer({ 
+    renderer = new THREE.WebGLRenderer({ 
         canvas: pongArea,
         antialias: true,
         alpha: true
@@ -234,21 +252,34 @@ ws.onmessage = (e) => {
     scene.add(leftPaddle);
     scene.add(rightPaddle);
     
-    ball = createBall(scene);
-    
+    const ballObjects = createBall(scene);
+    ball = ballObjects.ball;
+
     const texts = createGameTexts(scene, scores, minutes, seconds);
     scoreText = texts.scoreText;
     timeText = texts.timeText;
 
+    const camera = createCamera();
+
+    let lastTime = performance.now();
+
     function animate() {
-        animationId = requestAnimationFrame(animate);
-        
-        scoreText.text = `${scores.left} - ${scores.right}`;
-        timeText.text = `${minutes}:${seconds}`;
-        scoreText.sync();
-        timeText.sync();
-        
-        renderer.render(scene, camera);
+      const currentTime = performance.now();
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+
+      animationId = requestAnimationFrame(animate);
+
+      scoreText.text = `${scores.left} - ${scores.right}`;
+      timeText.text = `${minutes}:${seconds}`;
+      scoreText.sync();
+      timeText.sync();
+
+      updateTrailEffect(ball, deltaTime / 1000);
+
+      texts.updateHologramEffect();
+      texts.updateTextOrientation(camera);
+      renderer.render(scene, camera);
     }
     
     animate();

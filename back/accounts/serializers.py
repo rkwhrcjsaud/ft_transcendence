@@ -120,7 +120,7 @@ class LoginSerializer(serializers.ModelSerializer):
             'email': user.email,
             'username': user.username,
             'nickname': user.nickname,
-            'full_name': user.get_full_name,
+            'full_name': user.get_full_name(),
             'access_token': str(user_tokens['access']),
             'refresh_token': str(user_tokens['refresh'])
         }

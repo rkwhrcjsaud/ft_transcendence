@@ -78,8 +78,8 @@
   </body>
 </html>
 
-<script>
-  import { checkAuth, logout, getAuthStatus } from "./authProvider";
+<script type="module">
+  import Auth from "./src/auth/authProvider";
 
   document.addEventListener("DOMContentLoaded", async () => {
     const authButton = document.getElementById("auth-button");
@@ -117,18 +117,11 @@
     langDropdown.querySelector(".dropdown-text").textContent = initialLanguage;
   
     // 로그인,로그아웃 버튼 로직
-    const isAuthenticated = await checkAuth();
+    const isAuthenticated = await Auth.checkAuth();
     authButton.textContent = isAuthenticated ? "Logout" : "Login";
 
     authButton.addEventListener("click", () => {
-      if (getAuthStatus()) {
-        // 로그아웃 처리 후 랜딩페이지로 리디렉션
-        logout();
-        window.location.href = "/";
-      } else {
-        // 로그인 페이지로 이동
-        window.location.href = "/login";
-      }
+      Auth.logout();
     });
   
     // 활성화된 링크 표시

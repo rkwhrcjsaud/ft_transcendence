@@ -90,12 +90,17 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_WHITELIST = [
     getSecretValue("django/DJANGO_LOCALHOST"),
     getSecretValue("django/DJANGO_VITE"),
+    'https://api.intra.42.fr',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     getSecretValue("django/DJANGO_LOCALHOST"),
     getSecretValue("django/DJANGO_VITE"),
+    'https://api.intra.42.fr',
 ]
+
+CSRF_COOKIE_SECURE = False 
+CSRF_COOKIE_HTTPONLY = False
 
 ROOT_URLCONF = 'transcendence.urls'
 
@@ -155,7 +160,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',

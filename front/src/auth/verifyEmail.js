@@ -14,11 +14,8 @@ function loadVerifyEmail() {
       <form id="verify-email-form">
         <div class="verify-from-group form-group mb-3">
           <label for="verify-email" class="verify-form-label">${language[languageKey]["Email"]}</label>
-          <div class="email-form-wrapper">
-            <div class="email-form-input-container">
-              <input type="email" id="verify-email" class="verify-form-input" placeholder="${language[languageKey]["InputEmail"]}">
-            </div>
-            <button class="send-email-btn">${language[languageKey]["SendEmail"]}</button>
+          <div class="email-form-input-container">
+            <input type="email" id="verify-email" class="verify-form-input" placeholder="${language[languageKey]["InputEmail"]}">
           </div>
         </div>
 

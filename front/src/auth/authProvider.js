@@ -48,4 +48,5 @@ const Auth = {
     },
 };
 
+export const checkAuth = Auth.checkAuth;
 export default Auth;

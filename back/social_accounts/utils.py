@@ -14,7 +14,7 @@ def RegisterSocialAccount(email, username, nickname, firstName, lastName, img_UR
     if user.exists():
         register_userd=authenticate(email=email, password=settings.SOCIAL_AUTH_PASSWORD)
         tokens = register_userd.tokens()
-        print(register_userd)
+        print("register_userd: ", register_userd)
         return {
             'id':register_userd.id,
 			'full_name':register_userd.get_full_name,
@@ -60,7 +60,7 @@ class SocialAccount42:
             "client_id": settings.CLIENT_ID_42,
             "client_secret": settings.CLIENT_SECRET_42,
             "code": code,
-            "redirect_uri": f"https://{settings.DOMAIN}/42"
+            "redirect_uri": "https://localhost/42"
         } # 42 API로 보낼 파라미터
         response = requests.post(
             getSecretValue("back/BACK_API_OAUTH_TOKEN"),

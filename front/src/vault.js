@@ -3,29 +3,25 @@ import axios from 'axios';
 const VAULT_ADDR = "https://localhost:443"; // Vault 서버 주소
 const DJANGO_API_URL = "http://localhost:8000/api/vault/"; // Django API URL
 
-/**
- * Django API에서 role-id와 secret-id 가져오기
- */
+// Django API에서 role-id와 secret-id 가져오기
 async function fetchVaultData() {
     try {
         const response = await axios.get(DJANGO_API_URL);
-        return response.data; // { role_id, secret_id } 반환
+        return response.data;
     } catch (error) {
         console.error("Failed to fetch Vault data from Django API:", error.message);
         throw error;
     }
 }
 
-/**
- * Vault에서 AppRole 로그인 토큰 가져오기
- */
+// Vault에서 AppRole 로그인 토큰 가져오기
 export async function getVaultToken() {
     try {
         // Django API에서 role-id와 secret-id 가져오기
         const { role_id, secret_id } = await fetchVaultData();
 
-        console.log("Role ID (from API):", role_id);
-        console.log("Secret ID (from API):", secret_id);
+        // console.log("Role ID (from API):", role_id);
+        // console.log("Secret ID (from API):", secret_id);
 
         // Vault 서버에 로그인 요청
         const response = await axios.post(`${VAULT_ADDR}/v1/auth/approle/login`, {

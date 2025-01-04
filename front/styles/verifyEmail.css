@@ -22,13 +22,8 @@
   color: #ee532c;
 }
 
-.email-form-wrapper {
-  display: flex;
-  justify-content: space-between;
-}
-
 .email-form-input-container {
-  width: 80%;
+  width: 100%;
 }
 
 .verify-form-label {
@@ -61,23 +56,6 @@
   border-color: #ee532c;
   outline: none;
   color: #333;
-}
-
-.send-email-btn {
-  /* 이메일 인증번호 전송 버튼 스타일 */
-  width: 18%;
-  border: none;
-  background-color: #ee532c;
-  color: #fff;
-  border-radius: 8px;
-  padding: 10px 0px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.send-email-btn:hover {
-  background-color: #555;
 }
 
 .verify-email-submit-btn {

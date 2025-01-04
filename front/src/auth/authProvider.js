@@ -10,11 +10,16 @@ const Auth = {
             const authUrl = await getSecretValue('front/FRONT_API_ACCOUNTS_AUTH');
             const instance = await createAxiosInstance();
             console.log(authUrl);
-            const res = await instance.get(authUrl);
-            if (res.status === 200) {
-                this.isAuth = true;
-                this.user = JSON.parse(localStorage.getItem('user'));
-            }
+            // const res = await instance.get(authUrl);
+            // if (res.status === 200) {
+            //     this.isAuth = true;
+            //     this.user = JSON.parse(localStorage.getItem('user'));
+            // }
+
+            // 개발 환경 로직 추가, 추후 삭제하고 위의 주석된 코드 사용!!
+            console.warn('Auth check bypassed for development.');
+            this.isAuth = true; // 강제로 인증된 상태 설정
+            this.user = JSON.parse(localStorage.getItem('user')) || { username: 'dev_user' };
         } catch {
             console.log('Failed to check auth');
             this.isAuth = false;

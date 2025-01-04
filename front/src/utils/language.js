@@ -51,6 +51,8 @@ export const language = {
       Email: "이메일",
       DeleteAccount: "탈퇴하기",
       Save: "저장하기",
+      ProfileUpdated: "프로필이 성공적으로 변경 되었습니다.",
+      ErrorUpdatingProfile: "프로필 변경 중 오류가 발생했습니다.",
   
       //loadChangePassword
       ChangePassword: "비밀번호 변경",
@@ -149,6 +151,8 @@ export const language = {
       Email: "Email",
       DeleteAccount: "Delete Account",
       Save: "Save",
+      ProfileUpdated: "Your profile has been successfully updated.",
+      ErrorUpdatingProfile: "An error occurred while updating profile.",
   
       //loadChangePassword
       ChangePassword: "Change Password",
@@ -247,6 +251,8 @@ export const language = {
       Email: "Email",
       DeleteAccount: "Supprimer le compte",
       Save: "Enregistrer",
+      ProfileUpdated: "Votre profil a été mis à jour avec succès.",
+      ErrorUpdatingProfile: "Une erreur s'est produite lors de la mise à jour de votre profil.",
   
       //loadChangePassword
       ChangePassword: "Changer le mot de passe",

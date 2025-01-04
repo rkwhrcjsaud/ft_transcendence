@@ -1,22 +1,78 @@
 import * as THREE from 'three';
 import { Text } from 'troika-three-text';
 
-export class GameTimer {
-    constructor() {
-        this.lastTime = performance.now() / 1000; // 초 단위로 변환
-        this.deltaTime = 0;
+export function createGameTexts(scene, scores, minutes, seconds) {
+    // 홀로그램 효과를 위한 쉐이더 material
+    const hologramMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            time: { value: 0 },
+            baseColor: { value: new THREE.Color(0x00ffff) }
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform float time;
+            uniform vec3 baseColor;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                float scanline = sin(vPosition.y * 50.0 + time * 5.0) * 0.15 + 0.85;
+                float glitch = step(0.99, sin(time * 100.0 + vUv.y * 100.0));
+                vec3 color = baseColor * scanline;
+                color = mix(color, vec3(1.0), glitch * 0.1);
+                float alpha = 0.8 + sin(time * 3.0) * 0.2;
+                gl_FragColor = vec4(color, alpha);
+            }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending
+    });
+
+   // 점수 텍스트
+   const scoreText = new Text();
+   scoreText.text = `${scores.left} - ${scores.right}`;
+   scoreText.fontSize = 35;
+   scoreText.material = hologramMaterial.clone();
+   scoreText.position.set(0, 30, -400);
+   scoreText.sync();
+   
+   // 시간 텍스트
+   const timeText = new Text();
+   timeText.text = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+   timeText.fontSize = 25;
+   timeText.material = hologramMaterial.clone();
+   timeText.position.set(0, 30, -340);
+   timeText.sync();
+   
+   // 텍스트를 카메라 방향으로 향하게 하는 함수
+   function updateTextOrientation(camera) {
+       scoreText.quaternion.copy(camera.quaternion);
+       timeText.quaternion.copy(camera.quaternion);
+   }
+    
+    // 애니메이션 업데이트 함수
+    function updateHologramEffect() {
+        scoreText.material.uniforms.time.value += 0.016;
+        timeText.material.uniforms.time.value += 0.016;
     }
 
-    update() {
-        const currentTime = performance.now() / 1000;
-        this.deltaTime = currentTime - this.lastTime;
-        this.lastTime = currentTime;
-        return this.deltaTime;
-    }
+    scene.add(scoreText);
+    scene.add(timeText);
 
-    getDeltaTime() {
-        return this.deltaTime;
-    }
+    return { 
+        scoreText, 
+        timeText,
+        updateHologramEffect,
+        updateTextOrientation
+    };
 }
 
 export function createCamera() {
@@ -28,56 +84,27 @@ export function createCamera() {
 
 export function createLights(scene) {
     // 주 조명
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    mainLight.position.set(0, 100, 0);
+    const mainLight = new THREE.DirectionalLight(0xffffff, 2);
+    mainLight.position.set(0, 1000, 300);
     mainLight.castShadow = true;
     mainLight.shadow.mapSize.width = 4096;
     mainLight.shadow.mapSize.height = 4096;
     mainLight.shadow.camera.near = 0.1;
-    mainLight.shadow.camera.far = 1000;
+    mainLight.shadow.camera.far = 2000;
     mainLight.shadow.camera.left = -500;
     mainLight.shadow.camera.right = 500;
     mainLight.shadow.camera.top = 500;
     mainLight.shadow.camera.bottom = -500;
-    mainLight.shadow.bias = -0.0001;
+    mainLight.shadow.bias = -0.01;
     scene.add(mainLight);
 
     // 부드러운 주변광
-    const ambientLight = new THREE.AmbientLight(0x404040, 1.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
     scene.add(ambientLight);
 
-    // 볼륨메트릭 조명 효과
-    const spotLight1 = new THREE.SpotLight(0xffffff, 0.5);
-    spotLight1.position.set(-200, 100, 0);
-    spotLight1.castShadow = true;
-    spotLight1.angle = Math.PI / 6;
-    spotLight1.penumbra = 0.3;
-    spotLight1.decay = 1.5;
-    scene.add(spotLight1);
-
-    const spotLight2 = new THREE.SpotLight(0xffffff, 0.5);
-    spotLight2.position.set(200, 100, 0);
-    spotLight2.castShadow = true;
-    spotLight2.angle = Math.PI / 6;
-    spotLight2.penumbra = 0.3;
-    spotLight2.decay = 1.5;
-    scene.add(spotLight2);
-
-    // 컬러 액센트 조명
-    const accentLight1 = new THREE.PointLight(0x4169E1, 0.3);
-    accentLight1.position.set(-300, 100, 0);
-    scene.add(accentLight1);
-
-    const accentLight2 = new THREE.PointLight(0xFF4500, 0.3);
-    accentLight2.position.set(300, 100, 0);
-    scene.add(accentLight2);
     return { 
         mainLight, 
-        ambientLight, 
-        spotLight1, 
-        spotLight2, 
-        accentLight1, 
-        accentLight2,
+        ambientLight
     };
 }
 
@@ -159,16 +186,16 @@ export function createTableLines(scene) {
     });
 
     // 중앙선
-    const centerLineGeometry = new THREE.PlaneGeometry(800, 3);
+    const centerLineGeometry = new THREE.PlaneGeometry(800, 4);
     const centerLine = new THREE.Mesh(centerLineGeometry, lineMaterial);
-    centerLine.position.y = 3;
+    centerLine.position.y = 4;
     centerLine.rotation.x = -Math.PI / 2;
     scene.add(centerLine);
     
     // 수직 중앙선
     const verticalCenterLineGeometry = new THREE.PlaneGeometry(3, 600);
     const verticalCenterLine = new THREE.Mesh(verticalCenterLineGeometry, lineMaterial);
-    verticalCenterLine.position.y = 3;
+    verticalCenterLine.position.y = 4;
     verticalCenterLine.rotation.x = -Math.PI / 2;
     scene.add(verticalCenterLine);
 
@@ -176,7 +203,7 @@ export function createTableLines(scene) {
     const sideLines = [];
     [-300, 300].forEach(z => {
         const sideLine = new THREE.Mesh(new THREE.PlaneGeometry(800, 3), lineMaterial);
-        sideLine.position.set(0, 3, z);
+        sideLine.position.set(0, 4, z);
         sideLine.rotation.x = -Math.PI / 2;
         scene.add(sideLine);
         sideLines.push(sideLine);
@@ -186,7 +213,7 @@ export function createTableLines(scene) {
     const endLines = [];
     [-400, 400].forEach(x => {
         const endLine = new THREE.Mesh(new THREE.PlaneGeometry(3, 600), lineMaterial);
-        endLine.position.set(x, 3, 0);
+        endLine.position.set(x, 4, 0);
         endLine.rotation.x = -Math.PI / 2;
         scene.add(endLine);
         endLines.push(endLine);
@@ -214,7 +241,7 @@ export function createPaddle(isLeft) {
     const paddleGroup = new THREE.Group();
 
     // 라켓 헤드의 우드 부분 (5겹 합판)
-    const woodGeometry = new THREE.CircleGeometry(35, 64);
+    const woodGeometry = new THREE.CylinderGeometry(35, 35, 3, 64);  // 3mm 두께
     const woodMaterial = new THREE.MeshPhysicalMaterial({
         color: 0x8B4513,
         roughness: 0.5,
@@ -225,11 +252,10 @@ export function createPaddle(isLeft) {
         emissiveIntensity: 0.3
     });
     const wood = new THREE.Mesh(woodGeometry, woodMaterial);
-    wood.castShadow = true;
-    wood.receiveShadow = true;
+
 
     // 스폰지 층 (2.0mm)
-    const spongeGeometry = new THREE.CircleGeometry(35, 64);
+    const spongeGeometry = new THREE.CylinderGeometry(35, 35, 2, 64);
     const spongeMaterial = new THREE.MeshPhysicalMaterial({
         color: isLeft ? 0xFFE4E1 : 0x696969,
         roughness: 0.8,
@@ -239,12 +265,11 @@ export function createPaddle(isLeft) {
         emissiveIntensity: 0.2
     });
     const sponge = new THREE.Mesh(spongeGeometry, spongeMaterial);
-    sponge.position.z = 0.5;
-    sponge.castShadow = true;
-    sponge.receiveShadow = true;
+    sponge.rotation.x = Math.PI / 2;
+    sponge.position.z = 1;
 
     // 러버 표면 (탑시트)
-    const rubberGeometry = new THREE.CircleGeometry(35, 64);
+    const rubberGeometry = new THREE.CylinderGeometry(35, 35, 1, 64);
     const rubberMaterial = new THREE.MeshPhysicalMaterial({
         color: isLeft ? 0xFF0000 : 0x000000,
         roughness: 0.8,
@@ -255,10 +280,8 @@ export function createPaddle(isLeft) {
         emissiveIntensity: 0.2
     });
     const rubber = new THREE.Mesh(rubberGeometry, rubberMaterial);
-    rubber.position.z = 1;
-
-    rubber.castShadow = true;
-    rubber.receiveShadow = true;
+    rubber.rotation.x = Math.PI / 2;  // sponge와 같은 회전 적용
+    rubber.position.z = 2.5;  // sponge보다 앞쪽에 위치
 
     // 러버 표면 텍스처 추가
     const textureCanvas = document.createElement('canvas');
@@ -309,8 +332,6 @@ export function createPaddle(isLeft) {
     });
     const handleTop = new THREE.Mesh(handleTopGeometry, handleTopMaterial);
     handleTop.position.y = -35;
-    handleTop.castShadow = true;
-    handleTop.receiveShadow = true;
 
     paddleGroup.add(wood);
     paddleGroup.add(sponge);
@@ -334,7 +355,6 @@ export function createPaddle(isLeft) {
 }
 
 export function createBall(scene) {
-    // 볼 본체
     const ballGeometry = new THREE.SphereGeometry(6, 64, 64);
     const ballMaterial = new THREE.MeshPhysicalMaterial({ 
         color: 0xFFFFFF,
@@ -349,183 +369,161 @@ export function createBall(scene) {
     ball.castShadow = true;
     ball.position.set(0, 36, 0);
     
-    // 트레일 효과
-    const trailGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(150); // 50개의 점으로 줄임
-    const colors = new Float32Array(150);
-    const alphas = new Float32Array(50);  // 각 점의 수명을 저장
-
-    // 초기 위치로 배열 채우기
-    for (let i = 0; i < positions.length; i += 3) {
-        positions[i] = ball.position.x;
-        positions[i + 1] = ball.position.y;
-        positions[i + 2] = ball.position.z;
+    // 트레일 설정
+    const trailLength = 15; // 트레일 길이를 조금 줄임
+    const positions = new Float32Array(trailLength * 3);
+    const colors = new Float32Array(trailLength * 3);
+    const opacities = new Float32Array(trailLength);
+    
+    // 모든 초기 위치를 공의 현재 위치로 설정
+    for (let i = 0; i < trailLength; i++) {
+        const idx = i * 3;
+        positions[idx] = ball.position.x;
+        positions[idx + 1] = ball.position.y;
+        positions[idx + 2] = ball.position.z;
+        opacities[i] = 1.0 - (i / trailLength);
     }
-   
+
+    const trailGeometry = new THREE.BufferGeometry();
     trailGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     trailGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     
     const trailMaterial = new THREE.LineBasicMaterial({
         vertexColors: true,
         transparent: true,
-        opacity: 0.6,
+        opacity: 0.5,
         blending: THREE.AdditiveBlending,
-        linewidth: 1.5,
-        depthWrite: false  // 깊이 버퍼 쓰기 비활성화로 투명도 개선
+        depthWrite: false
     });
     
     const trail = new THREE.Line(trailGeometry, trailMaterial);
     
-    // 데이터 저장
+    // userData 초기화
     ball.userData = {
         trail: trail,
         trailPositions: positions,
         trailColors: colors,
-        trailAlphas: alphas,
-        trailTimer: 0,
-        lastPosition: ball.position.clone()  // 마지막 위치 저장
+        trailOpacities: opacities,
+        trailLength: trailLength,
+        previousPosition: ball.position.clone(),
+        accumulatedTime: 0,
+        trailActive: true
     };
-
+    
     scene.add(ball);
     scene.add(trail);
     
     return { ball, trail };
 }
 
-
-export function createGameTexts(scene, scores, minutes, seconds) {
-    // 홀로그램 효과를 위한 쉐이더 material
-    const hologramMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-            time: { value: 0 },
-            baseColor: { value: new THREE.Color(0x00ffff) }
-        },
-        vertexShader: `
-            varying vec2 vUv;
-            varying vec3 vPosition;
-            void main() {
-                vUv = uv;
-                vPosition = position;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-        `,
-        fragmentShader: `
-            uniform float time;
-            uniform vec3 baseColor;
-            varying vec2 vUv;
-            varying vec3 vPosition;
-            
-            void main() {
-                float scanline = sin(vPosition.y * 50.0 + time * 5.0) * 0.15 + 0.85;
-                float glitch = step(0.99, sin(time * 100.0 + vUv.y * 100.0));
-                vec3 color = baseColor * scanline;
-                color = mix(color, vec3(1.0), glitch * 0.1);
-                float alpha = 0.8 + sin(time * 3.0) * 0.2;
-                gl_FragColor = vec4(color, alpha);
-            }
-        `,
-        transparent: true,
-        blending: THREE.AdditiveBlending
-    });
-
-   // 점수 텍스트
-   const scoreText = new Text();
-   scoreText.text = `${scores.left} - ${scores.right}`;
-   scoreText.fontSize = 35;
-   scoreText.material = hologramMaterial.clone();
-   scoreText.position.set(0, 30, -400);
-   scoreText.sync();
-   
-   // 시간 텍스트
-   const timeText = new Text();
-   timeText.text = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-   timeText.fontSize = 25;
-   timeText.material = hologramMaterial.clone();
-   timeText.position.set(0, 30, -340);
-   timeText.sync();
-   
-   // 텍스트를 카메라 방향으로 향하게 하는 함수
-   function updateTextOrientation(camera) {
-       scoreText.quaternion.copy(camera.quaternion);
-       timeText.quaternion.copy(camera.quaternion);
-   }
-    
-    // 애니메이션 업데이트 함수
-    function updateHologramEffect() {
-        scoreText.material.uniforms.time.value += 0.016;
-        timeText.material.uniforms.time.value += 0.016;
-    }
-
-    scene.add(scoreText);
-    scene.add(timeText);
-
-    return { 
-        scoreText, 
-        timeText,
-        updateHologramEffect,
-        updateTextOrientation
-    };
-}
-
 export function updateTrailEffect(ball, deltaTime) {
-    if (!ball.userData.trail) return;  // 필요한 데이터가 없으면 반환
+    if (!ball.userData || !ball.userData.trailActive) return;
 
-    const positions = ball.userData.trailPositions;
-    const colors = ball.userData.trailColors;
-    const alphas = ball.userData.trailAlphas;
-    const lastPosition = ball.userData.lastPosition;
-
-    // 현재 위치와 마지막 위치 사이의 거리 계산
-    const distance = lastPosition ? ball.position.distanceTo(lastPosition) : 0;
-
-   // 급격한 위치 변화 감지 (튕김)
-   if (distance > 20) {
-    // 트레일 초기화
-    for (let i = 0; i < positions.length; i += 3) {
-        positions[i] = ball.position.x;
-        positions[i + 1] = ball.position.y;
-        positions[i + 2] = ball.position.z;
-        const index = Math.floor(i / 3);
-        alphas[index] = 0;
+    ball.userData.accumulatedTime = (ball.userData.accumulatedTime || 0) + deltaTime;
+    const UPDATE_INTERVAL = 1/100;
+    
+    if (ball.userData.accumulatedTime < UPDATE_INTERVAL) {
+        return;
     }
-    } else {
-        // 이전 위치들을 뒤로 밀기
-        for (let i = positions.length - 3; i >= 3; i -= 3) {
-            positions[i] = positions[i - 3];
-            positions[i + 1] = positions[i - 2];
-            positions[i + 2] = positions[i - 1];
+
+    const {
+        trailPositions: positions,
+        trailColors: colors,
+        trailOpacities: opacities,
+        trailLength,
+        trail,
+        previousPosition
+    } = ball.userData;
+
+    const currentPos = ball.position;
+    const movementVector = currentPos.clone().sub(previousPosition);
+    const distance = movementVector.length();
+
+    // 최대 허용 이동 거리 (이보다 크면 텔레포트로 간주)
+    const MAX_ALLOWED_DISTANCE = 20;
+    
+    if (distance > MAX_ALLOWED_DISTANCE) {
+        // 급격한 위치 변화 감지 - 트레일 리셋
+        for (let i = 0; i < trailLength; i++) {
+            const idx = i * 3;
+            positions[idx] = currentPos.x;
+            positions[idx + 1] = currentPos.y;
+            positions[idx + 2] = currentPos.z;
+            opacities[i] = 0;
+        }
+    } else if (distance > 0.1) {
+        // 정상적인 움직임
+        const normalizedMovement = movementVector.normalize();
+        
+        // 트레일 위치 업데이트
+        for (let i = trailLength - 1; i > 0; i--) {
+            const currentIdx = i * 3;
+            const prevIdx = (i - 1) * 3;
             
-            const index = Math.floor(i / 3);
-            if (index > 0) {
-                alphas[index] = alphas[index - 1];
+            // 이전 위치와 현재 위치 사이의 거리 검사
+            const prevPoint = new THREE.Vector3(
+                positions[prevIdx],
+                positions[prevIdx + 1],
+                positions[prevIdx + 2]
+            );
+            
+            const currentPoint = new THREE.Vector3(
+                positions[currentIdx],
+                positions[currentIdx + 1],
+                positions[currentIdx + 2]
+            );
+
+            // 트레일 포인트 간의 최대 거리 제한
+            const segmentVector = prevPoint.clone().sub(currentPoint);
+            const segmentDistance = segmentVector.length();
+            
+            if (segmentDistance > MAX_ALLOWED_DISTANCE * 0.5) {
+                // 거리가 너무 멀면 이전 점 근처로 이동
+                const limitedPoint = prevPoint.clone().sub(
+                    normalizedMovement.clone().multiplyScalar(MAX_ALLOWED_DISTANCE * 0.3)
+                );
+                positions[currentIdx] = limitedPoint.x;
+                positions[currentIdx + 1] = limitedPoint.y;
+                positions[currentIdx + 2] = limitedPoint.z;
+            } else {
+                // 정상적인 위치 업데이트
+                positions[currentIdx] = positions[prevIdx];
+                positions[currentIdx + 1] = positions[prevIdx + 1];
+                positions[currentIdx + 2] = positions[prevIdx + 2];
             }
+            
+            opacities[i] = opacities[i - 1] * 0.95;
         }
 
-        // 각 세그먼트의 색상 업데이트
-        for (let i = 0; i < positions.length; i += 3) {
-            const index = Math.floor(i / 3);
-            const fadePhase = index / (positions.length / 3);
-            const alpha = Math.pow(1 - fadePhase, 2);  // 이차 감쇄
-            
-            colors[i] = 0.3 * alpha;      // R
-            colors[i + 1] = 0.6 * alpha;  // G
-            colors[i + 2] = 1.0 * alpha;  // B
+        // 첫 번째 점 업데이트
+        positions[0] = currentPos.x;
+        positions[1] = currentPos.y;
+        positions[2] = currentPos.z;
+        opacities[0] = Math.min(1.0, 0.5 + (distance / MAX_ALLOWED_DISTANCE));
+    } else {
+        // 느린 움직임 - 페이드아웃
+        for (let i = 0; i < trailLength; i++) {
+            opacities[i] = Math.max(0, opacities[i] - deltaTime * 2);
         }
     }
 
-    // 현재 위치를 첫 번째 점으로 설정
-    positions[0] = ball.position.x;
-    positions[1] = ball.position.y;
-    positions[2] = ball.position.z;
-    colors[0] = 0.9;
-    colors[1] = 0.95;
-    colors[2] = 1.0;
-    alphas[0] = 1.0;
+    // 색상 업데이트
+    for (let i = 0; i < trailLength; i++) {
+        const idx = i * 3;
+        const fadeOutFactor = 1 - (i / trailLength);
+        const opacity = opacities[i] * fadeOutFactor;
+        
+        colors[idx] = opacity;
+        colors[idx + 1] = opacity;
+        colors[idx + 2] = opacity;
+    }
 
-    // 마지막 위치 업데이트
-    ball.userData.lastPosition.copy(ball.position);
+    // 위치 업데이트
+    previousPosition.copy(currentPos);
 
-    // 버퍼 업데이트
-    ball.userData.trail.geometry.attributes.position.needsUpdate = true;
-    ball.userData.trail.geometry.attributes.color.needsUpdate = true;
+    // Geometry 업데이트
+    trail.geometry.attributes.position.needsUpdate = true;
+    trail.geometry.attributes.color.needsUpdate = true;
+    
+    ball.userData.accumulatedTime = 0;
 }

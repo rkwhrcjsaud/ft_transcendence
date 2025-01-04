@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { loadCSS } from '../utils/loadcss';
 import { language } from "../utils/language"
-import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines } from './gameObjects';
+import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines, createCamera, updateTrailEffect, GameTimer } from './gameObjects';
+
 
 let paddles, ballPosition, leftPaddle, rightPaddle, ball;
 let scoreText, timeText;
@@ -102,17 +103,18 @@ ws.onmessage = (e) => {
       const leftY = ((data.paddles.left.top / 100) * 600) - 300;  // 600은 height
       const rightY = ((data.paddles.right.top / 100) * 600) - 300;
 
-      leftPaddle.position.set(-354, 0, leftY);    // x: -350 (왼쪽)
-      rightPaddle.position.set(354, 0, rightY);   // x: 350 (오른쪽)
+      leftPaddle.position.set(-354, 50, leftY);    // x: -350 (왼쪽)
+      rightPaddle.position.set(354, 50, rightY);   // x: 350 (오른쪽)
   } 
   else if (data.type === "ball_update") {
       // 2D 퍼센트 좌표를 3D 좌표로 변환
       const x = ((data.ball.x / 100) * 800) - 400;  // 800은 width
       const z = ((data.ball.y / 100) * 600) - 300;  // 600은 height
 
-      // 공의 위치 업데이트
+      // 공의 높이를 x 위치에 따라 동적으로 계산 (포물선 운동)
       const y = Math.abs(Math.cos((x / 400) * Math.PI));
-
+    
+      // 새로 추가한 updatePosition 메서드 사용
       ball.position.set(x, 6 + 80 * y, z);
     }
   else if (data.type === "update") {
@@ -127,8 +129,8 @@ ws.onmessage = (e) => {
           const leftY = ((data.paddles.left.top / 100) * 600) - 300;
           const rightY = ((data.paddles.right.top / 100) * 600) - 300;
 
-          leftPaddle.position.set(-354, 0, leftY);
-          rightPaddle.position.set(354, 0, rightY);
+          leftPaddle.position.set(-354, 50, leftY);
+          rightPaddle.position.set(354, 50, rightY);
       }
 
       if (data.ball) {
@@ -200,17 +202,12 @@ ws.onmessage = (e) => {
 
   // Three.js 초기 설정
   function initGame() {
-
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
     // 오버레이 초기 설정
     overlay.classList.remove('hidden');
     overlay.classList.remove('game-over');
-
-    const camera = new THREE.PerspectiveCamera(60, 800 / 600, 0.1, 1000);
-    camera.position.set(0, 600, 300);
-    camera.lookAt(0, 200, 100);
     
     const renderer = new THREE.WebGLRenderer({ 
         canvas: pongArea,
@@ -234,21 +231,26 @@ ws.onmessage = (e) => {
     scene.add(leftPaddle);
     scene.add(rightPaddle);
     
-    ball = createBall(scene);
-    
+    const ballObjects = createBall(scene);
+    ball = ballObjects.ball;
+
     const texts = createGameTexts(scene, scores, minutes, seconds);
     scoreText = texts.scoreText;
     timeText = texts.timeText;
 
+    const camera = createCamera();
+    const gameTimer = new GameTimer();
+    const deltaTime = gameTimer.update();
     function animate() {
-        animationId = requestAnimationFrame(animate);
-        
-        scoreText.text = `${scores.left} - ${scores.right}`;
-        timeText.text = `${minutes}:${seconds}`;
-        scoreText.sync();
-        timeText.sync();
-        
-        renderer.render(scene, camera);
+      animationId = requestAnimationFrame(animate);
+      scoreText.text = `${scores.left} - ${scores.right}`;
+      timeText.text = `${minutes}:${seconds}`;
+      scoreText.sync();
+      timeText.sync();
+      updateTrailEffect(ball, deltaTime / 1000);
+      texts.updateHologramEffect();
+      texts.updateTextOrientation(camera);
+      renderer.render(scene, camera);
     }
     
     animate();

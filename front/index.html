@@ -116,12 +116,18 @@
     const initialLanguage = localStorage.getItem("selectedLanguage");
     langDropdown.querySelector(".dropdown-text").textContent = initialLanguage;
   
-    // 로그인,로그아웃 버튼 로직
-    const isAuthenticated = await Auth.checkAuth();
+    // 로그인, 로그아웃 버튼 로직
+    const isAuthenticated = await Auth.checkAuth(); // 인증 상태 확인
     authButton.textContent = isAuthenticated ? "Logout" : "Login";
-
-    authButton.addEventListener("click", () => {
-      Auth.logout();
+    
+    authButton.addEventListener("click", async () => {
+        if (Auth.isAuth == true) {
+            // 로그아웃 처리 후 랜딩 페이지로 리디렉션
+            Auth.logout();
+            window.location.href = "/";
+        } else {
+            window.location.href = "/login";
+        }
     });
   
     // 활성화된 링크 표시

@@ -124,7 +124,7 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 0.9rem;
-  color: #ccc;
+  color: #888;
   transition: all 0.3s ease;
 }
 
@@ -132,6 +132,12 @@
   border-color: #ee532c;
   outline: none;
   color: #333;
+}
+
+#edit-profile-email {
+  cursor: not-allowed;
+  color: #666;
+  font-size: .9rem;
 }
 
 /* 버튼 섹션 */

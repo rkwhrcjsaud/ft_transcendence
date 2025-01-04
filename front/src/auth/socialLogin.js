@@ -1,25 +1,31 @@
 import axios from 'axios';
+import { getSecretValue } from '../vault';
+import Auth from '../auth/authProvider';
+import { language } from '../utils/language';
 
 export async function socialLogin() {
     const url = new URL(window.location.href);
     const code = url.searchParams.get('code');
+    const languageKey = localStorage.getItem("selectedLanguage");
     
     if (code) {
         try {
+            console.log(code);
+            console.log(await getSecretValue('front/FRONT_API_SOCIAL_ACCOUNTS'));
             const response = await axios.post(await getSecretValue('front/FRONT_API_SOCIAL_ACCOUNTS'), { code: code });
             if (response.status === 200) {
                 const user = {
                     id: response.data.id,
-                    username: response.data.username,
+                    user: response.data.username,
                     full_name: response.data.full_name,
                     email: response.data.email,
                 };
 
                 // 로컬스토리지에 사용자 정보 및 토큰 저장
-                localStorage.clear();
-                localStorage.setItem('access_token', response.data.access_token);
-                localStorage.setItem('refresh_token', response.data.refresh_token);
-                localStorage.setItem('user', JSON.stringify(user));
+                console.log(user);
+                console.log(response.data.access_token);
+                console.log(response.data.refresh_token);
+                Auth.login(user, response.data.access_token, response.data.refresh_token);
 
                 // 페이지 리디렉션
                 window.location.href = '/';
@@ -27,6 +33,8 @@ export async function socialLogin() {
         } catch (error) {
             let social_error = '';
             let status = undefined;
+            console.log(error);
+            console.log(error.response);
             
             if (error.response) {
                 social_error = error.response.data;
@@ -35,13 +43,9 @@ export async function socialLogin() {
                 social_error = language[languageKey]["Error"];
                 status = 500;
             }
-            
-            // 오류 발생 시 처리
-            throw new Response("", {
-                status: status,
-                statusText: social_error,
-            });
+            window.location.href = '/login';
         }
+    } else {
+        window.location.href = '/login';
     }
-    return null;
 }

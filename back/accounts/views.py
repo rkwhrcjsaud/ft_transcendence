@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from .models import User, UserProfile, UserStats, OTP
-from .serializers import RegisterSerializer, ProfileSerializer, UserStatsSerializer, LogoutSerializer, LoginSerializer, VerifyEmailSerializer
+from .models import User, UserProfile, UserStats, OTP, MatchHistory
+from .serializers import RegisterSerializer, ProfileSerializer, UserStatsSerializer, LogoutSerializer, LoginSerializer, VerifyEmailSerializer, MatchHistorySerializer
 import random
 from django.conf import settings
 from django.core.mail import send_mail
@@ -118,3 +118,27 @@ class VerifyEmailView(generics.GenericAPIView):
             return Response({'message': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         except OTP.DoesNotExist:
             return Response({'message': 'OTP does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+class MatchHistoryView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = MatchHistory.objects.all()
+    serializer_class = MatchHistorySerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        try:
+            user_id = request.GET.get('user_id')
+            if not user_id:
+                return Response({'error': 'user_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+            match_history = MatchHistory.objects.filter(user_id=user_id)
+            serializer = self.serializer_class(match_history, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        

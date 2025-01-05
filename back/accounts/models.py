@@ -14,7 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     email = models.EmailField(max_length=255, unique=True, verbose_name=_('email address'))
     username = models.CharField(max_length=40, unique=True)
-    nickname = models.CharField(max_length=40, null=True, blank=True, default="")
+    nickname = models.CharField(max_length=40, null=True, blank=True, default="guest")
     first_name = models.CharField(max_length=40, verbose_name=_('first name'))
     last_name = models.CharField(max_length=40, verbose_name=_('last name'))
     is_active = models.BooleanField(default=True)
@@ -87,7 +87,21 @@ class UserStats(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
-    rating = models.IntegerField(default=1000, validators=[MinLengthValidator(0)])
+    draws = models.IntegerField(default=0)
     
     def __str__(self):
-        return f"wins: {self.wins}, losses: {self.losses}, rating: {self.rating}"
+        return f"wins: {self.wins}, losses: {self.losses}, draws: {self.draws}"
+
+class MatchHistory(models.Model):
+    user = models.ForeignKey(User, related_name='match_histories', on_delete=models.CASCADE)
+    opponent = models.CharField(max_length=40, default='guest')
+    result = models.CharField(
+        max_length=10,
+        choices=[('win', 'win'), ('loss', 'loss'), ('draw', 'draw')],
+        default='draw'
+    )
+    score = models.CharField(max_length=20, default="0-0")   # 예: '10-7'
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.nickname} vs {self.opponent} ({self.result})"

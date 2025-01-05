@@ -45,8 +45,8 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def game_start(self):
         self.leftScore = 0
         self.rightScore = 0
-        self.minutes = 1
-        self.seconds = 40
+        self.minutes = 0
+        self.seconds = 1
         self.ball_x = self.width / 2
         self.ball_y = self.height / 2
         self.ball_speed_x = random.randint(3, 5) * random.choice([1, -1])

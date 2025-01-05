@@ -103,8 +103,8 @@ export async function loadGame() {
   }
 
   function initWebSocket() {
-    const username = "guest";
-    ws = new WebSocket(`wss://localhost:443/ws/localgame/${username}/`);
+    const userId = Auth.getUser().id;
+    ws = new WebSocket(`wss://localhost:443/ws/localgame/${userId}/`);
 
     ws.onerror = (e) => {
       console.error("WebSocket error: ", e);

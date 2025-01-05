@@ -33,15 +33,15 @@ export async function loadEditProfile() {
                     </div>
                     <div class="form-group">
                         <label class="form-label">${language[languageKey]["LastName"]}</label>
-                        <input type="text" id="lastName" class="form-input">
+                        <p type="text" id="lastName" class="fixed-text">
                     </div>
                     <div class="form-group">
                         <label class="form-label">${language[languageKey]["FirstName"]}</label>
-                        <input type="text" id="firstName" class="form-input">
+                        <p type="text" id="firstName" class="fixed-text">
                     </div>
                 </form>
                 <div class="form-buttons">
-                    <button type="button" class="edit-profile-cancel-btn">${language[languageKey]["DeleteAccount"]}</button>
+                    <button type="button" id="deleteAccountBtn" class="edit-profile-cancel-btn">${language[languageKey]["DeleteAccount"]}</button>
                     <button type="submit" id="saveProfileBtn" class="edit-profile-save-btn">${language[languageKey]["Save"]}</button>
                 </div>
             </div>
@@ -54,6 +54,7 @@ export async function loadEditProfile() {
   const deleteImageBtn = document.getElementById("deleteImageBtn");
   const imageUpload = document.getElementById("imageUpload");
   const saveProfileBtn = document.getElementById("saveProfileBtn");
+  const deleteAccountBtn = document.getElementById("deleteAccountBtn");
 
   // Axios 인스턴스 생성
   const axios = await createAxiosInstance();
@@ -66,10 +67,11 @@ export async function loadEditProfile() {
 
       // Mock 데이터 기반 유저 정보 업데이트
       document.getElementById("nickname").value = data.nickname || "";
-      document.getElementById("lastName").value = data.last_name || "";
-      document.getElementById("firstName").value = data.first_name || "";
+      document.getElementById("lastName").textContent = data.last_name || "";
+      document.getElementById("firstName").textContent = data.first_name || "";
       document.getElementById("edit-profile-email").textContent = data.email || "";
-      if (data.profile_image) {
+      console.log("data.profile_image", data.profile_image);
+      if (data.profile_image & (data.profile_image !== "")) {
         profileImage.src = data.profile_image;
       } else {
         profileImage.src = "default_profile.jpeg";
@@ -99,6 +101,16 @@ export async function loadEditProfile() {
     } catch (error) {
       console.error("Failed to update profile:", error);
       alert(language[languageKey]["ErrorUpdatingProfile"]);
+    }
+  });
+
+  // 계정 삭제 버튼 클릭 시
+  deleteAccountBtn.addEventListener("click", async () => {
+    if (confirm(language[languageKey]["DeleteAccountConfirm"])) {
+      try {
+      } catch (error) {
+        console.error("Failed to delete account:", error);
+      }
     }
   });
 

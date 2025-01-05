@@ -9,7 +9,7 @@ from vault import *
 import sys
 import os
 
-def RegisterSocialAccount(email, username, nickname, firstName, lastName, img_URL):
+def RegisterSocialAccount(email, username, firstName, lastName, img_URL):
     user = User.objects.filter(email=email)
     if user.exists():
         register_userd=authenticate(email=email, password=settings.SOCIAL_AUTH_PASSWORD)
@@ -28,7 +28,6 @@ def RegisterSocialAccount(email, username, nickname, firstName, lastName, img_UR
         user = {
 			'email': email,
 			'username': username,
-   			'nickname': nickname,
 			'first_name': firstName,
 			'last_name': lastName,
 			'password': settings.SOCIAL_AUTH_PASSWORD,

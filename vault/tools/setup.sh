@@ -2,7 +2,7 @@
 # Vault 서버를 백그라운드에서 시작
 vault server -config=/local.json &
 
-sleep 8
+sleep 7
 
 # 초기화 여부 확인 및 초기화 수행
 if [ ! -f /vault-data/initialized ]; then

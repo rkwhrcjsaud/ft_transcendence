@@ -48,9 +48,21 @@ const Auth = {
         window.location.href = '/login';
     },
 
-    getUser() {
-        return this.user;
-    },
+    getUser: () => JSON.parse(localStorage.getItem('user')),
+
+    // async getUserNickname() {
+    //     const apiUrl = await getSecretValue('front/FRONT_API_ACCOUNTS_NICKNAME');
+    //     const instance = await createAxiosInstance();
+    //     const res = await instance.get(apiUrl, {
+    //         params: {
+    //             user_id: this.user.id,
+    //         },
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         }
+    //     });
+    //     return res.data.nickname;
+    // }
 };
 
 export const checkAuth = Auth.checkAuth;

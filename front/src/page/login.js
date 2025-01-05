@@ -77,7 +77,7 @@ export function loadLogin() {
     try {
       const response = await axios.post(
         await getSecretValue("front/FRONT_API_ACCOUNTS_LOGIN"),
-        { email, password, showPassword },
+        { email: email, password: password },
         {
           headers: {
             "Content-Type": "application/json",

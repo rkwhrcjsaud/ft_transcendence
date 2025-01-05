@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, UserProfile, UserStats
+from .models import User, UserProfile, UserStats, MatchHistory
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
@@ -134,10 +134,15 @@ class LoginSerializer(serializers.ModelSerializer):
             'email': user.email,
             'username': user.username,
             'nickname': user.nickname,
-            'full_name': user.get_full_name(),
+            'full_name': user.get_full_name,
             'access_token': str(user_tokens['access']),
             'refresh_token': str(user_tokens['refresh'])
         }
 
 class VerifyEmailSerializer(serializers.ModelSerializer):
     pass
+
+class MatchHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MatchHistory
+        fields = ['user', 'opponent', 'result', 'score', 'date']

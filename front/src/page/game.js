@@ -4,6 +4,8 @@ import { language } from "../utils/language"
 import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines, createCamera } from './gameObjects';
 import { updateTrailEffect } from './gameEffect';
 
+import Auth from '../auth/authProvider';
+import { saveMatchHistory } from '../utils/matchhistory';
 
 let scene, renderer;
 let paddles, ballPosition, leftPaddle, rightPaddle, ball;
@@ -17,7 +19,7 @@ let minutes = 0;
 let seconds = 0;
 let message = 'none';
 
-export function loadGame() {
+export async function loadGame() {
   loadCSS('../styles/game.css');
   const languageKey = localStorage.getItem("selectedLanguage");
 
@@ -61,7 +63,7 @@ export function loadGame() {
     overlay.removeEventListener('click', handleOverlayClick);
   };
 
-  function renderMessage() {
+  async function renderMessage() {
     if (message === 'menu') {
       overlay.addEventListener('click', handleOverlayClick);
       overlay.classList.add('game-over');
@@ -78,6 +80,7 @@ export function loadGame() {
       // 게임 종료 메시지인 경우
       else if (message.includes('wins!') || message === 'Draw') {
         overlay.classList.add('game-over');
+        await saveMatchHistory(Auth.getUser().id, 'guest', scores.left, scores.right);
       }
     } else {
       overlay.classList.add('hidden');
@@ -86,7 +89,7 @@ export function loadGame() {
   }
 
   function initWebSocket() {
-    const username = 'guest';
+    const username = "guest";
     ws = new WebSocket(`wss://localhost:443/ws/localgame/${username}/`);
 
     ws.onerror = (e) => {

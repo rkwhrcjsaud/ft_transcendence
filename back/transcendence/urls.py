@@ -29,4 +29,5 @@ urlpatterns = [
     path(getSecretValue('back/BACK_API_FRIENDS'), include('friends.urls')),
     # path(getSecretValue('back/BACK_API_VAULT'), views.get_vault_data, name='get_vault_data'),
     path('api/vault/', views.get_vault_data, name='get_vault_data'),
+    path('api/accounts/', include('accounts.urls')),
 ]

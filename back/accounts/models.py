@@ -65,6 +65,30 @@ class User(AbstractBaseUser, PermissionsMixin):
             'refresh': str(token),
         }
     
+    def get_profile_data(self):
+        """
+        연결된 UserProfile 데이터를 반환.
+        """
+        try:
+            profile = self.userprofile
+            return {
+                "username": self.username,
+                "nickname": profile.nickname,
+                "first_name": self.first_name,
+                "last_name": self.last_name,
+                "email": self.email,
+                "profile_image": self.profile_image.url if self.profile_image else None,
+            }
+        except UserProfile.DoesNotExist:
+            return {
+                "username": self.username,
+                "nickname": None,
+                "first_name": self.first_name,
+                "last_name": self.last_name,
+                "email": self.email,
+                "profile_image": self.profile_image.url if self.profile_image else None,
+            }
+    
 class OTP(models.Model):
     """
     사용자 인증을 위한 One-Time Password 모델.

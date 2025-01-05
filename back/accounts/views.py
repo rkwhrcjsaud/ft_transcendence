@@ -1,10 +1,12 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .models import User, UserProfile, UserStats, OTP, MatchHistory
-from .serializers import RegisterSerializer, ProfileSerializer, UserStatsSerializer, LogoutSerializer, LoginSerializer, VerifyEmailSerializer, MatchHistorySerializer
+from .serializers import RegisterSerializer, ExtendedProfileSerializer, ProfileSerializer, UserStatsSerializer, LogoutSerializer, LoginSerializer, VerifyEmailSerializer, MatchHistorySerializer
 import random
 from django.conf import settings
 from django.core.mail import send_mail
+
 
 class RegisterView(generics.GenericAPIView):
     """
@@ -44,9 +46,53 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     """
     프로필 조회 및 수정 View.
     """
-    queryset = UserProfile.objects.all()
-    serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ExtendedProfileSerializer
+    permission_classes = [permissions.AllowAny]  # 일단 인증 비활성화했음, 추후에 IsAuthenticated로 변경?
+
+    def get_queryset(self):
+        """
+        인증된 사용자에 해당하는 UserProfile만 반환.
+        """
+        return UserProfile.objects.none()  # 테스트용: 빈 QuerySet 반환
+        # return UserProfile.objects.filter(user=self.request.user) # 실제 사용 시 이렇게 사용(예시)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Mock 데이터를 반환.
+        """
+        mock_data = {
+            "nickname": "mocktest_user",
+            "last_name": "Ran",
+            "first_name": "Choi",
+            "email": "mocktest@example.com",
+            "profile_image": "default_profile.jpeg"
+        }
+        return Response(mock_data)
+
+        # 실제 사용 시 이렇게 사용(예시)
+        # try:
+        #     user = request.user
+        #     user_profile = user.userprofile  # One-to-One 관계로 연결된 UserProfile
+        #     serializer = self.get_serializer(user_profile)
+        #     return Response(serializer.data, status=status.HTTP_200_OK)
+        # except UserProfile.DoesNotExist:
+        #     return Response({"error": "User profile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, *args, **kwargs):
+        """
+        Mock 업데이트 응답.
+        """
+        return Response({"message": "Profile updated successfully"}, status=200)
+
+        # 실제 사용 시 이렇게 사용(예시)
+        # try:
+        #     user_profile = request.user.userprofile
+        #     serializer = self.get_serializer(user_profile, data=request.data, partial=True)
+        #     serializer.is_valid(raise_exception=True)
+        #     serializer.save()
+        #     return Response(serializer.data, status=status.HTTP_200_OK)
+        # except UserProfile.DoesNotExist:
+        #     return Response({"error": "User profile not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class UserStatsView(generics.RetrieveAPIView):
     """

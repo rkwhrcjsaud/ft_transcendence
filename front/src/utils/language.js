@@ -66,12 +66,13 @@ export const language = {
       SuccessPasswordChange: "비밀번호가 성공적으로 변경되었습니다.",
       FailPasswordChange: "비밀번호가 일치하지 않아, 변경에 실패했습니다. 다시 시도해주세요.",
   
-      //loadMultyGame
+      //loadGame
       Start: "게임시작",
       PongRules: "게임 규칙",
       FirstTo11: "11점 선점 또는 시간 종료 시 가장 많은 점수를 가진 플레이어가 승리합니다!",
       LeftPlayer: "왼쪽 플레이어 조작: W (위), S (아래).",
       RightPlayer: "오른쪽 플레이어 조작: ArrowUp (위), ArrowDown (아래).",
+      OpponentNickname : "상대방의 닉네임을 입력해주세요.",
   
       //loadLogin
       Password: "비밀번호",
@@ -166,12 +167,13 @@ export const language = {
       SuccessPasswordChange: "Your password has been successfully changed.",
       FailPasswordChange: "The passwords do not match. The change failed. Please try again.",
   
-      //loadMultyGame
+      //loadGame
       Start: "Start Game",
       PongRules: "Pong Rules",
       FirstTo11: "The first player to reach 11 points or the player with the most points when time runs out wins!",
       LeftPlayer: "Left player controls: W (Up), S (Down).",
       RightPlayer: "Right player controls: ArrowUp (Up), ArrowDown (Down).",
+      OpponentNickname : "Please enter the opponent's nickname.",
   
       //loadLogin
       Password: "Password",
@@ -266,12 +268,13 @@ export const language = {
       SuccessPasswordChange: "Votre mot de passe a été modifié avec succès.",
       FailPasswordChange: "Les mots de passe ne correspondent pas. Le changement a échoué. Veuillez réessayer.",
   
-      //loadMultyGame
+      //loadGame
       Start: "Démarrer le jeu",
       PongRules: "Règles de Pong",
       FirstTo11: "Le premier à atteindre 11 points ou le joueur avec le plus de points lorsque le temps est écoulé gagne !",
       LeftPlayer: "Contrôles du joueur gauche : W (Haut), S (Bas).",
       RightPlayer: "Contrôles du joueur droit : Flèche haut (Haut), Flèche bas (Bas).",
+      OpponentNickname: "Veuillez entrer le surnom de l'adversaire.",
   
       //loadLogin
       Password: "Mot de passe",

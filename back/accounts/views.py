@@ -167,7 +167,6 @@ class VerifyEmailView(generics.GenericAPIView):
         
 class MatchHistoryView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = MatchHistory.objects.all()
     serializer_class = MatchHistorySerializer
 
     def post(self, request):

@@ -39,27 +39,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         UserStats.objects.create(user=user)
         return user
 
-class ExtendedProfileSerializer(serializers.ModelSerializer):
-    """
-    User 및 UserProfile 데이터를 포함하는 Serializer.
-    """
-    username = serializers.CharField(source="user.username", read_only=True)
-    email = serializers.EmailField(source="user.email", read_only=True)
-    first_name = serializers.CharField(source="user.first_name", required=False)
-    last_name = serializers.CharField(source="user.last_name", required=False)
-    profile_image = serializers.ImageField(source="user.profile_image", required=False)
-
-    class Meta:
-        model = UserProfile
-        fields = ["nickname", "username", "email", "first_name", "last_name", "profile_image"]
-
 class ProfileSerializer(serializers.ModelSerializer):
     """
-    사용자 프로필 데이터를 처리하는 Serializer.
+    사용자 프로필을 처리하는 Serializer.
     """
     class Meta:
         model = UserProfile
-        fields = ['nickname']
+        fields = ['nickname', 'profile_image', 'first_name', 'last_name', 'email']
 
 class UserStatsSerializer(serializers.ModelSerializer):
     """

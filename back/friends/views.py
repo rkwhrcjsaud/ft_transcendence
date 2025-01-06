@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Friend
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 class AddFriend(generics.GenericAPIView):
     premission_classes = [IsAuthenticated]
@@ -36,9 +37,19 @@ class FriendList(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        friends = Friend.objects.filter(user=request.user)
-        friend_list = []
-        for friend in friends:
-            friend_list.append(friend.friend.username)
-        return Response({'friends': friend_list}, status=status.HTTP_200_OK)
+        friends = Friend.objects.filter(user=request.user).values_list('friend_id', flat=True)
+        User = get_user_model()
+        all_users = User.objects.all()
+        user_list = []
+        for user in all_users:
+            if user.id == request.user.id:
+                continue
+            user_list.append({
+                'id': user.id,
+                'name': user.username,
+                'status': user.is_active,
+                'avatar': user.userprofile.profile_image.url if user.userprofile.profile_image else "/default_profile.jpeg",
+                'isFriend': user.id in friends,
+            })
+        return Response({'users': user_list}, status=status.HTTP_200_OK)
         

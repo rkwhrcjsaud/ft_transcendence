@@ -2,6 +2,7 @@ import { loadCSS } from "../../utils/loadcss";
 import { language } from "../../utils/language";
 import { getSecretValue } from "../../vault";
 import { createAxiosInstance } from "../../utils/axiosInterceptor";
+import Auth from "../../auth/authProvider";
 
 
 export async function FriendListAccordion() {
@@ -9,39 +10,40 @@ export async function FriendListAccordion() {
   const languageKey = localStorage.getItem("selectedLanguage");
   const axios = await createAxiosInstance();
   const apiUrl_friendList = await getSecretValue("front/FRONT_API_FRIENDS_LIST");
+  console.log("API URL:", apiUrl_friendList);
   const res_friendList = await axios.get(apiUrl_friendList);
-  console.log(res_friendList.data);
-  // const friends = res_friendList.data.friends;
-  const friends = [
-    {
-      id: 1,
-      name: "gibkim",
-      status: language[languageKey]["Online"],
-      avatar: "/default_profile.jpeg",
-      isFriend: true,
-    },
-    {
-      id: 2,
-      name: "haekang",
-      status: language[languageKey]["Offline"],
-      avatar: "/default_profile.jpeg",
-      isFriend: false,
-    },
-    {
-      id: 3,
-      name: "jaehyji",
-      status: language[languageKey]["Offline"],
-      avatar: "/default_profile.jpeg",
-      isFriend: true,
-    },
-    {
-      id: 4,
-      name: "dongwook",
-      status: language[languageKey]["Online"],
-      avatar: "/default_profile.jpeg",
-      isFriend: false,
-    },
-  ];
+  console.log("Friend List:", res_friendList.data.users);
+  const friends = res_friendList.data.users;
+  // const friends = [
+  //   {
+  //     id: 1,
+  //     name: "gibkim",
+  //     status: language[languageKey]["Online"],
+  //     avatar: "/default_profile.jpeg",
+  //     isFriend: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "haekang",
+  //     status: language[languageKey]["Offline"],
+  //     avatar: "/default_profile.jpeg",
+  //     isFriend: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "jaehyji",
+  //     status: language[languageKey]["Offline"],
+  //     avatar: "/default_profile.jpeg",
+  //     isFriend: true,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "dongwook",
+  //     status: language[languageKey]["Online"],
+  //     avatar: "/default_profile.jpeg",
+  //     isFriend: false,
+  //   },
+  // ];
 
   const renderAccordion = () => {
     // 기존의 아코디언을 삭제
@@ -155,8 +157,6 @@ export async function FriendListAccordion() {
 
   async function handleSearch() {
     const searchTerm = searchInput.value.trim().toLowerCase();
-    const apiUrl_userList = await getSecretValue("front/FRONT_API_USERLIST");
-    const res_userList = await axios.get(apiUrl_userList);
 
     if (!searchTerm) {
       searchResultsContainer.style.display = "none";

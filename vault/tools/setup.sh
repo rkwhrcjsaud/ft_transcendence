@@ -35,7 +35,6 @@ if ! vault secrets list | grep -q '^transcendence/'; then
     vault auth enable approle
     sh backrole.sh && sh frontrole.sh
 fi
-
 python3 secret.py
 
 # Vault 서버 프로세스 대기

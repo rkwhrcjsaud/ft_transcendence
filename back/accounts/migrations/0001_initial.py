@@ -68,6 +68,7 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(blank=True, max_length=40, null=True)),
                 ('last_name', models.CharField(blank=True, max_length=40, null=True)),
                 ('email', models.EmailField(blank=True, max_length=255, null=True)),
+                ('auth_provider', models.CharField(editable=False, max_length=40)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

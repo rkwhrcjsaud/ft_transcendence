@@ -1,11 +1,13 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from .models import User, UserProfile, UserStats, OTP, MatchHistory
 from .serializers import RegisterSerializer, ProfileSerializer, UserStatsSerializer, LogoutSerializer, LoginSerializer, VerifyEmailSerializer, MatchHistorySerializer, UserSerializer
 import random
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -58,6 +60,7 @@ class RegisterView(generics.GenericAPIView):
         OTP.objects.create(user=user, code=code)
 
     def post(self, request):
+        print("수신된 요청 데이터:", request.data)  # 요청 데이터를 로그로 출력
         user_data = request.data
         print(user_data)
         serializer = self.serializer_class(data=user_data)
@@ -72,7 +75,7 @@ class RegisterView(generics.GenericAPIView):
         print(serializer.errors)
         return Response({'message': 'failed to register view'}, serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileView(generics.RetrieveUpdateAPIView):
+class ProfileView(generics.RetrieveUpdateAPIView): 
     """
     사용자 프로필 조회 및 수정 View.
     """
@@ -82,7 +85,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user.userprofile
     
-    def petch(self, request):
+    def patch(self, request):
         return self.retrieve(request)
         
 
@@ -194,4 +197,17 @@ class MatchHistoryView(generics.GenericAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        new_password = request.data.get('new_password')
+
+        if not new_password or len(new_password) < 8:
+            return Response({"error": "Password must be at least 8 characters long."}, status=400)
+
+        user.password = make_password(new_password)
+        user.save()
+        return Response({"message": "Password changed successfully."}, status=200)

@@ -23,7 +23,17 @@ class UserManager(BaseUserManager):
             raise ValueError(_('The First Name field must be set'))
         if not last_name:
             raise ValueError(_('The Last Name field must be set'))
-        user = self.model(email=email, username=username, first_name=first_name, last_name=last_name, **extra_fields)
+        
+        # 닉네임 기본값 설정
+        extra_fields.setdefault('nickname', 'guest')
+        
+        user = self.model(
+            email=email, 
+            username=username, 
+            first_name=first_name, 
+            last_name=last_name, 
+            **extra_fields
+        )
         user.set_password(password)
         user.save(using=self._db)
         return user

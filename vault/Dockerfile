@@ -6,7 +6,9 @@ USER root
 RUN apk update && apk add --no-cache \
     python3 \
     py3-pip \
-    py3-virtualenv
+    py3-virtualenv \
+    netcat-openbsd \
+    curl
 
 # Python 가상 환경 생성 및 활성화
 RUN python3 -m venv /opt/venv

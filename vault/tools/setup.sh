@@ -10,6 +10,7 @@ done
 # 초기화 여부 확인 및 초기화 수행
 if [ ! -f /vault-data/initialized ]; then
     vault operator init -key-shares=1 -key-threshold=1 > /vault-data/init-output.txt
+    sleep 1
     # 초기화 성공 여부 확인
     while true; do
         if grep -q 'Unseal Key 1:' /vault-data/init-output.txt && grep -q 'Initial Root Token:' /vault-data/init-output.txt; then

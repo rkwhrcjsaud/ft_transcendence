@@ -4,6 +4,14 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
 
+class UserSerializer(serializers.ModelSerializer):
+    """
+    사용자 정보를 처리하는 Serializer.
+    """
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'nickname', 'is_active', 'is_online', 'is_verified', 'is_staff', 'is_superuser', 'date_joined', 'last_login', 'auth_provider']
+
 class RegisterSerializer(serializers.ModelSerializer):
     """
     사용자 등록에 사용하는 Serializer.

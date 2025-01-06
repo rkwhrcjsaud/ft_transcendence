@@ -66,9 +66,7 @@ export function loadRegister() {
           </div>
           
           <button type="submit" class="submit-btn">
-            <a href="/verify" data-router-link>
               ${language[languageKey]["Submit"]}
-            </a>
           </button>
         </form>
         
@@ -139,6 +137,7 @@ export function loadRegister() {
     const last_name = lastNameInput.value;
     const password = passwordInput.value;
     const password2 = password2Input.value;
+    const nickname = usernameInput.value;
 
     if (password !== password2) {
       showAlert(language[languageKey]["IncorrectPassword"]);
@@ -155,6 +154,7 @@ export function loadRegister() {
           username,
           first_name,
           last_name,
+          nickname,
           password,
           password2,
           showPassword: false,

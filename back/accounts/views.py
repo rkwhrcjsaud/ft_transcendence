@@ -2,13 +2,36 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import User, UserProfile, UserStats, OTP, MatchHistory
-from .serializers import RegisterSerializer, ProfileSerializer, UserStatsSerializer, LogoutSerializer, LoginSerializer, VerifyEmailSerializer, MatchHistorySerializer
+from .serializers import RegisterSerializer, ProfileSerializer, UserStatsSerializer, LogoutSerializer, LoginSerializer, VerifyEmailSerializer, MatchHistorySerializer, UserSerializer
 import random
 from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import AccessToken
 
+class MyUserView(generics.GenericAPIView):
+    """
+    자신의 정보를 조회하는 View.
+    """
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        serializer = self.serializer_class(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UserListView(generics.GenericAPIView):
+    """
+    사용자 목록을 조회하는 View.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        users = User.objects.all()
+        serializer = self.serializer_class(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class RegisterView(generics.GenericAPIView):
     """
@@ -21,6 +44,7 @@ class RegisterView(generics.GenericAPIView):
         """
         이메일로 인증 코드를 전송하는 메서드.
         """
+        print("send_verification_email")
         code = ''.join(random.choices('0123456789', k=6))
 
         subject = '회원가입을 위한 인증 코드입니다.'
@@ -29,19 +53,23 @@ class RegisterView(generics.GenericAPIView):
         recipient_list = [user.email]
 
         send_mail(subject, message, from_email, recipient_list)
+        print("send_mail")
 
         OTP.objects.create(user=user, code=code)
 
     def post(self, request):
         user_data = request.data
+        print(user_data)
         serializer = self.serializer_class(data=user_data)
         if (serializer.is_valid(raise_exception=True)):
             self.send_verification_email(serializer.save())
             user = serializer.data
+            print(user)
             return Response({
                 'data': user,
                 'message': 'User created successfully. Check your email for verification code.'
             }, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
         return Response({'message': 'failed to register view'}, serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileView(generics.RetrieveUpdateAPIView):

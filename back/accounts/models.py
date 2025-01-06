@@ -16,6 +16,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=40, unique=True)
     first_name = models.CharField(max_length=40, verbose_name=_('first name'))
     last_name = models.CharField(max_length=40, verbose_name=_('last name'))
+    nickname = models.CharField(max_length=40, verbose_name=_('nick_name'), blank=True, null=True, default="guest")
     is_active = models.BooleanField(default=True)
     is_online = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
@@ -105,7 +106,7 @@ class UserProfile(models.Model):
     사용자 프로필 모델. 추가 정보 저장.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nickname = models.CharField(max_length=40, blank=True, null=True, default="guest")
+    nickname = models.CharField(max_length=40, blank=True, null=True)
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     first_name = models.CharField(max_length=40, blank=True, null=True)
     last_name = models.CharField(max_length=40, blank=True, null=True)
@@ -118,6 +119,8 @@ class UserProfile(models.Model):
             self.last_name = self.user.last_name
         if not self.email:
             self.email = self.user.email
+        if not self.nickname:
+            self.nickname = self.user.nickname
         super().save(*args, **kwargs)
 
 class UserStats(models.Model):

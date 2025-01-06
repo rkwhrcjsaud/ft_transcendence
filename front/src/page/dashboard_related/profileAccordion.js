@@ -39,7 +39,7 @@ export function ProfileAccordion() {
                     ${language[languageKey]["ProfileEdit"]}
                   </a>
                 </button>
-                <button class="profile-button">
+                <button class="profile-button change-password-btn">
                   <i class="fas fa-lock"></i>
                   <a href="/change_password" data-router-link>
                     ${language[languageKey]["PasswordChange"]}

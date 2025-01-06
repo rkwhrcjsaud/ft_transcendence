@@ -2,11 +2,11 @@
 # 백엔드용 정책 생성
 vault policy write backend-policy - <<EOF
 path "transcendence/data/back/*" {
-  capabilities = ["read"]
+    capabilities = ["read"]
 }
 
 path "transcendence/data/django/*" {
-  capabilities = ["read"]
+    capabilities = ["read"]
 }
 EOF
 
@@ -24,8 +24,11 @@ vault write auth/approle/role/backend-role \
     token_ttl=24h \
     token_max_ttl=24h
 
-sleep 1
+# role-id와 secret-id 생성 성공 여부 확인
+until vault read -format=json auth/approle/role/backend-role/role-id > /vault-data/approle/back/role-id.json; do
+    sleep 0.5
+done
 
-# role-id 및 secret-id 생성 후 파일로 저장
-vault read -format=json auth/approle/role/backend-role/role-id > /vault-data/approle/back/role-id.json
-vault write -f -format=json auth/approle/role/backend-role/secret-id > /vault-data/approle/back/secret-id.json
+until vault write -f -format=json auth/approle/role/backend-role/secret-id > /vault-data/approle/back/secret-id.json; do
+    sleep 0.5
+done

@@ -37,7 +37,7 @@ export function loadLogin() {
         <div class="social-login">
           <button id="social-login" class="social-btn">
             <a href="/42" data-router-link>
-              <img src="/42_logo_white.png" alt="42" class="login-btn-42logo">${language[languageKey]["SocialLogin"]}
+              <img src="/42_logo_white.png" alt="42" class="login-btn-42logo">${language[languageKey]["socialLogin"]}
             </a>
           </button>
         </div>
@@ -77,7 +77,7 @@ export function loadLogin() {
     try {
       const response = await axios.post(
         await getSecretValue("front/FRONT_API_ACCOUNTS_LOGIN"),
-        { email, password, showPassword },
+        { email: email, password: password },
         {
           headers: {
             "Content-Type": "application/json",

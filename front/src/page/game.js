@@ -4,6 +4,8 @@ import { language } from "../utils/language"
 import { createBall, createGameTexts, createLights, createPaddle, createTable, createTableLines, createCamera } from './gameObjects';
 import { updateTrailEffect } from './gameEffect';
 
+import Auth from '../auth/authProvider';
+import { saveMatchHistory } from '../utils/matchhistory';
 
 let scene, renderer;
 let paddles, ballPosition, leftPaddle, rightPaddle, ball;
@@ -17,7 +19,7 @@ let minutes = 0;
 let seconds = 0;
 let message = 'none';
 
-export function loadGame() {
+export async function loadGame() {
   loadCSS('../styles/game.css');
   const languageKey = localStorage.getItem("selectedLanguage");
 
@@ -28,13 +30,20 @@ export function loadGame() {
       <canvas id="pong-area" class="pong-area"></canvas>
 
       <div id="game-rules" class="game-rules">
-        <Button id="start-game" class="start-game">
-          ${language[languageKey]["Start"]}
-        </Button>
-        <h4 className="game-rules-title">${language[languageKey]["PongRules"]}</h4>
+        <h4 class="game-rules-title">${language[languageKey]["PongRules"]}</h4>
         <p>${language[languageKey]["FirstTo11"]}</p>
         <p>${language[languageKey]["LeftPlayer"]}</p>
         <p>${language[languageKey]["RightPlayer"]}</p>
+        <div class="opponent-nickname-form form-group">
+            <label class="form-label">${language[languageKey]["OpponentNickname"]}</label>
+            <input type="text" id="opponentNickname" class="form-input" value="Guest" maxlength="40">
+            <p id="edit-profile-email" class="fixed-text"></p>
+        </div>
+        <div class="start-game-wrapper">
+          <Button id="start-game" class="start-game">
+            ${language[languageKey]["Start"]}
+          </Button>
+        <div>
       </div>
     </div>
   `
@@ -46,7 +55,13 @@ export function loadGame() {
   const gameRules = document.getElementById('game-rules');
   const overlay = document.getElementById('overlay');
 
-  startGame.addEventListener('click', () => {
+  let opponentNickname = "Guest"; // 기본값으로 초기화
+
+  startGame.addEventListener("click", () => {
+    // 상대방 닉네임 가져오기
+    const opponentNicknameInput = document.getElementById("opponentNickname");
+    opponentNickname = opponentNicknameInput.value.trim() || "Guest"; // 입력값이 없을 경우 기본값
+
     if (ws && ws.readyState === 1) {
       ws.send(JSON.stringify({ type: 'start_game' }));
       gameState = '2';
@@ -54,6 +69,7 @@ export function loadGame() {
       pongArea.style.display = 'block';
       initGame();
     }
+    
   });
 
   function handleOverlayClick() {
@@ -61,14 +77,14 @@ export function loadGame() {
     overlay.removeEventListener('click', handleOverlayClick);
   };
 
-  function renderMessage() {
+  async function renderMessage() {
     if (message === 'menu') {
       overlay.addEventListener('click', handleOverlayClick);
       overlay.classList.add('game-over');
     }
     
     if (message !== 'none') {
-      overlay.classList.remove('hidden');
+      overlay.classList.add('show');
       overlay.innerHTML = message;
       
       // 게임 시작 카운트다운인 경우
@@ -76,18 +92,19 @@ export function loadGame() {
         overlay.classList.remove('game-over');
       }
       // 게임 종료 메시지인 경우
-      else if (message.includes('wins!') || message === 'Draw') {
+      else if (message.includes('Wins!') || message === 'Draw') {
         overlay.classList.add('game-over');
+        await saveMatchHistory(Auth.getUser().id, opponentNickname, scores.left, scores.right);
       }
     } else {
-      overlay.classList.add('hidden');
+      overlay.classList.remove('show');
       overlay.classList.remove('game-over');
     }
   }
 
   function initWebSocket() {
-    const username = 'guest';
-    ws = new WebSocket(`wss://localhost:443/ws/localgame/${username}/`);
+    const userId = Auth.getUser().id;
+    ws = new WebSocket(`wss://localhost:443/ws/localgame/${userId}/`);
 
     ws.onerror = (e) => {
       console.error("WebSocket error: ", e);
@@ -194,7 +211,7 @@ export function loadGame() {
       ws.send(JSON.stringify({ type: 'reset_game' }));
     }
 
-    overlay.classList.add('hidden');
+    overlay.classList.remove('show');
     overlay.classList.remove('game-over');
     gameRules.style.display = 'block';
     pongArea.style.display = 'none';
@@ -227,7 +244,7 @@ export function loadGame() {
     scene.background = new THREE.Color(0x000000);
 
     // 오버레이 초기 설정
-    overlay.classList.remove('hidden');
+    overlay.classList.add('show');
     overlay.classList.remove('game-over');
     
     renderer = new THREE.WebGLRenderer({ 

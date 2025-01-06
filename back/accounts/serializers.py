@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, UserProfile, UserStats
+from .models import User, UserProfile, UserStats, MatchHistory
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
@@ -41,11 +41,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     """
-    사용자 프로필 데이터를 처리하는 Serializer.
+    사용자 프로필을 처리하는 Serializer.
     """
     class Meta:
         model = UserProfile
-        fields = ['nickname']
+        fields = ['nickname', 'profile_image', 'first_name', 'last_name', 'email']
 
 class UserStatsSerializer(serializers.ModelSerializer):
     """
@@ -120,10 +120,15 @@ class LoginSerializer(serializers.ModelSerializer):
             'email': user.email,
             'username': user.username,
             'nickname': user.nickname,
-            'full_name': user.get_full_name(),
+            'full_name': user.get_full_name,
             'access_token': str(user_tokens['access']),
             'refresh_token': str(user_tokens['refresh'])
         }
 
 class VerifyEmailSerializer(serializers.ModelSerializer):
     pass
+
+class MatchHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MatchHistory
+        fields = ['user', 'opponent', 'result', 'score', 'date']

@@ -14,7 +14,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     email = models.EmailField(max_length=255, unique=True, verbose_name=_('email address'))
     username = models.CharField(max_length=40, unique=True)
-    nickname = models.CharField(max_length=40, null=True, blank=True, default="")
     first_name = models.CharField(max_length=40, verbose_name=_('first name'))
     last_name = models.CharField(max_length=40, verbose_name=_('last name'))
     is_active = models.BooleanField(default=True)
@@ -25,7 +24,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     auth_provider = models.CharField(max_length=40, default=AUTH_PROVIDER.get('email'))
-    profile_image = models.ImageField(upload_to='profile_images/', default='default.png')
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='custom_user_set',
@@ -65,6 +63,35 @@ class User(AbstractBaseUser, PermissionsMixin):
             'refresh': str(token),
         }
     
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not hasattr(self, 'userprofile'):
+            UserProfile.objects.create(user=self)
+    
+    def get_profile_data(self):
+        """
+        연결된 UserProfile 데이터를 반환.
+        """
+        try:
+            profile = self.userprofile
+            return {
+                "username": self.username,
+                "nickname": profile.nickname,
+                "first_name": self.first_name,
+                "last_name": self.last_name,
+                "email": self.email,
+                "profile_image": self.profile_image.url if self.profile_image else None,
+            }
+        except UserProfile.DoesNotExist:
+            return {
+                "username": self.username,
+                "nickname": None,
+                "first_name": self.first_name,
+                "last_name": self.last_name,
+                "email": self.email,
+                "profile_image": self.profile_image.url if self.profile_image else None,
+            }
+    
 class OTP(models.Model):
     """
     사용자 인증을 위한 One-Time Password 모델.
@@ -78,7 +105,20 @@ class UserProfile(models.Model):
     사용자 프로필 모델. 추가 정보 저장.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nickname = models.CharField(max_length=40, unique=True, blank=True, null=True)
+    nickname = models.CharField(max_length=40, blank=True, null=True, default="guest")
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+    first_name = models.CharField(max_length=40, blank=True, null=True)
+    last_name = models.CharField(max_length=40, blank=True, null=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.first_name:
+            self.first_name = self.user.first_name
+        if not self.last_name:
+            self.last_name = self.user.last_name
+        if not self.email:
+            self.email = self.user.email
+        super().save(*args, **kwargs)
 
 class UserStats(models.Model):
     """
@@ -87,7 +127,21 @@ class UserStats(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
-    rating = models.IntegerField(default=1000, validators=[MinLengthValidator(0)])
+    draws = models.IntegerField(default=0)
     
     def __str__(self):
-        return f"wins: {self.wins}, losses: {self.losses}, rating: {self.rating}"
+        return f"wins: {self.wins}, losses: {self.losses}, draws: {self.draws}"
+
+class MatchHistory(models.Model):
+    user = models.ForeignKey(User, related_name='match_histories', on_delete=models.CASCADE)
+    opponent = models.CharField(max_length=40, default='guest')
+    result = models.CharField(
+        max_length=10,
+        choices=[('win', 'win'), ('loss', 'loss'), ('draw', 'draw')],
+        default='draw'
+    )
+    score = models.CharField(max_length=20, default="0-0")   # 예: '10-7'
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.nickname} vs {self.opponent} ({self.result})"

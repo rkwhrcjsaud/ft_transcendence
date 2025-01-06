@@ -29,15 +29,20 @@ vault operator unseal $(cat $VAULT_UNSEAL_KEY)
 # Vault 로그인
 vault login $(cat $VAULT_ROOT_TOKEN)
 
+# KV 엔진 확인 및 생성
+if ! vault secrets list | grep -q '^transcendence/'; then
+    vault secrets enable -path=transcendence kv
+fi
+
 # 초기 생성 단계에서만 AppRole발급
 if [ ! -f /vault-data/initapprole ]; then
     # AppRole 생성 스크립트 실행
     vault auth enable approle
     sh backrole.sh && sh frontrole.sh
-    touch /vault-data/initialized
+    touch /vault-data/initapprole
 fi
 
-python3 /secret.py
+python3 secret.py
 
 # Vault 서버 프로세스 대기
 wait

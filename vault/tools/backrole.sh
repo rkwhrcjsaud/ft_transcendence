@@ -10,7 +10,12 @@ path "transcendence/data/django/*" {
 }
 EOF
 
+# /vault-data/approle/back 디렉토리가 없으면 생성
 mkdir -p /vault-data/approle/back
+# /vault-data/approle/back/secret-id.json 파일이 있으면 삭제
+rm -f /vault-data/approle/back/secret-id.json
+
+sleep 1
 
 # AppRole 생성 및 설정
 vault write auth/approle/role/backend-role \

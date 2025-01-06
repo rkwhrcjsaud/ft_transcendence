@@ -1,10 +1,14 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from .models import User, UserProfile, UserStats, OTP
-from .serializers import RegisterSerializer, ProfileSerializer, UserStatsSerializer, LogoutSerializer, LoginSerializer, VerifyEmailSerializer
+from rest_framework.permissions import IsAuthenticated
+from .models import User, UserProfile, UserStats, OTP, MatchHistory
+from .serializers import RegisterSerializer, ProfileSerializer, UserStatsSerializer, LogoutSerializer, LoginSerializer, VerifyEmailSerializer, MatchHistorySerializer
 import random
 from django.conf import settings
 from django.core.mail import send_mail
+from rest_framework_simplejwt.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.tokens import AccessToken
+
 
 class RegisterView(generics.GenericAPIView):
     """
@@ -42,11 +46,18 @@ class RegisterView(generics.GenericAPIView):
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     """
-    프로필 조회 및 수정 View.
+    사용자 프로필 조회 및 수정 View.
     """
-    queryset = UserProfile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.userprofile
+    
+    def petch(self, request):
+        return self.retrieve(request)
+        
+
 
 class UserStatsView(generics.RetrieveAPIView):
     """
@@ -62,9 +73,24 @@ class TestJWTAuth(generics.GenericAPIView):
     """
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        data = {'message': 'Authenticated'}
-        return Response(data, status=status.HTTP_200_OK)
+    def post(self, request):
+        access_token = request.data.get('token')
+
+        if not access_token:
+            raise AuthenticationFailed('Token not provided')
+        
+        try:
+            payload = AccessToken(access_token)
+            user_id = payload['user_id']
+
+            user = User.objects.get(id=user_id)
+            if not user:
+                raise AuthenticationFailed('User not found')
+            if not user.is_active:
+                raise AuthenticationFailed('User is inactive')
+            return Response({'message': 'Token is valid'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            raise AuthenticationFailed(str(e))
     
 class LogoutView(generics.GenericAPIView):
     """
@@ -118,3 +144,26 @@ class VerifyEmailView(generics.GenericAPIView):
             return Response({'message': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         except OTP.DoesNotExist:
             return Response({'message': 'OTP does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+class MatchHistoryView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = MatchHistorySerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        try:
+            user_id = request.GET.get('user_id')
+            if not user_id:
+                return Response({'error': 'user_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+            match_history = MatchHistory.objects.filter(user_id=user_id)
+            serializer = self.serializer_class(match_history, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        

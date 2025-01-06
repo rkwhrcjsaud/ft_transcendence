@@ -7,13 +7,29 @@ const Auth = {
 
     async checkAuth() {
         try {
+            const access_token = localStorage.getItem('access_token');
+            if (!access_token) {
+                this.isAuth = false;
+                this.user = null;
+                return false;
+            }
             const authUrl = await getSecretValue('front/FRONT_API_ACCOUNTS_AUTH');
             const instance = await createAxiosInstance();
             console.log(authUrl);
-            const res = await instance.get(authUrl);
+            const res = await instance.post(authUrl, { token: access_token, }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
             if (res.status === 200) {
                 this.isAuth = true;
                 this.user = JSON.parse(localStorage.getItem('user'));
+            } else {
+                this.isAuth = false;
+                this.user = null;
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                localStorage.removeItem('user');
             }
         } catch {
             console.log('Failed to check auth');
@@ -43,9 +59,7 @@ const Auth = {
         window.location.href = '/login';
     },
 
-    getUser() {
-        return this.user;
-    },
+    getUser: () => JSON.parse(localStorage.getItem('user')),
 };
 
 export const checkAuth = Auth.checkAuth;

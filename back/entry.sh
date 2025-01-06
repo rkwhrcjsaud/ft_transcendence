@@ -5,9 +5,18 @@ while ! nc -z postgres 5432; do
     sleep 0.5
 done
 
+# Vault 서버가 시작될 때까지 대기
+until nc -z vault 8200; do
+    sleep 1
+done
+
 # role-id.json과 secret-id.json 파일이 모두 존재할 때까지 대기
 until [ -f "/usr/src/app/approle/role-id.json" ] && [ -f "/usr/src/app/approle/secret-id.json" ]; do
-    sleep 2
+    sleep 1
+done
+
+until [ -f "/usr/src/app/approle/front/role-id.json" ] && [ -f "/usr/src/app/approle/front/secret-id.json" ]; do
+    sleep 1
 done
 
 export DJANGO_SETTINGS_MODULE=transcendence.settings

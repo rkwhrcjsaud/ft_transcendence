@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import RegisterView, ProfileView, UserStatsView, TestJWTAuth, LogoutView, LoginView, VerifyEmailView, MatchHistoryView
+from .views import RegisterView, ProfileView, UserStatsView, TestJWTAuth, LogoutView, LoginView, VerifyEmailView, MatchHistoryView, UserListView, MyUserView
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework import routers
 
@@ -7,6 +7,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 
 urlpatterns = [
+    path('userlist/', UserListView.as_view(), name='userlist'),
     path('register/', RegisterView.as_view(), name='register'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('stats/', UserStatsView.as_view(), name='stats'),
@@ -16,5 +17,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('verify/', VerifyEmailView.as_view(), name='verify'),
     path('match_history/', MatchHistoryView.as_view(), name='match_history'),
+    path('myuser/', MyUserView.as_view(), name='myuser'),
     path('', include(router.urls)),
 ]

@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # 개발 의존성을 포함한 모든 의존성 설치
-RUN npm cache clean --force && npm install
+RUN ci
 RUN npm install -g vite
 
 # 나머지 소스 코드 복사

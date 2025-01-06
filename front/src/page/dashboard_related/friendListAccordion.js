@@ -1,38 +1,47 @@
 import { loadCSS } from "../../utils/loadcss";
 import { language } from "../../utils/language";
-export function FriendListAccordion() {
+import { getSecretValue } from "../../vault";
+import { createAxiosInstance } from "../../utils/axiosInterceptor";
+
+
+export async function FriendListAccordion() {
   loadCSS("../../styles/friendListAccordion.css");
   const languageKey = localStorage.getItem("selectedLanguage");
-  const friends = [
-    {
-      id: 1,
-      name: "gibkim",
-      status: language[languageKey]["Online"],
-      avatar: "/default_profile.jpeg",
-      isFriend: true,
-    },
-    {
-      id: 2,
-      name: "haekang",
-      status: language[languageKey]["Offline"],
-      avatar: "/default_profile.jpeg",
-      isFriend: false,
-    },
-    {
-      id: 3,
-      name: "jaehyji",
-      status: language[languageKey]["Offline"],
-      avatar: "/default_profile.jpeg",
-      isFriend: true,
-    },
-    {
-      id: 4,
-      name: "dongwook",
-      status: language[languageKey]["Online"],
-      avatar: "/default_profile.jpeg",
-      isFriend: false,
-    },
-  ];
+  const axios = await createAxiosInstance();
+  const apiUrl = await getSecretValue("front/FRONT_API_FRIENDS_LIST");
+  const res = await axios.get(apiUrl);
+  console.log(res.data);
+  const friends = res.data.friends;
+  // const friends = [
+  //   {
+  //     id: 1,
+  //     name: "gibkim",
+  //     status: language[languageKey]["Online"],
+  //     avatar: "/default_profile.jpeg",
+  //     isFriend: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "haekang",
+  //     status: language[languageKey]["Offline"],
+  //     avatar: "/default_profile.jpeg",
+  //     isFriend: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "jaehyji",
+  //     status: language[languageKey]["Offline"],
+  //     avatar: "/default_profile.jpeg",
+  //     isFriend: true,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "dongwook",
+  //     status: language[languageKey]["Online"],
+  //     avatar: "/default_profile.jpeg",
+  //     isFriend: false,
+  //   },
+  // ];
 
   const renderAccordion = () => {
     // 기존의 아코디언을 삭제
@@ -42,7 +51,6 @@ export function FriendListAccordion() {
     }
 
     const friendsListHTML = friends
-      .filter((friend) => friend.isFriend)
       .map(
         (friend) => `
         <li class="friend-item">

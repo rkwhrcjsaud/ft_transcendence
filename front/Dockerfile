@@ -2,15 +2,11 @@ FROM node:18
 
 WORKDIR /usr/src/app
 
-# package*.json 파일들을 복사
-COPY package*.json ./
+COPY . .
 
 # 개발 의존성을 포함한 모든 의존성 설치
-RUN npm ci
 RUN npm install -g vite
-
-# 나머지 소스 코드 복사
-COPY . .
+RUN npm install
 
 # 포트 설정
 EXPOSE 5173

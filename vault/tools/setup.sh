@@ -22,19 +22,6 @@ if [ ! -f /vault-data/initialized ]; then
     grep 'Initial Root Token:' /vault-data/init-output.txt | awk '{print $NF}' > $VAULT_ROOT_TOKEN
     touch /vault-data/initialized
     rm -rf /vault-data/init-output.txt
-
-    # 언실 수행
-    vault operator unseal $(cat $VAULT_UNSEAL_KEY)
-
-    # Vault 로그인
-    vault login $(cat $VAULT_ROOT_TOKEN)
-
-    # 엔진 생성
-    vault secrets enable -path=transcendence kv
-
-    # AppRole 생성 스크립트 실행
-    vault auth enable approle
-    sh backrole.sh && sh frontrole.sh
 fi
 
 # 언실 수행
@@ -42,7 +29,20 @@ vault operator unseal $(cat $VAULT_UNSEAL_KEY)
 # Vault 로그인
 vault login $(cat $VAULT_ROOT_TOKEN)
 
-python3 /secret.py
+# KV 엔진 확인 및 생성
+if ! vault secrets list | grep -q '^transcendence/'; then
+    vault secrets enable -path=transcendence kv
+fi
+
+# 초기 생성 단계에서만 AppRole발급
+if [ ! -f /vault-data/initapprole ]; then
+    # AppRole 생성 스크립트 실행
+    vault auth enable approle
+    sh backrole.sh && sh frontrole.sh
+    touch /vault-data/initapprole
+fi
+
+python3 secret.py
 
 # Vault 서버 프로세스 대기
 wait

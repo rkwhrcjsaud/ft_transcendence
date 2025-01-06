@@ -1,6 +1,8 @@
 import { loadCSS } from "../utils/loadcss";
 import { language } from "../utils/language";
-export function loadChangePassword() {
+import { createAxiosInstance } from '../utils/axiosInterceptor';
+
+export async function loadChangePassword() {
   loadCSS("../styles/changePassword.css");
   const languageKey = localStorage.getItem("selectedLanguage");
   const html = `<div class="change-pw-container">
@@ -50,7 +52,7 @@ export function loadChangePassword() {
       </div>
     </div>`;
 
-  document.getElementById("app").innerHTML = html;
+    document.getElementById("app").innerHTML = html;
 
   // 모든 비밀번호 입력 필드에 토글 기능 추가
   const toggles = document.querySelectorAll(".password-toggle");
@@ -87,13 +89,43 @@ export function loadChangePassword() {
   newPasswordRetype.addEventListener("input", checkPasswords);
 
   // 폼 제출 이벤트
-  const saveBtn = document.getElementById("saveBtn");
-  saveBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (newPassword.value === newPasswordRetype.value) {
+  const savePasswordButton = document.querySelector('.pw-save-btn');
+  savePasswordButton.addEventListener("click", async () => {
+    const currentPassword = document.getElementById("currentPassword").value.trim();
+    const newPasswordValue = newPassword.value.trim();
+  
+    if (newPasswordValue.length < 8) {
+      alert(language[languageKey]["PasswordTooShort"]);
+      return;
+    }
+  
+    if (newPasswordValue !== newPasswordRetype.value.trim()) {
+      alert(language[languageKey]["PasswordMismatch"]);
+      return;
+    }
+  
+    try {
+      const axios = await createAxiosInstance();
+      await axios.post("accounts/change-password/", {
+        current_password: currentPassword,
+        new_password: newPasswordValue,
+      });
+  
+      // 성공 메시지 출력
       alert(language[languageKey]["SuccessPasswordChange"]);
-    } else {
-      alert(language[languageKey]["FailPasswordChange"]);
+      window.location.href = "/dashboard";
+    } catch (error) {
+      console.error("Password change failed:", error);
+  
+      // 에러 메시지 처리
+      let errorMsg = language[languageKey]["FailPasswordChange"];
+      if (error.response?.data?.error) {
+        errorMsg = error.response.data.error;
+      } else if (error.response?.data) {
+        errorMsg = JSON.stringify(error.response.data);
+      }
+      alert(errorMsg);
     }
   });
+
 }

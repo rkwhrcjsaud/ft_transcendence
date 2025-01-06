@@ -18,18 +18,18 @@ class RegisterSerializer(serializers.ModelSerializer):
     """
     password = serializers.CharField(max_length=128, min_length=8, write_only=True)
     password2 = serializers.CharField(max_length=128, min_length=8, write_only=True)
-    nickname = serializers.CharField(max_length=40, required=False, allow_blank=True)
+
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'nickname', 'password', 'password2']
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'password', 'password2']
 
     def validate(self, attrs):
         password = attrs.get('password', '')
         password2 = attrs.get('password2', '')
         if (password != password2):
             raise serializers.ValidationError({'password': 'Passwords must match'})
-        if not attrs.get('nickname'):
-            attrs['nickname'] = 'guest'
+        if not attrs.get('username'):
+            attrs['username'] = attrs['email']  # `username`을 `email`로 기본 설정
         return attrs
 
     def create(self, validated_data):
@@ -41,8 +41,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            nickname=validated_data['nickname'],
-            password=validated_data['password']
+            password=validated_data['password'],
+            nickname='guest'  # 기본 닉네임 설정
         )
         UserStats.objects.create(user=user)
         return user
@@ -53,7 +53,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = UserProfile
-        fields = ['nickname', 'profile_image', 'first_name', 'last_name', 'email']
+        fields = ['nickname', 'profile_image', 'first_name', 'last_name', 'email', 'auth_provider']
+        read_only_fields = ['auth_provider']
 
 class UserStatsSerializer(serializers.ModelSerializer):
     """

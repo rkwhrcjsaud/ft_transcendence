@@ -111,6 +111,7 @@ class UserProfile(models.Model):
     first_name = models.CharField(max_length=40, blank=True, null=True)
     last_name = models.CharField(max_length=40, blank=True, null=True)
     email = models.EmailField(max_length=255, blank=True, null=True)
+    auth_provider = models.CharField(max_length=40, editable=False) 
 
     def save(self, *args, **kwargs):
         if not self.first_name:

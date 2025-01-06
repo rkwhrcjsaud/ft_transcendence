@@ -9,7 +9,7 @@ services:
       ROLE_ID_FILE: /usr/src/app/approle/role-id.json
       SECRET_ID_FILE: /usr/src/app/approle/secret-id.json
     volumes:
-      - ./front:/usr/src/app:delegated 
+      - ./front:/usr/src/app:delegated
       - ./volumes/vault-data/approle/front:/usr/src/app/approle
     networks:
       - transcendence

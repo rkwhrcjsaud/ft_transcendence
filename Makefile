@@ -19,7 +19,7 @@ watch: mount
 	docker compose watch
 
 mount:
-	@mkdir -p volumes/vault-data/approle/back
+	@mkdir -p volumes/vault-data/approle/back/front
 	@mkdir -p volumes/vault-data/approle/front
 
 # 컨테이너 정지 및 도커 리소스 삭제

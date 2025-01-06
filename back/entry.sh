@@ -19,6 +19,9 @@ until [ -f "/usr/src/app/approle/front/role-id.json" ] && [ -f "/usr/src/app/app
     sleep 1
 done
 
+# 비밀 새로 저장 대기 시간
+sleep 5
+
 export DJANGO_SETTINGS_MODULE=transcendence.settings
 
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete

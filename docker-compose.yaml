@@ -4,16 +4,12 @@ services:
     build: front
     ports:
       - 5173:5173
-    develop:
-      watch:
-        - action: sync
-          path: front
-          target: /usr/src/app
     environment:
       VAULT_ADDR: http://vault:8200
       ROLE_ID_FILE: /usr/src/app/approle/role-id.json
       SECRET_ID_FILE: /usr/src/app/approle/secret-id.json
     volumes:
+      - ./front:/usr/src/app:delegated 
       - ./volumes/vault-data/approle/front:/usr/src/app/approle
     networks:
       - transcendence
@@ -23,11 +19,6 @@ services:
     build: back
     ports:
       - 8000:8000
-    develop:
-      watch:
-        - action: sync
-          path: back
-          target: /usr/src/app
     depends_on:
       - postgres
       - redis
@@ -37,6 +28,7 @@ services:
       ROLE_ID_FILE: /usr/src/app/approle/role-id.json
       SECRET_ID_FILE: /usr/src/app/approle/secret-id.json
     volumes:
+      - ./back:/usr/src/app:delegate
       - static-data:/vol/static
       - media-data:/vol/media
       - ./volumes/vault-data/approle/back:/usr/src/app/approle

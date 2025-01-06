@@ -250,7 +250,6 @@ export async function loadGame() {
     renderer = new THREE.WebGLRenderer({ 
         canvas: pongArea,
         antialias: true,
-        alpha: true
     });
     renderer.setSize(800, 600);
     renderer.shadowMap.enabled = true;

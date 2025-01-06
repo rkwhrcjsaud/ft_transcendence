@@ -34,13 +34,8 @@ if ! vault secrets list | grep -q '^transcendence/'; then
     vault secrets enable -path=transcendence kv
 fi
 
-# 초기 생성 단계에서만 AppRole발급
-if [ ! -f /vault-data/initapprole ]; then
-    # AppRole 생성 스크립트 실행
-    vault auth enable approle
-    sh backrole.sh && sh frontrole.sh
-    touch /vault-data/initapprole
-fi
+vault auth enable approle
+sh backrole.sh && sh frontrole.sh
 
 python3 secret.py
 

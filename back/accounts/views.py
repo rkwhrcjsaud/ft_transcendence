@@ -21,6 +21,13 @@ class MyUserView(generics.GenericAPIView):
     def get(self, request):
         serializer = self.serializer_class(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    def patch(self, request):
+        user = request.user  # 현재 인증된 사용자 가져오기
+        serializer = self.serializer_class(user, data=request.data, partial=True)  # 부분 업데이트를 허용
+        if serializer.is_valid():
+            serializer.save()  # 수정된 데이터 저장
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserListView(generics.GenericAPIView):
     """
@@ -180,13 +187,6 @@ class MatchHistoryView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = MatchHistorySerializer
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     def get(self, request):
         try:
             user_id = request.GET.get('user_id')
@@ -198,6 +198,13 @@ class MatchHistoryView(generics.GenericAPIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        print(serializer)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 # class ChangePasswordView(APIView):
 #     permission_classes = [IsAuthenticated]
 

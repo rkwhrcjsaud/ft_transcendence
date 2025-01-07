@@ -133,7 +133,7 @@ class UserStats(models.Model):
     draws = models.IntegerField(default=0)
     
     def __str__(self):
-        return f"wins: {self.wins}, losses: {self.losses}, draws: {self.draws}"
+        return f"win: {self.wins}, loss: {self.losses}, draw: {self.draws}"
 
 class MatchHistory(models.Model):
     user = models.ForeignKey(User, related_name='match_histories', on_delete=models.CASCADE)

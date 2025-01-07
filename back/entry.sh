@@ -34,6 +34,9 @@ python manage.py migrate accounts
 python manage.py makemigrations admin
 python manage.py migrate admin
 
+python manage.py makemigrations friends
+python manage.py migrate friends
+
 # 나머지 앱들의 마이그레이션
 python manage.py makemigrations
 python manage.py migrate

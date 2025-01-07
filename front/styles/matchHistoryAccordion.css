@@ -147,3 +147,14 @@
   font-weight: bold;
   color: #fff;
 }
+
+.score.win {
+  color: green;
+}
+.score.loss {
+  color: red;
+}
+.score.draw {
+  color: gray;
+}
+

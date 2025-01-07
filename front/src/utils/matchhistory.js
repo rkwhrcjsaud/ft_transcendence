@@ -9,7 +9,7 @@ async function saveMatchHistory(userId, opponent, score_left, score_right) {
     const data = {
         user: userId,
         opponent: opponent,
-        result: score_left > score_right ? 'win' : score_left < score_right ? 'lose' : 'draw',
+        result: score_left > score_right ? 'win' : score_left < score_right ? 'loss' : 'draw',
         score: `${score_left}-${score_right}`,
     };
     try {

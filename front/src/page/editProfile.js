@@ -1,5 +1,6 @@
 import { loadCSS } from "../utils/loadcss";
 import { language } from "../utils/language";
+import { getSecretValue } from "../vault";
 import { createAxiosInstance } from "../utils/axiosInterceptor";
 
 export async function loadEditProfile() {
@@ -62,7 +63,8 @@ export async function loadEditProfile() {
   // 유저 정보 데이터 로드 (이메일, 성, 이름, 닉네임, 프로필 이미지)
   async function loadProfileData() {
     try {
-      const response = await axios.get("/accounts/profile/");
+      const apiUrl = await getSecretValue("front/FRONT_API_PROFILE");
+      const response = await axios.get(apiUrl);
       const data = response.data;
 
       // Mock 데이터 기반 유저 정보 업데이트

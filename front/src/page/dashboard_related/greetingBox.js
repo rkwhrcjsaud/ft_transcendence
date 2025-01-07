@@ -1,5 +1,6 @@
 import { loadCSS } from "../../utils/loadcss";
 import { language } from "../../utils/language";
+import { getSecretValue } from "../../vault";
 import { createAxiosInstance } from "../../utils/axiosInterceptor";
 
 export async function GreetingBox() {
@@ -12,7 +13,9 @@ export async function GreetingBox() {
   // 유저 정보 가져오기
   let userNickname = "";
   try {
-    const response = await axios.get("/accounts/profile/");
+    const apiUrl = await getSecretValue("front/FRONT_API_PROFILE");
+
+    const response = await axios.get(apiUrl);
     userNickname = response.data.nickname || "User";
   } catch (error) {
     console.error("Failed to load profile data:", error);

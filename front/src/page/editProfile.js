@@ -123,7 +123,9 @@ export async function loadEditProfile() {
       formData.append("profile_image", "");
     }
     try {
-      const response = await axios.put("/accounts/profile/", formData, {
+      const apiUrl = await getSecretValue("front/FRONT_API_PROFILE");
+
+      const response = await axios.put(apiUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }

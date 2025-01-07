@@ -27,6 +27,9 @@ fclean: down
 	@rm -rf front/node_modules front/approle
 	@rm -rf back/approle
 	@docker system prune -f -a --volumes
+	# vault 볼륨 제거
 	@find volumes/vault-data -type f -exec rm -f {} +
+	# __pycache__ 제거
+	@find back -type d -name "__pycache__" -exec rm -r {} +
 
 .PHONY: all detach down reup watch mount clean fclean

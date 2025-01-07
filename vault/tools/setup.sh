@@ -6,22 +6,19 @@ vault server -config=/local.json &
 until nc -z localhost 8200; do
     sleep 1
 done
+sleep 1
 
 # 초기화 여부 확인 및 초기화 수행
 if [ ! -f /vault-data/initialized ]; then
     vault operator init -key-shares=1 -key-threshold=1 > /vault-data/init-output.txt
-    sleep 3
-    # 초기화 성공 여부 확인
-    while true; do
-        if grep -q 'Unseal Key 1:' /vault-data/init-output.txt && grep -q 'Initial Root Token:' /vault-data/init-output.txt; then
-            break
-        fi
+    # /vault-data/init-output.txt이 생성되었는지 확인
+    # 생성되었으면 다음 명령어로 넘어가고, 그렇지 않으면 sleep 루프를 돌며 대기
+    until [ -f /vault-data/init-output.txt ]; do
         sleep 1
     done
     grep 'Unseal Key 1:' /vault-data/init-output.txt | awk '{print $NF}' > $VAULT_UNSEAL_KEY
     grep 'Initial Root Token:' /vault-data/init-output.txt | awk '{print $NF}' > $VAULT_ROOT_TOKEN
-    touch /vault-data/initialized
-    rm -rf /vault-data/init-output.txt
+    touch /vault-data/initialized && rm -rf /vault-data/init-output.txt
 fi
 
 # 언실 수행

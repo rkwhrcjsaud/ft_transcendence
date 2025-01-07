@@ -136,7 +136,8 @@ export async function loadEditProfile() {
       });
         
       if (profileResponse.status === 200) {
-        await axios.patch("/accounts/myuser/", { nickname });
+        const myuserUrl = await getSecretValue("front/FRONT_API_MYUSER");
+        await axios.patch(myuserUrl, { nickname });
         await loadProfileData();
         alert(language[languageKey]["ProfileUpdated"]);
         imageUpload.value = null;

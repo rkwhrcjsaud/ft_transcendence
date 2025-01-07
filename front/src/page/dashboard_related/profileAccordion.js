@@ -115,7 +115,7 @@ export async function ProfileAccordion() {
         if (authProvider === "email") {
           window.location.href = "/change_password";
         } else if (authProvider === "42") {
-          alert("42 소셜 로그인 계정입니다. 비밀번호 직접 변경이 불가합니다.");
+          alert(language[languageKey]["DisableChangePasswordAlert"]);
         }
       }
     });

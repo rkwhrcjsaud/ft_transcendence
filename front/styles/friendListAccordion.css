@@ -44,9 +44,9 @@
 
 .friend-count {
   position: absolute;
-  left: 118px;
+  left: 150px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-45%);
   color: #eee;
   padding: 5px 10px;
   font-size: 1rem;

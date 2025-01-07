@@ -14,36 +14,6 @@ export async function FriendListAccordion() {
   const res_friendList = await axios.get(apiUrl_friendList);
   console.log("Friend List:", res_friendList.data.users);
   const friends = res_friendList.data.users;
-  // const friends = [
-  //   {
-  //     id: 1,
-  //     name: "gibkim",
-  //     status: language[languageKey]["Online"],
-  //     avatar: "/default_profile.jpeg",
-  //     isFriend: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "haekang",
-  //     status: language[languageKey]["Offline"],
-  //     avatar: "/default_profile.jpeg",
-  //     isFriend: false,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "jaehyji",
-  //     status: language[languageKey]["Offline"],
-  //     avatar: "/default_profile.jpeg",
-  //     isFriend: true,
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "dongwook",
-  //     status: language[languageKey]["Online"],
-  //     avatar: "/default_profile.jpeg",
-  //     isFriend: false,
-  //   },
-  // ];
 
   const renderAccordion = () => {
     // 기존의 아코디언을 삭제
@@ -108,7 +78,7 @@ export async function FriendListAccordion() {
                         <input
                         type="text"
                         class="search-input"
-                        placeholder=${language[languageKey]["SearchMessage"]}
+                        placeholder=""
                         />
                         <button class="search-btn">${language[languageKey]["SearchFriend"]}</button>
                     </div>
@@ -150,6 +120,7 @@ export async function FriendListAccordion() {
   renderAccordion();
 
   const searchInput = document.querySelector(".search-input");
+  searchInput.setAttribute("placeholder", language[languageKey]["SearchMessage"]);
   const searchButton = document.querySelector(".search-btn");
   const searchResultsContainer = document.querySelector(".search-results");
   const searchResultsList = document.querySelector(".search-results-list");

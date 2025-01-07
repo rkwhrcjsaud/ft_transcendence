@@ -41,6 +41,7 @@ export async function getVaultToken() {
  * @param {string} secretPath - 비밀값이 저장된 Vault의 경로
  */
 export async function getSecretValue(secretPath) {
+    console.log(`getSecretValue called with key: ${secretPath}`); // 호출 여부 확인
     try {
         const token = await getVaultToken();
 

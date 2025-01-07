@@ -7,7 +7,7 @@ from .serializers import RegisterSerializer, ProfileSerializer, UserStatsSeriali
 import random
 from django.conf import settings
 from django.core.mail import send_mail
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -205,17 +205,38 @@ class MatchHistoryView(generics.GenericAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+# class ChangePasswordView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request):
+#         user = request.user
+#         new_password = request.data.get('new_password')
+
+#         if not new_password or len(new_password) < 8:
+#             return Response({"error": "Password must be at least 8 characters long."}, status=400)
+
+#         user.password = make_password(new_password)
+#         user.save()
+#         return Response({"message": "Password changed successfully."}, status=200)
 
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         user = request.user
+        current_password = request.data.get('current_password')
         new_password = request.data.get('new_password')
 
+        # 현재 비밀번호 검증
+        if not current_password or not check_password(current_password, user.password):
+            return Response({"error": "The current password does not match."}, status=401)
+
+        # 새 비밀번호 유효성 검사
         if not new_password or len(new_password) < 8:
             return Response({"error": "Password must be at least 8 characters long."}, status=400)
 
+        # 비밀번호 변경
         user.password = make_password(new_password)
         user.save()
+
         return Response({"message": "Password changed successfully."}, status=200)

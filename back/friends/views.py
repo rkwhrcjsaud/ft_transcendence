@@ -10,11 +10,12 @@ class AddFriend(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         friend_id = request.data.get('friend_id')
+        User = get_user_model()
         try:
             friend = User.objects.get(id=friend_id)
         except User.DoesNotExist:
             return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-        if friend.objects.filter(user=request.user, friend=friend).exists():
+        if Friend.objects.filter(user=request.user, friend=friend).exists():
             return Response({'message': 'Already friends'}, status=status.HTTP_400_BAD_REQUEST)
         Friend.objects.create(user=request.user, friend=friend)
         return Response({'message': 'Friend added'}, status=status.HTTP_201_CREATED)
@@ -25,10 +26,11 @@ class RemoveFriend(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         friend_id = request.data.get('friend_id')
         try:
+            User = get_user_model()
             friend = User.objects.get(id=friend_id)
         except User.DoesNotExist:
             return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-        if not friend.objects.filter(user=request.user, friend=friend).exists():
+        if not Friend.objects.filter(user=request.user, friend=friend).exists():
             return Response({'message': 'Not friends'}, status=status.HTTP_400_BAD_REQUEST)
         Friend.objects.get(user=request.user, friend=friend).delete()
         return Response({'message': 'Friend removed'}, status=status.HTTP_200_OK)

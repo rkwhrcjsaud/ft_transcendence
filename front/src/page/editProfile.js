@@ -1,5 +1,6 @@
 import { loadCSS } from "../utils/loadcss";
 import { language } from "../utils/language";
+import { getSecretValue } from "../vault";
 import { createAxiosInstance } from "../utils/axiosInterceptor";
 
 export async function loadEditProfile() {
@@ -61,7 +62,8 @@ export async function loadEditProfile() {
 
   async function loadProfileData() {
     try {
-      const response = await axios.get("/accounts/profile/");
+      const apiUrl = await getSecretValue("front/FRONT_API_PROFILE");
+      const response = await axios.get(apiUrl);
       const data = response.data;
   
       // 기본 정보 업데이트

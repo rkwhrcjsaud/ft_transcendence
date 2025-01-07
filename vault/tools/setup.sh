@@ -6,12 +6,13 @@ vault server -config=/local.json &
 until nc -z localhost 8200; do
     sleep 1
 done
-sleep 1
+sleep 3
 
 # 초기화 여부 확인 및 초기화 수행
 if [ ! -f /vault-data/initialized ]; then
     vault operator init -key-shares=1 -key-threshold=1 > /vault-data/init-output.txt
     # /vault-data/init-output.txt이 생성되었는지 확인
+    sleep 3
     # 생성되었으면 다음 명령어로 넘어가고, 그렇지 않으면 sleep 루프를 돌며 대기
     until [ -f /vault-data/init-output.txt ]; do
         sleep 1

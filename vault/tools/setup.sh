@@ -25,9 +25,7 @@ if [ ! -f /vault-data/initialized ]; then
 fi
 
 # 언실 수행
-vault operator unseal $(cat $VAULT_UNSEAL_KEY)
-# Vault 로그인
-vault login $(cat $VAULT_ROOT_TOKEN)
+vault operator unseal $(cat $VAULT_UNSEAL_KEY) && vault login $(cat $VAULT_ROOT_TOKEN)
 
 # KV 엔진 확인 및 생성, AppRole 발급
 if ! vault secrets list | grep -q '^transcendence/'; then

@@ -28,6 +28,8 @@ clean: down
 
 # 컨테이너 정지 및 도커 리소스와 볼륨 삭제
 fclean: down
+	@rm -rf front/node_modules front/approle
+	@rm -rf back/approle
 	@docker system prune -f -a --volumes
 	@find volumes/vault-data -type f -exec rm -f {} +
 

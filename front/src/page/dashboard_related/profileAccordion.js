@@ -59,8 +59,6 @@ export async function ProfileAccordion() {
 
     // Document-level click listener 추가 (버튼에 직접 할당 시 작동 x)
     document.addEventListener("click", (e) => {
-      console.log("Document click event fired:", e.target);
-
       // 비밀번호 변경 버튼 클릭 시 authProvider 종류에 따라 동작
       if (e.target.closest(".profile-password-change-btn")) {
         e.preventDefault();

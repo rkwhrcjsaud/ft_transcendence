@@ -21,7 +21,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'password', 'password2']
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'nickname', 'password', 'password2']
 
     def validate(self, attrs):
         password = attrs.get('password', '')
@@ -42,7 +42,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             password=validated_data['password'],
-            nickname='guest'  # 기본 닉네임 설정
+            nickname=validated_data.get('nickname', 'guest')
         )
         UserStats.objects.create(user=user)
         return user
@@ -53,8 +53,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = UserProfile
-        fields = ['nickname', 'profile_image', 'first_name', 'last_name', 'email', 'auth_provider']
-        read_only_fields = ['auth_provider']
+        fields = ['nickname', 'profile_image', 'first_name', 'last_name', 'email']
 
 class UserStatsSerializer(serializers.ModelSerializer):
     """

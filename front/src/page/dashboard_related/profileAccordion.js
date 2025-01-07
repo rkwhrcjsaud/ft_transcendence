@@ -16,7 +16,8 @@ export async function ProfileAccordion() {
     
     try {
       const axios = await createAxiosInstance();
-      const response = await axios.get("/accounts/profile/");
+      const apiUrl = await getSecretValue("front/FRONT_API_PROFILE");
+      const response = await axios.get(apiUrl);
       
       // 이미지 URL 처리
       let profileImageUrl = "/default_profile.jpeg";

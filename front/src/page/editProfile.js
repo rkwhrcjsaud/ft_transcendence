@@ -104,13 +104,17 @@ export async function loadEditProfile() {
   // 저장 버튼 핸들러도 수정
   saveProfileBtn.addEventListener("click", async (event) => {
     event.preventDefault();
+
+    // 입력값 검증
+    const nickname = document.getElementById("nickname").value.trim();
+    if (!nickname) {
+      alert(language[languageKey]["NicknameRequired"]);
+      return;
+    }
+
     const formData = new FormData();
-    
-    // 기본 정보 추가
-    formData.append("nickname", document.getElementById("nickname").value);
-    formData.append("last_name", document.getElementById("lastName").textContent);
-    formData.append("first_name", document.getElementById("firstName").textContent);
-    
+    formData.append("nickname", nickname);
+  
     // 이미지 파일 처리
     const imageFile = imageUpload.files[0];
     if (imageFile) {
@@ -121,14 +125,15 @@ export async function loadEditProfile() {
       formData.append("profile_image", "");
     }
     try {
-      const response = await axios.put("/accounts/profile/", formData, {
+      const profileResponse = await axios.put("/accounts/profile/", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }
       });
         
-      if (response.status === 200) {
-        await loadProfileData(); // 새로운 데이터 로드
+      if (profileResponse.status === 200) {
+        await axios.patch("/accounts/myuser/", { nickname });
+        await loadProfileData();
         alert(language[languageKey]["ProfileUpdated"]);
         imageUpload.value = null;
       }
@@ -137,7 +142,6 @@ export async function loadEditProfile() {
       alert(language[languageKey]["ErrorUpdatingProfile"]);
     }
   });
-
   
   // 이미지 업로드 이벤트 핸들러 수정
   imageUpload.addEventListener("change", (event) => {

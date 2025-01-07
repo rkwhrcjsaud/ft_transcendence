@@ -45,8 +45,8 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def game_start(self):
         self.leftScore = 0
         self.rightScore = 0
-        self.minutes = 1
-        self.seconds = 40
+        self.minutes = 0
+        self.seconds = 4
         self.ball_x = self.width / 2
         self.ball_y = self.height / 2
         self.ball_speed_x = random.randint(3, 5) * random.choice([1, -1])
@@ -59,7 +59,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         if self.leftScore == self.rightScore:
             message = 'Draw'
         else:
-            message = ('Left' if self.leftScore > self.rightScore else 'Right') + ' wins!'
+            message = ('Left' if self.leftScore > self.rightScore else 'Right') + ' Wins!'
         await self.send_message(message)
     
     async def set_game_state(self, state): # 게임 상태를 설정하는 함수

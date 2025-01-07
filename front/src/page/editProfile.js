@@ -33,11 +33,11 @@ export async function loadEditProfile() {
                     </div>
                     <div class="form-group">
                         <label class="form-label">${language[languageKey]["LastName"]}</label>
-                        <p type="text" id="lastName" class="fixed-text">
+                        <p type="text" id="lastName" class="fixed-text"></p>
                     </div>
                     <div class="form-group">
                         <label class="form-label">${language[languageKey]["FirstName"]}</label>
-                        <p type="text" id="firstName" class="fixed-text">
+                        <p type="text" id="firstName" class="fixed-text"></p>
                     </div>
                 </form>
                 <div class="form-buttons">
@@ -59,49 +59,119 @@ export async function loadEditProfile() {
   // Axios 인스턴스 생성
   const axios = await createAxiosInstance();
 
-  // 유저 정보 데이터 로드 (이메일, 성, 이름, 닉네임, 프로필 이미지)
   async function loadProfileData() {
     try {
       const response = await axios.get("/accounts/profile/");
       const data = response.data;
-
-      // Mock 데이터 기반 유저 정보 업데이트
+  
+      // 기본 정보 업데이트
       document.getElementById("nickname").value = data.nickname || "";
       document.getElementById("lastName").textContent = data.last_name || "";
       document.getElementById("firstName").textContent = data.first_name || "";
       document.getElementById("edit-profile-email").textContent = data.email || "";
-      console.log("data.profile_image", data.profile_image);
-      if (data.profile_image & (data.profile_image !== "")) {
-        profileImage.src = data.profile_image;
+  
+      // 프로필 이미지 업데이트 로직 수정
+      if (data.profile_image) {
+        // URL을 상대 경로로 변환
+        let imageUrl = data.profile_image;
+        
+        // http:// 또는 https:// 로 시작하는 경우 도메인 이후의 경로만 추출
+        if (imageUrl.startsWith('http')) {
+          const urlObj = new URL(imageUrl);
+          imageUrl = urlObj.pathname; // 예: /media/profile_images/image.jpg
+        }
+        
+        const img = new Image();
+        img.onload = () => {
+          profileImage.src = imageUrl;
+          deleteImageBtn.style.display = "block";
+        };
+        img.onerror = (e) => {
+          profileImage.src = "default_profile.jpeg";
+          deleteImageBtn.style.display = "none";
+        };
+        img.src = imageUrl;
       } else {
         profileImage.src = "default_profile.jpeg";
+        deleteImageBtn.style.display = "none";
       }
     } catch (error) {
-      console.error("Failed to load profile data:", error);
       alert(language[languageKey]["ErrorLoadingProfile"]);
     }
   }
-
   loadProfileData();
-
-  // 프로필 저장 버튼 클릭 시
+  let isImageDeleted = false;
+  // 저장 버튼 핸들러도 수정
   saveProfileBtn.addEventListener("click", async (event) => {
     event.preventDefault();
     const formData = new FormData();
+    
+    // 기본 정보 추가
     formData.append("nickname", document.getElementById("nickname").value);
-    formData.append("last_name", document.getElementById("lastName").value);
-    formData.append("first_name", document.getElementById("firstName").value);
-    if (imageUpload.files[0]) {
-      formData.append("profile_image", imageUpload.files[0]);
+    formData.append("last_name", document.getElementById("lastName").textContent);
+    formData.append("first_name", document.getElementById("firstName").textContent);
+    
+    // 이미지 파일 처리
+    const imageFile = imageUpload.files[0];
+    if (imageFile) {
+      formData.append("profile_image", imageFile);
+      isImageDeleted = false; // 새 이미지가 업로드되면 삭제 상태 해제
+    } else if (isImageDeleted) {
+      // 이미지가 삭제된 상태라면 null을 전송
+      formData.append("profile_image", "");
     }
-
     try {
-      await axios.put("/accounts/profile/", formData);
-      alert(language[languageKey]["ProfileUpdated"]);
+      const response = await axios.put("/accounts/profile/", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+        
+      if (response.status === 200) {
+        await loadProfileData(); // 새로운 데이터 로드
+        alert(language[languageKey]["ProfileUpdated"]);
+        imageUpload.value = null;
+      }
     } catch (error) {
-      console.error("Failed to update profile:", error);
+      console.error("프로필 업데이트 실패:", error);
       alert(language[languageKey]["ErrorUpdatingProfile"]);
     }
+  });
+
+  
+  // 이미지 업로드 이벤트 핸들러 수정
+  imageUpload.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // 파일 크기 체크 (예: 5MB 제한)
+      if (file.size > 5 * 1024 * 1024) {
+        alert(language[languageKey]["ImageSizeError"]);
+        imageUpload.value = null;
+        return;
+      }
+      
+      // 파일 타입 체크
+      if (!file.type.startsWith('image/')) {
+        alert(language[languageKey]["ImageTypeError"]);
+        imageUpload.value = null;
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        profileImage.src = e.target.result;
+        deleteImageBtn.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+  
+  // 이미지 삭제 버튼 핸들러 수정
+  deleteImageBtn.addEventListener("click", () => {
+    profileImage.src = "default_profile.jpeg";
+    imageUpload.value = null;
+    deleteImageBtn.style.display = "none";
+    isImageDeleted = true; // 이미지가 삭제되었음을 표시
   });
 
   // 계정 삭제 버튼 클릭 시
@@ -112,24 +182,5 @@ export async function loadEditProfile() {
         console.error("Failed to delete account:", error);
       }
     }
-  });
-
-  // 이미지 업로드
-  imageUpload.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        profileImage.src = e.target.result;
-        deleteImageBtn.style.display = "block";
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // 이미지 초기화
-  deleteImageBtn.addEventListener("click", () => {
-    profileImage.src = "default_profile.jpeg";
-    imageUpload.value = null;
   });
 }

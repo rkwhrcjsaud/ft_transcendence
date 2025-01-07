@@ -14,10 +14,6 @@ down:
 reup: down
 	$(MAKE) all
 
-# 파일 변경 감지 후 업데이트
-watch: mount
-	docker compose watch
-
 mount:
 	@mkdir -p volumes/vault-data/approle/back/front
 	@mkdir -p volumes/vault-data/approle/front

@@ -1,6 +1,7 @@
 import { language } from "../../utils/language";
 import { loadCSS } from "../../utils/loadcss";
 import { createAxiosInstance } from "../../utils/axiosInterceptor";
+import { getSecretValue } from "../../vault";
 
 export async function MatchHistoryAccordion() {
   loadCSS("../../styles/matchHistoryAccordion.css");
@@ -11,15 +12,18 @@ export async function MatchHistoryAccordion() {
   
   try {
     // 현재 로그인한 사용자 정보 가져오기
-    const userResponse = await axiosInstance.get('/accounts/myuser/');
+    const userResponseUrl = await getSecretValue('front/FRONT_API_MYUSER');
+    const userResponse = await axiosInstance.get(userResponseUrl);
     const userId = userResponse.data.id;
     const currentUserNickname = userResponse.data.nickname;
 
     // 매치 히스토리 데이터 가져오기
-    const matchResponse = await axiosInstance.get(`/accounts/match_history/?user_id=${userId}`);
+    const matchResponseUrl = await getSecretValue('front/FRONT_API_MATCH_HISTORY');
+    const matchResponse = await axiosInstance.get(`${matchResponseUrl}?user_id=${userId}`);
     const matchData = matchResponse.data;
 
-    const userProfileResponse = await axiosInstance.get("/accounts/profile/");
+    const userProfileResponseUrl = await getSecretValue('front/FRONT_API_PROFILE');
+    const userProfileResponse = await axiosInstance.get(userProfileResponseUrl);
     const profileData = userProfileResponse.data;
 
     // 통계 계산

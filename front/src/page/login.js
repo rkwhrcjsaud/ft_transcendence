@@ -99,10 +99,10 @@ export function loadLogin() {
       console.log(error);
       if (error.response) {
         showAlert(
-          error.response.data.error || "An error occurred. Please try again"
+          error.response.data.error || language[languageKey]["ErrorOccurred"]
         );
       } else {
-        showAlert("An unknown error occurred");
+        showAlert(language[languageKey]["UnknownError"]);
       }
     }
   });

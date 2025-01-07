@@ -22,6 +22,7 @@ export const language = {
       Profile: "프로필",
       ProfileEdit: "프로필 수정",
       PasswordChange: "비밀번호 변경",
+      DisableChangePasswordAlert: "42 소셜 로그인 계정입니다. 비밀번호 직접 변경이 불가합니다.",
   
       //MatchHistoryAccordion
       MatchHistory: "매치 히스토리",
@@ -55,6 +56,7 @@ export const language = {
       ErrorUpdatingProfile: "프로필 변경 중 오류가 발생했습니다.",
       ImageSizeError: "이미지 크기는 5MB 이하로 업로드해주세요.",
       ImageTypeError: "이미지 파일만 업로드 가능합니다.",
+      DeleteAccountConfirm: "정말로 계정을 삭제하시겠습니까?",
   
       //loadChangePassword
       ChangePassword: "비밀번호 변경",
@@ -70,7 +72,6 @@ export const language = {
       CurrentPasswordMismatch: "현재 비밀번호가 일치하지 않아, 변경에 실패했습니다.",
       PasswordRetypeEmpty: "새 비밀번호를 다시 한번 입력해주세요.",
     
-  
       //loadGame
       Start: "게임시작",
       PongRules: "게임 규칙",
@@ -84,6 +85,8 @@ export const language = {
       socialLogin: "소셜 로그인",
       RegisterMessage: "아직 계정이 없으신가요?",
       RegisterPage: "가입 하러가기 🏓",
+      UnknownError: "알 수 없는 오류가 발생했습니다.",
+      ErrorOccurred : "오류가 발생했습니다. 다시 시도해주세요.",
   
       //loadRegister
       Register: "회원가입",
@@ -115,12 +118,12 @@ export const language = {
       GreetingMorning: "Good morning 🌞",
       GreetingAfternoon: "Good afternoon 🍀",
       GreetingEvening: "Good evening 🌝",
-      Postfix: "🏓 Let's play Ping Pong! 🏓",
+      Postfix: "Let's play 🏓 Ping Pong! 🏓",
       Morning: "Start of the day",
       Launch: "After lunch",
-      Afternoon: "Lazy afternoon",
-      Dinner: "After dinner",
-      Bored: "When you're bored",
+      Afternoon: "Lazy afternoon, ",
+      Dinner: "After dinner, ",
+      Bored: "When you're bored, ",
       Playing: "Play now",
       Hello: "Hello",
   
@@ -128,6 +131,7 @@ export const language = {
       Profile: "Profile",
       ProfileEdit: "Edit Profile",
       PasswordChange: "Change Password",
+      DisableChangePasswordAlert: "You're signed in with 42 Auth. Changing password is not available.",
   
       //MatchHistoryAccordion
       MatchHistory: "Match History",
@@ -161,6 +165,7 @@ export const language = {
       ErrorUpdatingProfile: "An error occurred while updating profile.",
       ImageSizeError: "Image size must be less than 5MB.",
       ImageTypeError: "Only image files are allowed.",
+      DeleteAccountConfirm: "Are you sure you want to delete your account?",
   
       //loadChangePassword
       ChangePassword: "Change Password",
@@ -189,6 +194,8 @@ export const language = {
       socialLogin: "Social Login",
       RegisterMessage: "Don't have an account?",
       RegisterPage: "Go to Sign Up 🏓",
+      UnknownError: "An unknown error occurred.",
+      ErrorOccurred : "An error occurred. Please try again.",
   
       //loadRegister
       Register: "Sign Up",
@@ -220,12 +227,12 @@ export const language = {
       GreetingMorning: "Bonjour 🌞",
       GreetingAfternoon: "Bon après-midi 🍀",
       GreetingEvening: "Bonsoir 🌝",
-      Postfix: "🏓 Une partie de Ping Pong ? 🏓",
+      Postfix: "Une partie de 🏓 Ping Pong ? 🏓",
       Morning: "Début de la journée",
-      Launch: "Après le déjeuner",
-      Afternoon: "Après-midi paresseux",
-      Dinner: "Après le dîner",
-      Bored: "Quand vous vous ennuyez",
+      Launch: "Après le déjeuner ",
+      Afternoon: "Après-midi paresseux ",
+      Dinner: "Après le dîner ",
+      Bored: "Quand vous vous ennuyez ",
       Playing: "Allons jouer",
       Hello: "Bonjour",
   
@@ -233,6 +240,7 @@ export const language = {
       Profile: "Profil",
       ProfileEdit: "Modifier le Profil",
       PasswordChange: "Changer le mot de passe",
+      DisableChangePasswordAlert: "Vous êtes connecté avec 42 Auth. La modification du mot de passe n'est pas disponible.",
   
       //MatchHistoryAccordion
       MatchHistory: "Historique des matchs",
@@ -266,6 +274,7 @@ export const language = {
       ErrorUpdatingProfile: "Une erreur s'est produite lors de la mise à jour de votre profil.",
       ImageSizeError: "La taille de l'image doit être inférieure à 5 Mo.",
       ImageTypeError: "Seuls les fichiers image sont autorisés.",
+      DeleteAccountConfirm: "Voulez-vous vraiment supprimer votre compte ?",
   
       //loadChangePassword
       ChangePassword: "Changer le mot de passe",
@@ -294,6 +303,8 @@ export const language = {
       socialLogin: "Connexion sociale",
       RegisterMessage: "Pas encore de compte ?",
       RegisterPage: "Allez à l'inscription 🏓",
+      UnknownError: "Une erreur inconnue s'est produite.",
+      ErrorOccurred : "Une erreur s'est produite.",
   
       //loadRegister
       Register: "S'inscrire",

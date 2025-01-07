@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/ball.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="./styles/fixedNavBar.css" />
     <link rel="stylesheet" href="./styles/global.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Vite App</title>
+    <title>ft_transcendence</title>
   </head>
   <body>
     <!-- NavBar -->
@@ -28,12 +28,7 @@
 
         <!-- Center: Navigation Links -->
         <div class="navbar-center">
-          <a
-            href="/dashboard"
-            class="nav-link"
-            data-router-link
-            >dashboard</a
-          >
+          <a href="/dashboard" class="nav-link" data-router-link>dashboard</a>
           <a href="/play" class="nav-link" data-router-link>play</a>
         </div>
 
@@ -51,7 +46,7 @@
               <i class="fa-solid fa-angle-down"></i>
             </button>
             <ul class="dropdown-menu" aria-labelledby="languageDropdown">
-              <li class="dropdown-item active">
+              <li class="dropdown-item">
                 <img src="/korean.png" alt="Korean" />한국어
                 <i class="active_lang fa-solid fa-check"></i>
               </li>
@@ -85,33 +80,38 @@
     const authButton = document.getElementById("auth-button");
     const langDropdown = document.getElementById("languageDropdown");
     const langItems = document.querySelectorAll(".dropdown-item");
-    
+
+    console.log("localStorage", localStorage.getItem("selectedLanguage"));
     // 초기 선택된 언어가 없으면 한국어로 설정
     if (!localStorage.getItem("selectedLanguage")) {
       localStorage.setItem("selectedLanguage", "한국어");
     }
-    
+
+    langItems.forEach((item) => {
+      // localStorage에 저장된 언어가 있으면 활성화 상태로 변경(체크 아이콘)
+      if (localStorage.getItem("selectedLanguage") === item.textContent.trim()) {
+        item.classList.add("active");
+      }
+    });
+
+
     // 언어 선택 로직
     langItems.forEach((item) => {
       item.addEventListener("click", (e) => {
         e.preventDefault();
-        
-        // 선택된 언어 텍스트만 가져오기 (아이콘 제외)
+
+        // 이미지와 체크 아이콘을 제외한 텍스트만 가져오기
         const selectedText = item.textContent.trim(); // 선택된 언어의 텍스트
         langDropdown.querySelector(".dropdown-text").textContent = selectedText;
-        
+
         // localStorage에 선택된 언어 저장
         localStorage.setItem("selectedLanguage", selectedText);
-  
-        // 활성화 상태 업데이트
-        langItems.forEach((lang) => lang.classList.remove("active"));
-        item.classList.add("active");
-  
+
         // 언어 변경 후 페이지 새로 고침
         window.location.reload();
       });
     });
-  
+
     // 초기 언어 표시 (localStorage에서 가져온 값에 맞게)
     const initialLanguage = localStorage.getItem("selectedLanguage");
     langDropdown.querySelector(".dropdown-text").textContent = initialLanguage;
@@ -123,7 +123,7 @@
     authButton.addEventListener("click", () => {
       Auth.logout();
     });
-  
+
     // 활성화된 링크 표시
     const navLinks = document.querySelectorAll(".nav-link");
     navLinks.forEach((link) => {
@@ -133,5 +133,4 @@
       });
     });
   });
-  
 </script>

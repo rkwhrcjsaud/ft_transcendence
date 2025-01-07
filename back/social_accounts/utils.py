@@ -9,7 +9,7 @@ from vault import *
 import sys
 import os
 
-def RegisterSocialAccount(email, username, firstName, lastName, img_URL):
+def RegisterSocialAccount(email, username, firstName, lastName, nickname, img_URL):
     user = User.objects.filter(email=email)
     if user.exists():
         register_userd=authenticate(email=email, password=settings.SOCIAL_AUTH_PASSWORD)
@@ -19,6 +19,7 @@ def RegisterSocialAccount(email, username, firstName, lastName, img_URL):
             'id':register_userd.id,
 			'full_name':register_userd.get_full_name,
 			'username': register_userd.username,
+            'nickname': register_userd.username,
 			'email':register_userd.email,
 			'auth_provider': '42',
 			'access_token': str(tokens.get('access')),
@@ -31,6 +32,7 @@ def RegisterSocialAccount(email, username, firstName, lastName, img_URL):
 			'first_name': firstName,
 			'last_name': lastName,
 			'password': settings.SOCIAL_AUTH_PASSWORD,
+            'nickname': nickname,
 			'auth_provider': '42',
 		}
         user = User.objects.create_user(**user)
@@ -46,6 +48,7 @@ def RegisterSocialAccount(email, username, firstName, lastName, img_URL):
 			'id': login_user.id,
 			'email': login_user.email,
 			'username': login_user.username,
+            'nickname': login_user.username,
 			'full_name': login_user.get_full_name,
 			'access_token': str(tokens.get('access')),
 			'refresh_token': str(tokens.get('refresh'))

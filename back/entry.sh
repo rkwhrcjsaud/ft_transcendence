@@ -19,15 +19,25 @@ until [ -f "/usr/src/app/approle/front/role-id.json" ] && [ -f "/usr/src/app/app
     sleep 1
 done
 
-# 비밀 새로 저장 대기 시간
+# 비밀 저장 대기 시간
 sleep 5
 
 export DJANGO_SETTINGS_MODULE=transcendence.settings
 
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 find . -path "*/migrations/*.pyc"  -delete
+# accounts 앱 마이그레이션 먼저 실행
+python manage.py makemigrations accounts
+python manage.py migrate accounts
+
+# 그 다음 admin 앱 마이그레이션
+python manage.py makemigrations admin
+python manage.py migrate admin
+
+# 나머지 앱들의 마이그레이션
 python manage.py makemigrations
 python manage.py migrate
+
 python manage.py collectstatic --noinput
 
 exec "$@"

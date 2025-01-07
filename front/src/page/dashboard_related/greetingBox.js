@@ -1,9 +1,24 @@
 import { loadCSS } from "../../utils/loadcss";
 import { language } from "../../utils/language";
+import { createAxiosInstance } from "../../utils/axiosInterceptor";
 
-export function GreetingBox() {
+export async function GreetingBox() {
   loadCSS("../../styles/greetingBox.css");
   const languageKey = localStorage.getItem("selectedLanguage");
+
+  // Axios 인스턴스 생성
+  const axios = await createAxiosInstance();
+    
+  // 유저 정보 가져오기
+  let userNickname = "";
+  try {
+    const response = await axios.get("/accounts/profile/");
+    userNickname = response.data.nickname || "User";
+  } catch (error) {
+    console.error("Failed to load profile data:", error);
+    userNickname = "User"; // 기본값 설정
+  }
+
   // 시간대에 따라 `hours` 메시지를 반환하는 함수
   const getHoursMessage = () => {
     const currentHour = new Date().getHours();
@@ -37,25 +52,25 @@ export function GreetingBox() {
 
   // Greeting Box HTML 구조
   const greetingBoxHTML = `
-      <div class="greeting-box">
-        <div class="greeting-subbox">
-          <h4 class="greeting-user">
-            <strong> ${language[languageKey]["Hello"]} </strong>
-            <strong> ranchoi</strong>
-            <strong id="Term"> </strong>
-            <strong> ${getHoursMessage()}</strong>
-          </h4>
-          <div class="greeting-row">
-            <p class="greeting-message">${getGreetingMessage()}</p>
-            <button class="greeting-button">
-               <a href="/play" data-router-link>
-                ${language[languageKey]["Playing"]}
-              </a>
-            </button>
-          </div>
+    <div class="greeting-box">
+      <div class="greeting-subbox">
+        <h4 class="greeting-user">
+          <strong> ${language[languageKey]["Hello"]} </strong>
+          <strong> ${userNickname}</strong>
+          <strong id="Term"> </strong>
+          <strong> ${getHoursMessage()}</strong>
+        </h4>
+        <div class="greeting-row">
+          <p class="greeting-message">${getGreetingMessage()}</p>
+          <button class="greeting-button">
+            <a href="/play" data-router-link>
+              ${language[languageKey]["Playing"]}
+            </a>
+          </button>
         </div>
       </div>
-    `;
+    </div>
+  `;
 
   // 기본 컨테이너(`#app`)에 Greeting Box 추가
   const container = document.querySelector("#app");

@@ -20,6 +20,7 @@ class Oauth42RegisterSerializer(serializers.Serializer):
                 # 필드에 값이 제대로 들어왔는지 확인
                 email = userData.get('email', 'No email found')
                 username = userData.get('login', 'No username found')
+                nickname = userData.get('login', 'No nickname found')
                 firstname = userData.get('first_name', 'No first name found')
                 lastname = userData.get('last_name', 'No last name found')
                 img_URL = userData.get('image', {}).get('versions', {}).get('small', 'No image URL found')
@@ -27,7 +28,7 @@ class Oauth42RegisterSerializer(serializers.Serializer):
                 print(f"Email: {email}, Username: {username}, First Name: {firstname}, Last Name: {lastname}, Image URL: {img_URL}")
                 
                 # 사용자 등록
-                return RegisterSocialAccount(email, username, firstname, lastname, img_URL)
+                return RegisterSocialAccount(email, username, firstname, lastname, nickname, img_URL)
             
             except KeyError as e:
                 raise ValidationError(f"Missing expected key in user data: {e}")

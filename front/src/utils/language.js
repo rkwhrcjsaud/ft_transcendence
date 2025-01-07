@@ -53,6 +53,8 @@ export const language = {
       Save: "저장하기",
       ProfileUpdated: "프로필이 성공적으로 변경 되었습니다.",
       ErrorUpdatingProfile: "프로필 변경 중 오류가 발생했습니다.",
+      ImageSizeError: "이미지 크기는 5MB 이하로 업로드해주세요.",
+      ImageTypeError: "이미지 파일만 업로드 가능합니다.",
   
       //loadChangePassword
       ChangePassword: "비밀번호 변경",
@@ -157,6 +159,8 @@ export const language = {
       Save: "Save",
       ProfileUpdated: "Your profile has been successfully updated.",
       ErrorUpdatingProfile: "An error occurred while updating profile.",
+      ImageSizeError: "Image size must be less than 5MB.",
+      ImageTypeError: "Only image files are allowed.",
   
       //loadChangePassword
       ChangePassword: "Change Password",
@@ -260,6 +264,8 @@ export const language = {
       Save: "Enregistrer",
       ProfileUpdated: "Votre profil a été mis à jour avec succès.",
       ErrorUpdatingProfile: "Une erreur s'est produite lors de la mise à jour de votre profil.",
+      ImageSizeError: "La taille de l'image doit être inférieure à 5 Mo.",
+      ImageTypeError: "Seuls les fichiers image sont autorisés.",
   
       //loadChangePassword
       ChangePassword: "Changer le mot de passe",

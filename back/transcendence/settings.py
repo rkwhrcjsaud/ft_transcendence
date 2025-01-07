@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'daphne',
     'channels',
 
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,7 +60,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'localgame',
-    'accounts',
     'social_accounts',
     'friends',
 ]

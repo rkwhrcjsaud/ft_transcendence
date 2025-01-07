@@ -7,6 +7,41 @@ export async function ProfileAccordion() {
   const loadContent = async () => {
     loadCSS("../../styles/profileAccordion.css");
     const languageKey = localStorage.getItem("selectedLanguage");
+
+    // 사용자 정보 먼저 가져오기
+    let userProfile = {
+      nickname: "User",
+      profile_image: "/default_profile.jpeg"
+    };
+    
+    try {
+      const axios = await createAxiosInstance();
+      const response = await axios.get("/accounts/profile/");
+      
+      // 이미지 URL 처리
+      let profileImageUrl = "/default_profile.jpeg";
+      if (response.data.profile_image) {
+        // URL을 상대 경로로 변환
+        const imageUrl = response.data.profile_image;
+        if (imageUrl.startsWith('http://')) {
+          // http://localhost 부분을 제거하고 상대 경로만 사용
+          profileImageUrl = new URL(imageUrl).pathname;
+        } else if (imageUrl.startsWith('https://')) {
+          profileImageUrl = new URL(imageUrl).pathname;
+        } else {
+          profileImageUrl = imageUrl;
+        }
+      }
+
+      userProfile = {
+        nickname: response.data.nickname || "User",
+        profile_image: profileImageUrl
+      };
+    } catch (error) {
+      console.error("Failed to load profile data:", error);
+    }
+
+    // HTML 렌더링
     const html = `
       <div class="accordion" id="profileAccordion">
         <div class="accordion-item">
@@ -32,9 +67,13 @@ export async function ProfileAccordion() {
             <div class="accordion-body">
               <div class="profile-container">
                 <div class="profile-image">
-                  <img src="/default_profile.jpeg" alt="Profile" />
+                  <img 
+                    src="${userProfile.profile_image}" 
+                    alt="Profile" 
+                    onerror="this.src='/default_profile.jpeg'" 
+                  />
                 </div>
-                <h2 class="profile-name">ranchoi</h2>
+                <h2 class="profile-name">${userProfile.nickname}</h2>
                 <div class="profile-buttons">
                   <button class="profile-button profile-setting-btn">
                     <i class="fas fa-cog"></i>
@@ -55,13 +94,20 @@ export async function ProfileAccordion() {
     `;
 
     document.getElementById("app").innerHTML += html;
+
+    // auth_provider 정보 가져오기
     let authProvider = null;
+    try {
+      const axios = await createAxiosInstance();
+      const apiUrl = await getSecretValue("front/FRONT_API_MYUSER");
+      const response = await axios.get(apiUrl);
+      authProvider = response.data.auth_provider;
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+    }
 
-    // Document-level click listener 추가 (버튼에 직접 할당 시 작동 x)
+    // 비밀번호 변경 버튼 이벤트 리스너
     document.addEventListener("click", (e) => {
-      console.log("Document click event fired:", e.target);
-
-      // 비밀번호 변경 버튼 클릭 시 authProvider 종류에 따라 동작
       if (e.target.closest(".profile-password-change-btn")) {
         e.preventDefault();
         console.log("Password change button clicked.");
@@ -72,22 +118,8 @@ export async function ProfileAccordion() {
         }
       }
     });
-
-    try {
-      const axios = await createAxiosInstance();
-      const apiUrl = await getSecretValue("front/FRONT_API_MYUSER");
-      const response = await axios.get(apiUrl);
-      authProvider = response.data.auth_provider;
-    } catch (error) {
-      console.error("Failed to fetch user data:", error);
-    }
   };
 
-  // DOM 준비 후 콘텐츠 로드하기
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadContent);
-  } else {
-    await loadContent();
-  }
+  // DOM이 준비되면 콘텐츠 로드
+  await loadContent();
 }
-

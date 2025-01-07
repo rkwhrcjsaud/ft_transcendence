@@ -33,9 +33,9 @@ venv/
 pip-log.txt
 
 # Migration
-*/migrations/*.py
-*/migrations/*.pyc
-*/migrations/__pycache__/
+**/migrations/*.py
+**/migrations/*.pyc
+**/migrations/__pycache__/
 
 # Vault
 ./vault/step

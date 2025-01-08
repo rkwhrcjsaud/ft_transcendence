@@ -183,14 +183,21 @@ export async function loadEditProfile() {
         const response = await axios.post(deleteUrl);
 
         if (response.status === 200) {
-          alert(language[languageKey]["AccountDeleted"]);
+          alert(language[languageKey]["DeleteAccountSuccess"]);
           // 로그아웃 처리 및 로그인 페이지로 리디렉션
           localStorage.clear(); // 로컬 스토리지 클리어
           window.location.href = "/login"; // 로그인 페이지로 이동
         }
       } catch (error) {
         console.error("Failed to delete account:", error);
-        alert(language[languageKey]["ErrorDeletingAccount"]);
+        // 에러 메시지 처리
+        let errorMsg = language[languageKey]["DeleteAccountFail"];
+        if (error.response?.data?.error) {
+          errorMsg = error.response.data.error;
+        } else if (error.response?.data) {
+          errorMsg = JSON.stringify(error.response.data);
+        }
+        alert(errorMsg);
       }
     }
   });

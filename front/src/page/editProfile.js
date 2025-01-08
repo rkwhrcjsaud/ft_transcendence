@@ -174,7 +174,7 @@ export async function loadEditProfile() {
       reader.readAsDataURL(file);
     }
   });
-  
+
   // 이미지 삭제 버튼 핸들러 수정
   deleteImageBtn.addEventListener("click", () => {
     profileImage.src = "default_profile.jpeg";
@@ -182,13 +182,30 @@ export async function loadEditProfile() {
     deleteImageBtn.style.display = "none";
     isImageDeleted = true; // 이미지가 삭제되었음을 표시
   });
-
+  
   // 계정 삭제 버튼 클릭 시
   deleteAccountBtn.addEventListener("click", async () => {
     if (confirm(language[languageKey]["DeleteAccountConfirm"])) {
       try {
+        const deleteUrl = await getSecretValue("front/FRONT_API_ACCOUNTS_DELETE");
+        const response = await axios.post(deleteUrl);
+
+        if (response.status === 200) {
+          alert(language[languageKey]["DeleteAccountSuccess"]);
+          // 로그아웃 처리 및 로그인 페이지로 리디렉션
+          localStorage.clear(); // 로컬 스토리지 클리어
+          window.location.href = "/login"; // 로그인 페이지로 이동
+        }
       } catch (error) {
         console.error("Failed to delete account:", error);
+        // 에러 메시지 처리
+        let errorMsg = language[languageKey]["DeleteAccountFail"];
+        if (error.response?.data?.error) {
+          errorMsg = error.response.data.error;
+        } else if (error.response?.data) {
+          errorMsg = JSON.stringify(error.response.data);
+        }
+        alert(errorMsg);
       }
     }
   });

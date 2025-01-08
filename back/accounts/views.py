@@ -204,7 +204,8 @@ class MatchHistoryView(generics.GenericAPIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # class ChangePasswordView(APIView):
 #     permission_classes = [IsAuthenticated]
 
@@ -240,3 +241,24 @@ class ChangePasswordView(APIView):
         user.save()
 
         return Response({"message": "Password changed successfully."}, status=200)
+
+class UserDeleteView(APIView):
+    """
+    회원 탈퇴를 처리하는 View
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        try:
+            # 연관된 데이터들은 CASCADE 설정으로 인해 자동으로 삭제됩니다
+            user.delete()
+            return Response(
+                {"message": "계정이 성공적으로 삭제되었습니다."}, 
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"계정 삭제 중 오류가 발생했습니다: {str(e)}"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )

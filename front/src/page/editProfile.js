@@ -174,6 +174,16 @@ export async function loadEditProfile() {
       reader.readAsDataURL(file);
     }
   });
+
+
+  // 이미지 삭제 버튼 핸들러 수정
+  deleteImageBtn.addEventListener("click", () => {
+    profileImage.src = "default_profile.jpeg";
+    imageUpload.value = null;
+    deleteImageBtn.style.display = "none";
+    isImageDeleted = true; // 이미지가 삭제되었음을 표시
+  });
+
   
   // 계정 삭제 버튼 클릭 시
   deleteAccountBtn.addEventListener("click", async () => {

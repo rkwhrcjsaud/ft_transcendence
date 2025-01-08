@@ -134,7 +134,7 @@
   color: #333;
 }
 
-#edit-profile-email {
+.fixed-text {
   cursor: not-allowed;
   color: #666;
   font-size: .9rem;
@@ -148,9 +148,16 @@
   margin-top: 2.5rem;
 }
 
+.edit-profile-cancel-btn {
+  width: 60%;
+}
+
+.edit-profile-save-btn {
+  width: 38%;
+}
+
 .edit-profile-cancel-btn,
 .edit-profile-save-btn {
-  width: 48%;
   padding: 0.65rem 2rem;
   font-size: 0.85rem;
   border: none;

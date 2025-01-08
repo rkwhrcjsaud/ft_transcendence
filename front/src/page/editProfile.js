@@ -187,8 +187,30 @@ export async function loadEditProfile() {
   deleteAccountBtn.addEventListener("click", async () => {
     if (confirm(language[languageKey]["DeleteAccountConfirm"])) {
       try {
+        // Axios 인스턴스 생성
+        const axios = await createAxiosInstance();
+
+        // API URL 가져오기
+        const apiUrl = await getSecretValue("front/FRONT_API_ACCOUNTS_DELETE");
+
+        // DELETE 요청 보내기
+        const response = await axios.delete(apiUrl);
+        console.log("Account deletion response:", response.data);
+
+        // 성공 메시지 출력 및 리다이렉션
+        alert(language[languageKey]["DeleteAccountSuccess"]);
+        window.location.href = "/login"; // 메인 페이지로 이동
       } catch (error) {
         console.error("Failed to delete account:", error);
+
+        // 에러 메시지 처리
+        let errorMsg = language[languageKey]["DeleteAccountFail"];
+        if (error.response?.data?.error) {
+          errorMsg = error.response.data.error;
+        } else if (error.response?.data) {
+          errorMsg = JSON.stringify(error.response.data);
+        }
+        alert(errorMsg);
       }
     }
   });

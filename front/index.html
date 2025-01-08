@@ -81,7 +81,6 @@
     const langDropdown = document.getElementById("languageDropdown");
     const langItems = document.querySelectorAll(".dropdown-item");
 
-    console.log("localStorage", localStorage.getItem("selectedLanguage"));
     // 초기 선택된 언어가 없으면 한국어로 설정
     if (!localStorage.getItem("selectedLanguage")) {
       localStorage.setItem("selectedLanguage", "한국어");

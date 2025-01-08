@@ -56,7 +56,9 @@ export const language = {
       ErrorUpdatingProfile: "프로필 변경 중 오류가 발생했습니다.",
       ImageSizeError: "이미지 크기는 5MB 이하로 업로드해주세요.",
       ImageTypeError: "이미지 파일만 업로드 가능합니다.",
-      DeleteAccountConfirm: "정말로 계정을 삭제하시겠습니까?",
+      DeleteAccountConfirm: "정말로 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      AccountDeleted: "계정이 성공적으로 삭제되었습니다.",
+      ErrorDeletingAccount: "계정 삭제 중 오류가 발생했습니다.",
   
       //loadChangePassword
       ChangePassword: "비밀번호 변경",
@@ -165,8 +167,10 @@ export const language = {
       ErrorUpdatingProfile: "An error occurred while updating profile.",
       ImageSizeError: "Image size must be less than 5MB.",
       ImageTypeError: "Only image files are allowed.",
-      DeleteAccountConfirm: "Are you sure you want to delete your account?",
-  
+      DeleteAccountConfirm: "Are you sure you want to delete your account? This action cannot be undone.",
+      AccountDeleted: "Your account has been successfully deleted.",
+      ErrorDeletingAccount: "An error occurred while deleting the account.",
+
       //loadChangePassword
       ChangePassword: "Change Password",
       CurrentPassword: "Current Password",
@@ -274,8 +278,10 @@ export const language = {
       ErrorUpdatingProfile: "Une erreur s'est produite lors de la mise à jour de votre profil.",
       ImageSizeError: "La taille de l'image doit être inférieure à 5 Mo.",
       ImageTypeError: "Seuls les fichiers image sont autorisés.",
-      DeleteAccountConfirm: "Voulez-vous vraiment supprimer votre compte ?",
-  
+      DeleteAccountConfirm: "Tu es sûr de vouloir supprimer ton compte ? Cette action ne peut être annulée.",
+      AccountDeleted: "Votre compte a été supprimé avec succès.",
+      ErrorDeletingAccount: "Une erreur s'est produite lors de la suppression du compte.",
+      
       //loadChangePassword
       ChangePassword: "Changer le mot de passe",
       CurrentPassword: "Mot de passe actuel",

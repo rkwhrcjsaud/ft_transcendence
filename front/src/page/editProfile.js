@@ -175,34 +175,21 @@ export async function loadEditProfile() {
     }
   });
   
-  // 이미지 삭제 버튼 핸들러 수정
-  deleteImageBtn.addEventListener("click", () => {
-    profileImage.src = "default_profile.jpeg";
-    imageUpload.value = null;
-    deleteImageBtn.style.display = "none";
-    isImageDeleted = true; // 이미지가 삭제되었음을 표시
-  });
-
   // 계정 삭제 버튼 클릭 시
   deleteAccountBtn.addEventListener("click", async () => {
     if (confirm(language[languageKey]["DeleteAccountConfirm"])) {
       try {
-        // Axios 인스턴스 생성
-        const axios = await createAxiosInstance();
+        const deleteUrl = await getSecretValue("front/FRONT_API_ACCOUNTS_DELETE");
+        const response = await axios.post(deleteUrl);
 
-        // API URL 가져오기
-        const apiUrl = await getSecretValue("front/FRONT_API_ACCOUNTS_DELETE");
-
-        // DELETE 요청 보내기
-        const response = await axios.delete(apiUrl);
-        console.log("Account deletion response:", response.data);
-
-        // 성공 메시지 출력 및 리다이렉션
-        alert(language[languageKey]["DeleteAccountSuccess"]);
-        window.location.href = "/login"; // 메인 페이지로 이동
+        if (response.status === 200) {
+          alert(language[languageKey]["DeleteAccountSuccess"]);
+          // 로그아웃 처리 및 로그인 페이지로 리디렉션
+          localStorage.clear(); // 로컬 스토리지 클리어
+          window.location.href = "/login"; // 로그인 페이지로 이동
+        }
       } catch (error) {
         console.error("Failed to delete account:", error);
-
         // 에러 메시지 처리
         let errorMsg = language[languageKey]["DeleteAccountFail"];
         if (error.response?.data?.error) {
